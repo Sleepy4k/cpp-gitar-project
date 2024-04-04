@@ -1,5 +1,6 @@
 #include <iostream>
 
+using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
@@ -17,7 +18,7 @@ struct Node {
   Node *next, *prev;
 };
 
-class Gitar {
+class List {
 private:
   Node *head, *tail, *newNode, *currentNode, *nodeHelper;
 
@@ -54,7 +55,7 @@ private:
   }
 
 public:
-  Gitar() { head = tail = nullptr; }
+  List() { head = tail = nullptr; }
 
   void test() { cout << "This is data from gitar class" << endl; }
 
@@ -214,6 +215,47 @@ public:
     delete currentNode;
   }
 
+  void deleteMiddle(int position) {
+    if (isNodeEmpty()) {
+      cout << "Belum ada data yang tersedia" << endl;
+      return;
+    }
+
+    currentNode = head;
+
+    int index = 0;
+
+    while (index < position - 1) {
+      currentNode = currentNode->next;
+      index++;
+    }
+
+    nodeHelper = currentNode->prev;
+    nodeHelper->next = currentNode->next;
+    nodeHelper = currentNode->next;
+    nodeHelper->prev = currentNode->prev;
+
+    delete currentNode;
+  }
+
+  void clearAllNode() {
+    if (!isNodeEmpty()) {
+      currentNode = head->next;
+
+      while (currentNode != head) {
+        nodeHelper = currentNode->next;
+        delete currentNode;
+        currentNode = nodeHelper;
+      }
+
+      delete head;
+      
+      head = tail = nullptr;
+    }
+
+    cout << "Semua data berhasil di hapus" << endl;
+  }
+
   void showAllNode() {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
@@ -238,28 +280,59 @@ public:
   }
 };
 
+class Gitar {
+  private:
+    List destinationList;
+
+    void show_destination() {}
+    
+    void insert_destination() {}
+
+    void update_destination() {}
+
+    void delete_destination() {}
+
+  public:
+    void destination_menu() {
+      int choice, isRunning = 1;
+
+      do {
+        cout << "List of Destination Menu" << endl;
+        cout << "1. Tampilkan Destinasi" << endl;
+        cout << "2. Tambah Destinasi" << endl;
+        cout << "3. Ubah Destinasi" << endl;
+        cout << "4. Hapus Destinasi" << endl;
+        cout << "5. Kembali" << endl;
+        cout << "===================" << endl;
+        cout << "Pilih menu : ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+          show_destination();
+          break;
+        case 2:
+          insert_destination();
+          break;
+        case 3:
+          update_destination();
+          break;
+        case 4:
+          delete_destination();
+          break;
+        case 5:
+          isRunning = 0;
+          break;
+        default:
+          cout << "Pilihan tidak valid" << endl;
+          break;
+        }
+      } while (isRunning == 1);
+    }
+};
+
 int main() {
   Gitar gitar;
-
-  gitar.test();
-
-  gitar.insertHead(
-      Destination{"baturaden", "fsfs", "dfss", "dsfs", 3, 2500, Nature});
-  gitar.showAllNode();
-
-  gitar.insertTail(
-      Destination{"Musium", "dfdsf", "dfs", "adad", 1, 5000, History});
-  gitar.showAllNode();
-
-  gitar.insertMiddle(
-      Destination{"Stasiun", "fds", "dada", "ewrw", 1, 25000, Culture}, 2);
-  gitar.showAllNode();
-
-  gitar.updateMiddle(Destination({"KAI", "ada", "ere", "sfds", 3, 50000, Culture}), 2);
-  gitar.showAllNode();
-
-  gitar.deleteTail();
-  gitar.showAllNode();
 
   return 0;
 }
