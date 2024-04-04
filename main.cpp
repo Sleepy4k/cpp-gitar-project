@@ -1,8 +1,10 @@
+#include <string>
 #include <iostream>
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::getline;
 using std::string;
 
 enum Type { Nature = 1, History = 2, Culture = 3 } typeDestination;
@@ -13,14 +15,20 @@ struct Destination {
   Type type;
 };
 
+template <typename S>
 struct Node {
-  Destination data;
-  Node *next, *prev;
+  S data;
+  Node<S> *next, *prev;
 };
 
+struct Pagination {
+  bool back, next;
+};
+
+template <typename S>
 class List {
 private:
-  Node *head, *tail, *newNode, *currentNode, *nodeHelper;
+  Node<S> *head, *tail, *newNode, *currentNode, *nodeHelper;
 
   bool isNodeEmpty() { return (head == nullptr) ? true : false; }
 
@@ -40,8 +48,8 @@ private:
     return total;
   }
 
-  void createNode(Destination data) {
-    newNode = new Node();
+  template <typename T> void createNode(T data) {
+    newNode = new Node<S>();
     newNode->data = data;
     newNode->next = nullptr;
     newNode->prev = nullptr;
@@ -54,12 +62,15 @@ private:
     newNode->prev = head;
   }
 
+  void displayNode(Destination data) {
+    cout << "Nama : " << data.name << " (" << data.location << ")" << endl;
+    cout << "Deskripsi : " << data.description << endl;
+  }
+
 public:
   List() { head = tail = nullptr; }
 
-  void test() { cout << "This is data from gitar class" << endl; }
-
-  void insertHead(Destination data) {
+  template <typename T> void insertHead(T data) {
     createNode(data);
 
     if (isNodeEmpty()) {
@@ -76,9 +87,12 @@ public:
     newNode->next = head;
     newNode->prev = tail;
     head = newNode;
+
+    cout << "head " << head->data.name << endl;
+    cout << "tail " << head->next->data.name << endl;
   }
 
-  void insertTail(Destination data) {
+  template <typename T> void insertTail(T data) {
     createNode(data);
 
     if (isNodeEmpty()) {
@@ -97,7 +111,7 @@ public:
     tail = newNode;
   }
 
-  void insertMiddle(Destination data, int position) {
+  template <typename T> void insertMiddle(T data, int position) {
     createNode(data);
 
     if (isNodeEmpty()) {
@@ -123,7 +137,7 @@ public:
     currentNode->prev = newNode;
   }
 
-  void updateHead(Destination data) {
+  template <typename T> void updateHead(T data) {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
       return;
@@ -132,7 +146,7 @@ public:
     head->data = data;
   }
 
-  void updateTail(Destination data) {
+  template <typename T> void updateTail(T data) {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
       return;
@@ -141,7 +155,7 @@ public:
     tail->data = data;
   }
 
-  void updateMiddle(Destination data, int position) {
+  template <typename T> void updateMiddle(T data, int position) {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
       return;
@@ -256,37 +270,153 @@ public:
     cout << "Semua data berhasil di hapus" << endl;
   }
 
-  void showAllNode() {
+  Pagination showAllNode(int index = 1, int pagination = 5) {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
-      return;
+      return Pagination { false, false };
     }
 
     currentNode = head;
 
+    // Prevent error (current data not updated)
+    int totalData = totalNodeData();
+
+    if (index > totalData) return Pagination { index > 5, index < totalData };
+
     cout << "=======================" << endl;
 
-    int index = 2;
-
     do {
-      cout << "Nama : " << currentNode->data.name << endl;
-      cout << "Deskripsi : " << currentNode->data.description << endl;
+      if (index > pagination || index > totalData) break;
+
+      cout << "ID : " << index << endl;
+      displayNode(currentNode->data);
       cout << "=======================" << endl;
 
+      // Update index before moving to the next node
+      index++;
+
+      // Move to the next node (circularly)
       currentNode = currentNode->next;
-    } while (currentNode != head);
+    } while (currentNode != nullptr);
 
     cout << endl;
+  
+    return Pagination { index > 5, index < totalData };
   }
 };
 
 class Gitar {
   private:
-    List destinationList;
+    List<Destination> destinationList;
 
-    void show_destination() {}
+    void show_destination() {
+      int choice, index = 1, pagination = 5, page = 5;
+
+      do {
+        cout << "Menampilkan list dari " << index << " - " << page << " data" << endl;
+
+        Pagination result = destinationList.showAllNode(index, pagination);
+
+        cout << "1. Lanjut ke laman berikut nya" << endl;
+        cout << "2. Kembali ke laman sebelum nya" << endl;
+        cout << "3. Keluar" << endl;
+        cout << "Pilih tindakan anda : ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+          if (result.next) {
+            page += pagination;
+            index += pagination;
+          }
+          break;
+        case 2:
+          if (result.back) {
+            page -= pagination;
+            index -= pagination;
+          }
+          break;
+        case 3:
+          return;
+        default:
+          cout << "Pilihan tidak valid, silahkan coba lagi" << endl;
+          break;
+        }
+      } while (true);
+    }
     
-    void insert_destination() {}
+    void insert_destination() {
+      int type, position, section;
+      Destination data;
+
+      cin.ignore();
+
+      cout << "Masukan nama destinasi : ";
+      getline(cin, data.name);
+
+      cout << "Masukan deskripsi destinasi : ";
+      getline(cin, data.description);
+
+      cout << "Masukan lokasi destinasi : ";
+      getline(cin, data.location);
+
+      cout << "Masukan jam operasional : ";
+      getline(cin, data.work_hours);
+
+      cout << "Masukan jumlah orang per tiket : ";
+      cin >> data.person;
+
+      cout << "Masukan harga per tiket : ";
+      cin >> data.price;
+
+      cout << "Jenis destinasi" << endl;
+      cout << "1. Alam" << endl;
+      cout << "2. Sejarah" << endl;
+      cout << "3. Budaya" << endl;
+      cout << "Masukan jenis destinasi : ";
+      cin >> type;
+
+      switch (type) {
+      case 1:
+        data.type = Nature;
+        break;
+      case 2:
+        data.type = History;
+        break;
+      case 3:
+        data.type = Culture;
+        break;
+      default:
+        cout << "Pilihan tidak valid, jenis akan menjadi alam secara default" << endl;
+        data.type = Nature;
+        break;
+      }
+
+      cout << "Data akan dimasukan ke?" << endl;
+      cout << "1. depan" << endl;
+      cout << "2. belakang" << endl;
+      cout << "3. tengah" << endl;
+      cout << "bagian : ";
+      cin >> section;
+      
+      switch (section) {
+      case 1:
+        destinationList.insertHead(data);
+        break;
+      case 2:
+        destinationList.insertTail(data);
+        break;
+      case 3:
+        cout << "Masukan posisi data : ";
+        cin >> position;
+
+        destinationList.insertMiddle(data, position);
+        break;
+      default:
+        cout << "Pilihan tidak valid, gagal menambahkan data" << endl;
+        break;
+      }
+    }
 
     void update_destination() {}
 
@@ -333,6 +463,8 @@ class Gitar {
 
 int main() {
   Gitar gitar;
+
+  gitar.destination_menu();
 
   return 0;
 }
