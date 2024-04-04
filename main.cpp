@@ -122,6 +122,98 @@ public:
     currentNode->prev = newNode;
   }
 
+  void updateHead(Destination data) {
+    if (isNodeEmpty()) {
+      cout << "Belum ada data yang tersedia" << endl;
+      return;
+    }
+
+    head->data = data;
+  }
+
+  void updateTail(Destination data) {
+    if (isNodeEmpty()) {
+      cout << "Belum ada data yang tersedia" << endl;
+      return;
+    }
+
+    tail->data = data;
+  }
+
+  void updateMiddle(Destination data, int position) {
+    if (isNodeEmpty()) {
+      cout << "Belum ada data yang tersedia" << endl;
+      return;
+    }
+
+    if (position < 1 || position > totalNodeData())
+      cout << "Posisi data diluar jangkauan" << endl;
+    else if (position == 1)
+      cout << "Posisi bukan berada ditengah" << endl;
+    else {
+      currentNode = head;
+
+      int index = 0;
+
+      while (index < position - 1) {
+        currentNode = currentNode->next;
+        index++;
+      }
+
+      currentNode->data = data;
+    }
+  }
+
+  void deleteHead() {
+    if (isNodeEmpty()) {
+      cout << "Belum ada data yang tersedia" << endl;
+      return;
+    }
+
+    currentNode = tail = head;
+
+    if (currentNode->next == head) {
+      head = tail = nullptr;
+      delete currentNode;
+      return;
+    }
+
+    while (tail->next != currentNode) {
+      tail = tail->next;
+    }
+
+    head = head->next;
+    head->prev = tail;
+    tail->next = head;
+
+    delete currentNode;
+  }
+
+  void deleteTail() {
+    if (isNodeEmpty()) {
+      cout << "Belum ada data yang tersedia" << endl;
+      return;
+    }
+
+    currentNode = tail = head;
+
+    if (currentNode->next == head) {
+      head = tail = nullptr;
+      delete currentNode;
+      return;
+    }
+
+    while (currentNode->next != head) {
+      currentNode = currentNode->next;
+    }
+
+    tail = currentNode->prev;
+    tail->next = head;
+    head->prev = tail;
+
+    delete currentNode;
+  }
+
   void showAllNode() {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
@@ -131,6 +223,8 @@ public:
     currentNode = head;
 
     cout << "=======================" << endl;
+
+    int index = 2;
 
     do {
       cout << "Nama : " << currentNode->data.name << endl;
@@ -159,6 +253,12 @@ int main() {
 
   gitar.insertMiddle(
       Destination{"Stasiun", "fds", "dada", "ewrw", 1, 25000, Culture}, 2);
+  gitar.showAllNode();
+
+  gitar.updateMiddle(Destination({"KAI", "ada", "ere", "sfds", 3, 50000, Culture}), 2);
+  gitar.showAllNode();
+
+  gitar.deleteTail();
   gitar.showAllNode();
 
   return 0;
