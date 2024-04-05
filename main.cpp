@@ -15,14 +15,14 @@ struct Destination {
   Type type;
 };
 
+struct Pagination {
+  bool back, next;
+};
+
 template <typename S>
 struct Node {
   S data;
   Node<S> *next, *prev;
-};
-
-struct Pagination {
-  bool back, next;
 };
 
 template <typename S>
@@ -87,9 +87,6 @@ public:
     newNode->next = head;
     newNode->prev = tail;
     head = newNode;
-
-    cout << "head " << head->data.name << endl;
-    cout << "tail " << head->next->data.name << endl;
   }
 
   template <typename T> void insertTail(T data) {
@@ -270,7 +267,23 @@ public:
     cout << "Semua data berhasil di hapus" << endl;
   }
 
-  Pagination showAllNode(int index = 1, int pagination = 5) {
+  template <typename T> T findNodeData(int position) {
+    if (isNodeEmpty() || position > totalNodeData())
+      return T {};
+
+    currentNode = head;
+    
+    int index = 0;
+
+    while (index < position - 1) {
+      currentNode = currentNode->next;
+      index++;
+    }
+
+    return currentNode->data;
+  }
+
+  Pagination showAllNodes(int index = 1, int pagination = 5) {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
       return Pagination { false, false };
@@ -315,11 +328,12 @@ class Gitar {
       do {
         cout << "Menampilkan list dari " << index << " - " << page << " data" << endl;
 
-        Pagination result = destinationList.showAllNode(index, pagination);
+        Pagination result = destinationList.showAllNodes(index, pagination);
 
         cout << "1. Lanjut ke laman berikut nya" << endl;
         cout << "2. Kembali ke laman sebelum nya" << endl;
         cout << "3. Keluar" << endl;
+        cout << "===============================" << endl;
         cout << "Pilih tindakan anda : ";
         cin >> choice;
 
@@ -344,9 +358,9 @@ class Gitar {
         }
       } while (true);
     }
-    
-    void insert_destination() {
-      int type, position, section;
+
+    Destination form_destination() {
+      int type;
       Destination data;
 
       cin.ignore();
@@ -373,6 +387,7 @@ class Gitar {
       cout << "1. Alam" << endl;
       cout << "2. Sejarah" << endl;
       cout << "3. Budaya" << endl;
+      cout << "==================" << endl;
       cout << "Masukan jenis destinasi : ";
       cin >> type;
 
@@ -392,14 +407,23 @@ class Gitar {
         break;
       }
 
+      return data;
+    }
+    
+    void insert_destination() {
+      int position;
+
+      Destination data = form_destination();
+
       cout << "Data akan dimasukan ke?" << endl;
-      cout << "1. depan" << endl;
-      cout << "2. belakang" << endl;
-      cout << "3. tengah" << endl;
-      cout << "bagian : ";
-      cin >> section;
+      cout << "1. Depan" << endl;
+      cout << "2. Belakang" << endl;
+      cout << "3. Tengah" << endl;
+      cout << "=======================" << endl;
+      cout << "Bagian : ";
+      cin >> position;
       
-      switch (section) {
+      switch (position) {
       case 1:
         destinationList.insertHead(data);
         break;
@@ -418,9 +442,64 @@ class Gitar {
       }
     }
 
-    void update_destination() {}
+    int find_destination() {
+      int position = 0;
 
-    void delete_destination() {}
+      cout << "Masukan id destinasi : ";
+      cin >> position;
+
+      Destination data = destinationList.findNodeData<Destination>(position);
+    
+      if (data.name.empty() || data.description.empty() || data.location.empty()) {
+        cout << "Data tidak ditemukan" << endl;
+        return -1;
+      }
+
+      cout << "===================" << endl;
+      cout << "Nama : " << data.name << " (" << data.location << ")" << endl;
+      cout << "Deskripsi : " << data.description << endl;
+      cout << "Jam Operasional : " << data.work_hours << endl;
+      
+      if (data.price != 0)
+        cout << "Harga Tiket : " << data.price << " / " << data.person << " orang" << endl;
+      else
+        cout << "Harga Tiket : Gratis" << endl;
+
+      cout << "===================" << endl;
+    
+      return position;
+    }
+
+    void update_destination() {
+      int status = find_destination();
+
+      if (status == -1) return;
+
+      Destination data = form_destination();
+
+      if (status == 1) destinationList.updateHead(data);
+      else destinationList.updateMiddle(data, status);
+
+      cout << "Data berhasil diubah" << endl;
+    }
+
+    void delete_destination() {
+      int status = find_destination();
+
+      if (status == -1) return;
+
+      char confirmation;
+
+      cout << "Apakah kamu yakin mau menghapus? (y/N)" << endl;
+      cin >> confirmation;
+
+      if (tolower(confirmation) == 'y') {
+        if (status == 1) destinationList.deleteHead();
+        else destinationList.deleteMiddle(status);
+
+        cout << "Data berhasil dihapus" << endl;
+      } 
+    }
 
   public:
     void destination_menu() {
@@ -430,9 +509,10 @@ class Gitar {
         cout << "List of Destination Menu" << endl;
         cout << "1. Tampilkan Destinasi" << endl;
         cout << "2. Tambah Destinasi" << endl;
-        cout << "3. Ubah Destinasi" << endl;
-        cout << "4. Hapus Destinasi" << endl;
-        cout << "5. Kembali" << endl;
+        cout << "3. Cari Destinasi" << endl;
+        cout << "4. Ubah Destinasi" << endl;
+        cout << "5. Hapus Destinasi" << endl;
+        cout << "6. Kembali" << endl;
         cout << "===================" << endl;
         cout << "Pilih menu : ";
         cin >> choice;
@@ -445,12 +525,15 @@ class Gitar {
           insert_destination();
           break;
         case 3:
-          update_destination();
+          find_destination();
           break;
         case 4:
-          delete_destination();
+          update_destination();
           break;
         case 5:
+          delete_destination();
+          break;
+        case 6:
           isRunning = 0;
           break;
         default:
