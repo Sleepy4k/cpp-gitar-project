@@ -403,7 +403,8 @@ private:
       data.type = Culture;
       break;
     default:
-      cout << "Pilihan tidak valid, jenis akan menjadi alam secara default"
+      cout << "Pilihan tidak valid, jenis wisata akan menjadi alam secara "
+              "default"
            << endl;
       data.type = Nature;
       break;
@@ -517,6 +518,8 @@ public:
     int choice, isRunning = 1;
 
     do {
+      system("cls");
+
       cout << "List of Destination Menu" << endl;
       cout << "1. Tampilkan Destinasi" << endl;
       cout << "2. Tambah Destinasi" << endl;
@@ -551,14 +554,55 @@ public:
         cout << "Pilihan tidak valid" << endl;
         break;
       }
+
+      if (choice != 6)
+        system("pause");
     } while (isRunning == 1);
+  }
+
+  void destination_package() {
+    system("cls");
+    cout << "Hello World from package" << endl;
+    system("pause");
   }
 };
 
 int main() {
   Gitar gitar;
 
-  gitar.destination_menu();
+  int choice;
+  bool isRunning = true;
+
+  do {
+    system("cls");
+
+    cout << "=== Gitar - Guider for Tour and Recreation ===" << endl;
+    cout << "1. Destinasi Wisata" << endl;
+    cout << "2. Paket Wisata" << endl;
+    cout << "3. Keluar" << endl;
+    cout << "==============================================" << endl;
+    cout << "Pilih menu : ";
+    cin >> choice;
+
+    switch (choice) {
+    case 1:
+      gitar.destination_menu();
+      break;
+    case 2:
+      gitar.destination_package();
+      break;
+    case 3:
+      isRunning = false;
+      break;
+    default:
+      cout << "Pilihan tidak valid, silahkan coba lagi" << endl;
+      break;
+    }
+
+    system("cls");
+  } while (isRunning);
+
+  cout << "Terima kasih sudah menggunakan aplikasi kami" << endl;
 
   return 0;
 }
