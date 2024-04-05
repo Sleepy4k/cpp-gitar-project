@@ -1,5 +1,6 @@
-#include <string>
+#include <cctype>
 #include <iostream>
+#include <string>
 
 using std::cin;
 using std::cout;
@@ -19,14 +20,12 @@ struct Pagination {
   bool back, next;
 };
 
-template <typename S>
-struct Node {
+template <typename S> struct Node {
   S data;
   Node<S> *next, *prev;
 };
 
-template <typename S>
-class List {
+template <typename S> class List {
 private:
   Node<S> *head, *tail, *newNode, *currentNode, *nodeHelper;
 
@@ -260,7 +259,7 @@ public:
       }
 
       delete head;
-      
+
       head = tail = nullptr;
     }
 
@@ -269,10 +268,10 @@ public:
 
   template <typename T> T findNodeData(int position) {
     if (isNodeEmpty() || position > totalNodeData())
-      return T {};
+      return T{};
 
     currentNode = head;
-    
+
     int index = 0;
 
     while (index < position - 1) {
@@ -286,7 +285,7 @@ public:
   Pagination showAllNodes(int index = 1, int pagination = 5) {
     if (isNodeEmpty()) {
       cout << "Belum ada data yang tersedia" << endl;
-      return Pagination { false, false };
+      return Pagination{false, false};
     }
 
     currentNode = head;
@@ -294,12 +293,14 @@ public:
     // Prevent error (current data not updated)
     int totalData = totalNodeData();
 
-    if (index > totalData) return Pagination { index > 5, index < totalData };
+    if (index > totalData)
+      return Pagination{index > 5, index < totalData};
 
     cout << "=======================" << endl;
 
     do {
-      if (index > pagination || index > totalData) break;
+      if (index > pagination || index > totalData)
+        break;
 
       cout << "ID : " << index << endl;
       displayNode(currentNode->data);
@@ -313,235 +314,246 @@ public:
     } while (currentNode != nullptr);
 
     cout << endl;
-  
-    return Pagination { index > 5, index < totalData };
+
+    return Pagination{index > 5, index < totalData};
   }
 };
 
 class Gitar {
-  private:
-    List<Destination> destinationList;
+private:
+  List<Destination> destinationList;
 
-    void show_destination() {
-      int choice, index = 1, pagination = 5, page = 5;
+  void show_destination() {
+    int choice, index = 1, pagination = 5, page = 5;
 
-      do {
-        cout << "Menampilkan list dari " << index << " - " << page << " data" << endl;
+    do {
+      cout << "Menampilkan list dari " << index << " - " << page << " data"
+           << endl;
 
-        Pagination result = destinationList.showAllNodes(index, pagination);
+      Pagination result = destinationList.showAllNodes(index, pagination);
 
-        cout << "1. Lanjut ke laman berikut nya" << endl;
-        cout << "2. Kembali ke laman sebelum nya" << endl;
-        cout << "3. Keluar" << endl;
-        cout << "===============================" << endl;
-        cout << "Pilih tindakan anda : ";
-        cin >> choice;
+      cout << "1. Lanjut ke laman berikut nya" << endl;
+      cout << "2. Kembali ke laman sebelum nya" << endl;
+      cout << "3. Keluar" << endl;
+      cout << "===============================" << endl;
+      cout << "Pilih tindakan anda : ";
+      cin >> choice;
 
-        switch (choice) {
-        case 1:
-          if (result.next) {
-            page += pagination;
-            index += pagination;
-          }
-          break;
-        case 2:
-          if (result.back) {
-            page -= pagination;
-            index -= pagination;
-          }
-          break;
-        case 3:
-          return;
-        default:
-          cout << "Pilihan tidak valid, silahkan coba lagi" << endl;
-          break;
-        }
-      } while (true);
-    }
-
-    Destination form_destination() {
-      int type;
-      Destination data;
-
-      cin.ignore();
-
-      cout << "Masukan nama destinasi : ";
-      getline(cin, data.name);
-
-      cout << "Masukan deskripsi destinasi : ";
-      getline(cin, data.description);
-
-      cout << "Masukan lokasi destinasi : ";
-      getline(cin, data.location);
-
-      cout << "Masukan jam operasional : ";
-      getline(cin, data.work_hours);
-
-      cout << "Masukan jumlah orang per tiket : ";
-      cin >> data.person;
-
-      cout << "Masukan harga per tiket : ";
-      cin >> data.price;
-
-      cout << "Jenis destinasi" << endl;
-      cout << "1. Alam" << endl;
-      cout << "2. Sejarah" << endl;
-      cout << "3. Budaya" << endl;
-      cout << "==================" << endl;
-      cout << "Masukan jenis destinasi : ";
-      cin >> type;
-
-      switch (type) {
+      switch (choice) {
       case 1:
-        data.type = Nature;
+        if (result.next) {
+          page += pagination;
+          index += pagination;
+        }
         break;
       case 2:
-        data.type = History;
+        if (result.back) {
+          page -= pagination;
+          index -= pagination;
+        }
         break;
       case 3:
-        data.type = Culture;
-        break;
+        return;
       default:
-        cout << "Pilihan tidak valid, jenis akan menjadi alam secara default" << endl;
-        data.type = Nature;
+        cout << "Pilihan tidak valid, silahkan coba lagi" << endl;
         break;
       }
+    } while (true);
+  }
 
-      return data;
+  Destination form_destination() {
+    int type;
+    Destination data;
+
+    cin.ignore();
+
+    cout << "Masukan nama destinasi : ";
+    getline(cin, data.name);
+
+    cout << "Masukan deskripsi destinasi : ";
+    getline(cin, data.description);
+
+    cout << "Masukan lokasi destinasi : ";
+    getline(cin, data.location);
+
+    cout << "Masukan jam operasional : ";
+    getline(cin, data.work_hours);
+
+    cout << "Masukan jumlah orang per tiket : ";
+    cin >> data.person;
+
+    cout << "Masukan harga per tiket : ";
+    cin >> data.price;
+
+    cout << "Jenis destinasi" << endl;
+    cout << "1. Alam" << endl;
+    cout << "2. Sejarah" << endl;
+    cout << "3. Budaya" << endl;
+    cout << "==================" << endl;
+    cout << "Masukan jenis destinasi : ";
+    cin >> type;
+
+    switch (type) {
+    case 1:
+      data.type = Nature;
+      break;
+    case 2:
+      data.type = History;
+      break;
+    case 3:
+      data.type = Culture;
+      break;
+    default:
+      cout << "Pilihan tidak valid, jenis akan menjadi alam secara default"
+           << endl;
+      data.type = Nature;
+      break;
     }
-    
-    void insert_destination() {
-      int position;
 
-      Destination data = form_destination();
+    return data;
+  }
 
-      cout << "Data akan dimasukan ke?" << endl;
-      cout << "1. Depan" << endl;
-      cout << "2. Belakang" << endl;
-      cout << "3. Tengah" << endl;
-      cout << "=======================" << endl;
-      cout << "Bagian : ";
+  void insert_destination() {
+    int position;
+
+    Destination data = form_destination();
+
+    cout << "Data akan dimasukan ke?" << endl;
+    cout << "1. Depan" << endl;
+    cout << "2. Belakang" << endl;
+    cout << "3. Tengah" << endl;
+    cout << "=======================" << endl;
+    cout << "Bagian : ";
+    cin >> position;
+
+    switch (position) {
+    case 1:
+      destinationList.insertHead(data);
+      break;
+    case 2:
+      destinationList.insertTail(data);
+      break;
+    case 3:
+      cout << "Masukan posisi data : ";
       cin >> position;
-      
-      switch (position) {
+
+      destinationList.insertMiddle(data, position);
+      break;
+    default:
+      cout << "Pilihan tidak valid, gagal menambahkan data" << endl;
+      break;
+    }
+  }
+
+  int find_destination() {
+    int position = 0;
+
+    cout << "Masukan id destinasi : ";
+    cin >> position;
+
+    Destination data = destinationList.findNodeData<Destination>(position);
+
+    if (data.name.empty() || data.description.empty() ||
+        data.location.empty()) {
+      cout << "Data tidak ditemukan" << endl;
+      return -1;
+    }
+
+    cout << "===================" << endl;
+    cout << "Nama : " << data.name << " (" << data.location << ")" << endl;
+    cout << "Deskripsi : " << data.description << endl;
+    cout << "Jam Operasional : " << data.work_hours << endl;
+
+    if (data.price != 0)
+      cout << "Harga Tiket : " << data.price << " / " << data.person << " orang"
+           << endl;
+    else
+      cout << "Harga Tiket : Gratis" << endl;
+
+    cout << "===================" << endl;
+
+    return position;
+  }
+
+  void update_destination() {
+    int status = find_destination();
+
+    if (status == -1)
+      return;
+
+    Destination data = form_destination();
+
+    if (status == 1)
+      destinationList.updateHead(data);
+    else
+      destinationList.updateMiddle(data, status);
+
+    cout << "Data berhasil diubah" << endl;
+  }
+
+  void delete_destination() {
+    int status = find_destination();
+
+    if (status == -1)
+      return;
+
+    char confirmation;
+
+    cout << "Apakah kamu yakin mau menghapus? (y/N)" << endl;
+    cin >> confirmation;
+
+    if (tolower(confirmation) != 'y')
+      return;
+
+    if (status == 1)
+      destinationList.deleteHead();
+    else
+      destinationList.deleteMiddle(status);
+
+    cout << "Data berhasil dihapus" << endl;
+  }
+
+public:
+  void destination_menu() {
+    int choice, isRunning = 1;
+
+    do {
+      cout << "List of Destination Menu" << endl;
+      cout << "1. Tampilkan Destinasi" << endl;
+      cout << "2. Tambah Destinasi" << endl;
+      cout << "3. Cari Destinasi" << endl;
+      cout << "4. Ubah Destinasi" << endl;
+      cout << "5. Hapus Destinasi" << endl;
+      cout << "6. Kembali" << endl;
+      cout << "===================" << endl;
+      cout << "Pilih menu : ";
+      cin >> choice;
+
+      switch (choice) {
       case 1:
-        destinationList.insertHead(data);
+        show_destination();
         break;
       case 2:
-        destinationList.insertTail(data);
+        insert_destination();
         break;
       case 3:
-        cout << "Masukan posisi data : ";
-        cin >> position;
-
-        destinationList.insertMiddle(data, position);
+        find_destination();
+        break;
+      case 4:
+        update_destination();
+        break;
+      case 5:
+        delete_destination();
+        break;
+      case 6:
+        isRunning = 0;
         break;
       default:
-        cout << "Pilihan tidak valid, gagal menambahkan data" << endl;
+        cout << "Pilihan tidak valid" << endl;
         break;
       }
-    }
-
-    int find_destination() {
-      int position = 0;
-
-      cout << "Masukan id destinasi : ";
-      cin >> position;
-
-      Destination data = destinationList.findNodeData<Destination>(position);
-    
-      if (data.name.empty() || data.description.empty() || data.location.empty()) {
-        cout << "Data tidak ditemukan" << endl;
-        return -1;
-      }
-
-      cout << "===================" << endl;
-      cout << "Nama : " << data.name << " (" << data.location << ")" << endl;
-      cout << "Deskripsi : " << data.description << endl;
-      cout << "Jam Operasional : " << data.work_hours << endl;
-      
-      if (data.price != 0)
-        cout << "Harga Tiket : " << data.price << " / " << data.person << " orang" << endl;
-      else
-        cout << "Harga Tiket : Gratis" << endl;
-
-      cout << "===================" << endl;
-    
-      return position;
-    }
-
-    void update_destination() {
-      int status = find_destination();
-
-      if (status == -1) return;
-
-      Destination data = form_destination();
-
-      if (status == 1) destinationList.updateHead(data);
-      else destinationList.updateMiddle(data, status);
-
-      cout << "Data berhasil diubah" << endl;
-    }
-
-    void delete_destination() {
-      int status = find_destination();
-
-      if (status == -1) return;
-
-      char confirmation;
-
-      cout << "Apakah kamu yakin mau menghapus? (y/N)" << endl;
-      cin >> confirmation;
-
-      if (tolower(confirmation) == 'y') {
-        if (status == 1) destinationList.deleteHead();
-        else destinationList.deleteMiddle(status);
-
-        cout << "Data berhasil dihapus" << endl;
-      } 
-    }
-
-  public:
-    void destination_menu() {
-      int choice, isRunning = 1;
-
-      do {
-        cout << "List of Destination Menu" << endl;
-        cout << "1. Tampilkan Destinasi" << endl;
-        cout << "2. Tambah Destinasi" << endl;
-        cout << "3. Cari Destinasi" << endl;
-        cout << "4. Ubah Destinasi" << endl;
-        cout << "5. Hapus Destinasi" << endl;
-        cout << "6. Kembali" << endl;
-        cout << "===================" << endl;
-        cout << "Pilih menu : ";
-        cin >> choice;
-
-        switch (choice) {
-        case 1:
-          show_destination();
-          break;
-        case 2:
-          insert_destination();
-          break;
-        case 3:
-          find_destination();
-          break;
-        case 4:
-          update_destination();
-          break;
-        case 5:
-          delete_destination();
-          break;
-        case 6:
-          isRunning = 0;
-          break;
-        default:
-          cout << "Pilihan tidak valid" << endl;
-          break;
-        }
-      } while (isRunning == 1);
-    }
+    } while (isRunning == 1);
+  }
 };
 
 int main() {
