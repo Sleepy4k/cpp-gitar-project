@@ -7,7 +7,14 @@ using std::endl;
 using std::getline;
 using std::string;
 
+enum Role { Guest = 1, Admin = 2 };
+
 enum Type { Nature = 1, History = 2, Culture = 3 } typeDestination;
+
+struct User {
+  string username, password;
+  Role role;
+};
 
 struct Destination {
   string name, description, location, work_hours;
@@ -58,6 +65,53 @@ private:
     tail = head;
     newNode->next = head;
     newNode->prev = head;
+  }
+
+  template <typename T> T findNode(int position) {
+    currentNode = head;
+
+    int index = 0;
+
+    while (index < position - 1) {
+      currentNode = currentNode->next;
+      index++;
+    }
+
+    return currentNode->data;
+  }
+
+  Destination findNode(Destination data) {
+    currentNode = head;
+
+    bool isFound = false;
+
+    do {
+      if (currentNode->data.name == data.name) {
+        isFound = true;
+        break;
+      }
+
+      currentNode = currentNode->next;
+    } while (currentNode != head);
+
+    return (isFound) ? currentNode->data : Destination{};
+  }
+
+  User findNode(User user) {
+    currentNode = head;
+
+    bool isFound = false;
+
+    do {
+      if (currentNode->data.username == user.username) {
+        isFound = true;
+        break;
+      }
+
+      currentNode = currentNode->next;
+    } while (currentNode != head);
+
+    return (isFound) ? currentNode->data : User{};
   }
 
   void displayNode(Destination data) {
@@ -265,20 +319,28 @@ public:
     cout << "Semua data berhasil di hapus" << endl;
   }
 
-  template <typename T> T findNodeData(int position) {
-    if (isNodeEmpty() || position > totalNodeData())
+  template <typename T> T findNodeData(int type, T data = T{}) {
+    if (isNodeEmpty())
       return T{};
 
-    currentNode = head;
+    int position;
 
-    int index = 0;
+    switch (type) {
+    case 1:
+      cout << "Masukan id : ";
+      cin >> position;
 
-    while (index < position - 1) {
-      currentNode = currentNode->next;
-      index++;
+      data = findNode<T>(position);
+      break;
+    case 2:
+      data = findNode(data);
+      break;
+    default:
+      cout << "Tipe data tidak valid" << endl;
+      break;
     }
 
-    return currentNode->data;
+    return data;
   }
 
   Pagination showAllNodes(int index = 1, int pagination = 5) {
@@ -318,8 +380,105 @@ public:
   }
 };
 
+class UserData {
+private:
+  string username, password;
+  User currentUser;
+  List<User> userList;
+
+  void basic_form() {
+    cout << "Masukan nama pengguna : ";
+    cin >> username;
+
+    cout << "Masukan kata sandi : ";
+    cin >> password;
+  }
+
+  void process_signin() {
+    User result, tempUser = {username, password, Guest};
+
+    result = userList.findNodeData(2, tempUser);
+
+    if (result.username.empty() || result.password.empty()) {
+      cout << "Akun tidak ditemukan, silahkan registrasi" << endl;
+      return;
+    }
+
+    if (result.password != password) {
+      cout << "Kata sandi salah, silahkan coba lagi" << endl;
+      return;
+    }
+
+    currentUser = result;
+    cout << "Proses autentikasi berhasil, selamat datang " << result.username
+         << endl;
+  }
+
+  void process_signup() {
+    User result, tempUser = {username, password, Guest};
+
+    result = userList.findNodeData(2, tempUser);
+
+    if (!result.username.empty() || !result.password.empty()) {
+      cout << "Akun sudah ada, silahkan gunakan akun yang lain" << endl;
+      return;
+    }
+
+    userList.insertHead(tempUser);
+    currentUser = tempUser;
+
+    cout << "Akun berhasil di buat, silahkan autentikasi akun anda" << endl;
+  }
+
+public:
+  UserData() {
+    userList.insertHead(User{"admin", "password", Admin});
+    userList.insertTail(User{"user", "password", Guest});
+  }
+
+  bool isAlreadyLogin() {
+    if (currentUser.username.empty() || currentUser.password.empty())
+      return false;
+
+    return true;
+  }
+
+  bool isUserAdmin() {
+    bool isLogged = isAlreadyLogin();
+
+    if (!isLogged)
+      return false;
+    if (currentUser.role == Admin)
+      return true;
+
+    return false;
+  }
+
+  void signin() {
+    basic_form();
+    process_signin();
+  }
+
+  void signup() {
+    basic_form();
+
+    string password_confirmation;
+
+    cout << "Masukan ulang kata sandi : ";
+    cin >> password_confirmation;
+
+    if (password != password_confirmation) {
+      cout << "Kata sandi tidak sama, silahkan coba lagi" << endl;
+      return;
+    }
+
+    process_signup();
+  }
+};
+
 class Gitar {
 private:
+  UserData userData;
   List<Destination> destinationList;
 
   void show_destination() {
@@ -514,6 +673,39 @@ private:
   }
 
 public:
+  void auth_menu() {
+    int choice, isRunning = 1;
+
+    do {
+      system("cls");
+
+      cout << "Autentikasi Pengguna" << endl;
+      cout << "1. Login" << endl;
+      cout << "2. Register" << endl;
+      cout << "3. Kembali" << endl;
+      cout << "====================" << endl;
+      cout << "Masukan pilihan : ";
+      cin >> choice;
+
+      switch (choice) {
+      case 1:
+        userData.signin();
+        break;
+      case 2:
+        userData.signup();
+        break;
+      case 3:
+        isRunning = 0;
+        break;
+      default:
+        cout << "Pilihan tidak valid" << endl;
+        break;
+      }
+
+      system("pause");
+    } while (isRunning == 1);
+  }
+
   void destination_menu() {
     int choice, isRunning = 1;
 
@@ -522,8 +714,8 @@ public:
 
       cout << "List of Destination Menu" << endl;
       cout << "1. Tampilkan Destinasi" << endl;
-      cout << "2. Tambah Destinasi" << endl;
-      cout << "3. Cari Destinasi" << endl;
+      cout << "2. Cari Destinasi" << endl;
+      cout << "3. Tambah Destinasi" << endl;
       cout << "4. Ubah Destinasi" << endl;
       cout << "5. Hapus Destinasi" << endl;
       cout << "6. Kembali" << endl;
@@ -536,15 +728,30 @@ public:
         show_destination();
         break;
       case 2:
-        insert_destination();
-        break;
-      case 3:
         find_destination();
         break;
+      case 3:
+        if (!userData.isUserAdmin()) {
+          cout << "Anda tidak memiliki akses" << endl;
+          break;
+        }
+
+        insert_destination();
+        break;
       case 4:
+        if (!userData.isUserAdmin()) {
+          cout << "Anda tidak memiliki akses" << endl;
+          break;
+        }
+
         update_destination();
         break;
       case 5:
+        if (!userData.isUserAdmin()) {
+          cout << "Anda tidak memiliki akses" << endl;
+          break;
+        }
+
         delete_destination();
         break;
       case 6:
@@ -579,7 +786,8 @@ int main() {
     cout << "=== Gitar - Guider for Tour and Recreation ===" << endl;
     cout << "1. Destinasi Wisata" << endl;
     cout << "2. Paket Wisata" << endl;
-    cout << "3. Keluar" << endl;
+    cout << "3. Authentikasi" << endl;
+    cout << "4. Keluar" << endl;
     cout << "==============================================" << endl;
     cout << "Pilih menu : ";
     cin >> choice;
@@ -592,6 +800,9 @@ int main() {
       gitar.destination_package();
       break;
     case 3:
+      gitar.auth_menu();
+      break;
+    case 4:
       isRunning = false;
       break;
     default:
