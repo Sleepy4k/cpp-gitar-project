@@ -25,7 +25,7 @@ g++ -std=c++11 ./main.cpp  -o ./output/main
 Start the project
 
 ~~~bash  
-  ./output/main
+./output/main
 ~~~
 
 Or you can use bash script
