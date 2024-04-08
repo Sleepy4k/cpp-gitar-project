@@ -1,58 +1,215 @@
-#include <iostream>
-#include <string>
+// Import Section
+#include <iostream> // Import library iostream yaitu untuk melakukan input dan output
+#include <string> // Import library string yaitu untuk menggunakan tipe data lanjutan string
 
+/**
+ * Import beberapa fungsi dari namespace std (standard library)
+ *
+ * std::cin     = untuk mengambil inputan dari user
+ * std::cout    = untuk menampilkan data ke user
+ * std::endl    = untuk membuat baris baru
+ * std::getline = untuk mengambil inputan dengan
+ *                karakter khusus seperti "space"
+ *                dari user
+ * std::string  = untuk membuat variable atau data
+ *                bertipe string
+ *
+ * Note : Kita hanya menggunakan fungsi yang kita
+ *        butuhkan saja
+ */
 using std::cin;
 using std::cout;
 using std::endl;
 using std::getline;
 using std::string;
 
+/**
+ * Deklarasi Enum atau Enumeration Role
+ *
+ * Yaitu sebuah tipe data yang merepresentasikan
+ * integral konstan, yang mana pada kasus ini,
+ * kita membuat enum untuk menyimpan data role,
+ * yang nantinya kita gunakan untuk autentikasi
+ */
 enum Role { Guest = 1, Admin = 2 };
 
-enum Type { Nature = 1, History = 2, Culture = 3 } typeDestination;
+/**
+ * Deklarasi Enum atau Enumeration Type
+ *
+ * Yaitu sebuah tipe data yang merepresentasikan
+ * integral konstan, yang mana pada kasus ini,
+ * kita membuat enum untuk menyimpan data type,
+ * yang nanti nya kita gunakan untuk menyimpan
+ * jenis jenis dari destinasi wisata
+ */
+enum Type { Nature = 1, History = 2, Culture = 3 };
 
+/**
+ * Deklarasi struct User
+ *
+ * Struct user ini akan kita gunakan untuk
+ * merapihkan data user pada autentikasi,
+ * untuk field pada struct yaitu :
+ * - username = untuk menyimpan nama user
+ * - password = untuk menyimpan kata sandi
+ * - role     = untuk menyimpan privilege user
+ *
+ * Note : Struct adalah tipe data yang dapat
+ *        menyimpan beberapa tipe data dan
+ *        dapat digunakan untuk membuat object
+ */
 struct User {
   string username, password;
   Role role;
 };
 
+/**
+ * Deklarasi struct Destination
+ *
+ * Struct destination ini akan kita gunakan
+ * untuk merapihkan data destinasi wisata,
+ * untuk field pada struct yaitu :
+ * - name         = untuk menyimpan nama wisata
+ * - description  = untuk menyimpan deskripsi
+ *                  dari wisata
+ * - location     = untuk menyimpan lokasi wisata
+ * - work_hours   = untuk menyimpan jam kerja
+ *                  dari wisata
+ * - person       = untuk menyimpan jumlah orang
+ *                  dalam satu tiket masuk wisata
+ * - price        = untuk menyimpan harga untuk
+ *                  satu tiket wisata
+ * - type         = untuk menyimpan jenis destinasi
+ *                  wisata yang dibuat berdasarkan
+ *                  enumerasi Type
+ *
+ * Note : Struct adalah tipe data yang dapat
+ *        menyimpan beberapa tipe data dan
+ *        dapat digunakan untuk membuat object
+ */
 struct Destination {
   string name, description, location, work_hours;
   int person, price;
   Type type;
 };
 
+/**
+ * Deklarasi struct Pagination
+ *
+ * Struct pagination ini akan kita gunakan untuk
+ * merapihkan return data pada fitur show all data,
+ * sehingga memudahkan dalam mengelola paginasi
+ * untuk field pada struct yaitu :
+ * - back = untuk menyimpan status apakah bisa
+ *          kembali ke laman sebelum nya atau tidak
+ * - next = untuk menyimpan status apakah bisa
+ *          lanjut ke laman setelah nya atau tidak
+ *
+ * Note : Struct adalah tipe data yang dapat
+ *        menyimpan beberapa tipe data dan
+ *        dapat digunakan untuk membuat object
+ */
 struct Pagination {
   bool back, next;
 };
 
+/**
+ * Deklarasi struct Node
+ *
+ * Struct node ini akan kita gunakan untuk
+ * merapihkan data pada linked list, untuk
+ * linked list sendiri kita menggunakan double
+ * circular linked list agar mempermudah data
+ * untuk field pada struct yaitu :
+ * - data = untuk menyimpan data dari struct
+ *          berikan, jika kita memberikan type
+ *          struct Destination, maka data akan
+ *          bertipe data destination
+ * - next = untuk menyimpan data node setelah
+ *          nya, jika kosong akan diisi dengan
+ *          nilai nullptr
+ * - prev = untuk menyimpan data node sebelum
+ *          nya, jika kosong akan diisi dengan
+ *          nilai nullptr
+ *
+ * Note : Struct adalah tipe data yang dapat
+ *        menyimpan beberapa tipe data dan
+ *        dapat digunakan untuk membuat object
+ */
 template <typename S> struct Node {
   S data;
   Node<S> *next, *prev;
 };
 
+/**
+ * Deklarasi class List
+ *
+ * Class list ini kita gunakan untuk menghandle
+ * double circular linked list yang kita buat
+ * agar berjalan sesuai dengan definisi nya
+ * serta dapat menyimpan secara dinamik untuk
+ * semua struct yang sudah kita buat seperti
+ * destination dan user
+ *
+ * Note : Class adalah tipe data yang ditentukan
+ *        oleh pengguna untuk menyimpan banyak
+ *        fungsi dan data yang disatukan dalam
+ *        satu tempat atau wadah
+ */
 template <typename S> class List {
 private:
+  // Inisialisasi variable bertipe data struct Node dengan
+  // template dari typename class
   Node<S> *head, *tail, *newNode, *currentNode, *nodeHelper;
 
-  bool isNodeEmpty() { return (head == nullptr) ? true : false; }
+  /**
+   * @brief Mengecek apakah data dalam node masih kosong atau tidak
+   *
+   * @return boolean
+   */
+  bool isNodeEmpty() {
+    // Jika head bernilai nullptr maka kembalikan nilai true,
+    // Jika head tidak bernilai nullptr maka kembalikan nilai false
+    return (head == nullptr) ? true : false;
+  }
 
+  /**
+   * @brief Menghitung jumlah data yang ada pada node
+   *
+   * @return integer
+   */
   int totalNodeData() {
+    // Inisialisasi variable total dengan nilai 0
     int total = 0;
 
+    // Cek apakah node kosong, jika iya maka kembalikan nilai 0
     if (isNodeEmpty())
       return total;
 
+    // Memberikan nilai head pada variable current node
     currentNode = head;
 
     do {
+      // Menambahkan satu nilai untuk variable total
       total++;
+
+      // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
+
+      // jika nilai current node bukan head lanjut looping
     } while (currentNode != head);
 
+    // Kembalikan nilai total
     return total;
   }
 
+  /**
+   * @brief Membuat node baru pada variable new node
+   *
+   * @param data untuk memberikan nilai pada field data
+   *
+   * @return void
+   */
   template <typename T> void createNode(T data) {
     newNode = new Node<S>();
     newNode->data = data;
@@ -60,60 +217,117 @@ private:
     newNode->prev = nullptr;
   }
 
+  /**
+   * @brief Memberikan nilai pada head dan tail menjadi new node
+   *
+   * @return void
+   */
   void insertHeadAndTail() {
-    head = newNode;
-    tail = head;
+    head = tail = newNode;
     newNode->next = head;
     newNode->prev = head;
   }
 
+  /**
+   * @brief Mencari node dengan paratemer posisi
+   *
+   * @param position untuk mencari posisi node
+   *
+   * @return T
+   */
   template <typename T> T findNode(int position) {
+    // Memberikan nilai head pada variable current node
     currentNode = head;
 
+    // Inisialisasi variable index dengan nilai 0
     int index = 0;
 
+    // Melakukan loop hingga index sama dengan position - 1
     while (index < position - 1) {
-      currentNode = currentNode->next;
+      // Menambahkan satu nilai untuk variable index
       index++;
+
+      // Mengganti nilai current menjadi node selanjutnya
+      currentNode = currentNode->next;
     }
 
+    // Mengembalikan data dari variable current node
     return currentNode->data;
   }
 
+  /**
+   * @brief Mencari node dengan parameter struct Destination
+   *
+   * @param data untuk mencari data yang sama dalam node
+   *
+   * @return Destination
+   */
   Destination findNode(Destination data) {
+    // Memberikan nilai head pada variable current node
     currentNode = head;
 
+    // Inisialisasi variable isFound dengan nilai false
     bool isFound = false;
 
     do {
+      // Jika data name sama dengan data nama dari current node
+      // maka ubah nilai isFound menjadi true dan matikan loop
       if (currentNode->data.name == data.name) {
         isFound = true;
         break;
       }
 
+      // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
+
+      // jika nilai current node bukan head lanjut looping
     } while (currentNode != head);
 
+    // Jika isFound bernilai true maka kembalikan data dari current node
+    // Jika tidak maka kembalikan struct Destination dengan data kosong
     return (isFound) ? currentNode->data : Destination{};
   }
 
+  /**
+   * @brief Mencari node dengan parameter struct User
+   *
+   * @param data untuk mencari data yang sama dalam node
+   *
+   * @return User
+   */
   User findNode(User user) {
+    // Memberikan nilai head pada variable current node
     currentNode = head;
 
+    // Inisialisasi variable isFound dengan nilai false
     bool isFound = false;
 
     do {
+      // Jika data username sama dengan data usernama dari current node
+      // maka ubah nilai isFound menjadi true dan matikan loop
       if (currentNode->data.username == user.username) {
         isFound = true;
         break;
       }
 
+      // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
+
+      // jika nilai current node bukan head lanjut looping
     } while (currentNode != head);
 
+    // Jika isFound bernilai true maka kembalikan data dari current node
+    // Jika tidak maka kembalikan struct User dengan data kosong
     return (isFound) ? currentNode->data : User{};
   }
 
+  /**
+   * @brief Menampilkan data dari struct Destination
+   *
+   * @param data yaitu data yang akan ditampilkan
+   *
+   * @return void
+   */
   void displayNode(Destination data) {
     cout << "Nama : " << data.name << " (" << data.location << ")" << endl;
     cout << "Deskripsi : " << data.description << endl;
