@@ -40,12 +40,17 @@ namespace Path {
    * @return void
    */
   const void setPath(std::string path) {
-    // Find the last backslash or slash
-    // and remove the filename from the path (if any)
-    // such as: /path/to/file.exe -> /path/to
+    // Mengambil posisi dari backslash atau slash terakhir
+    // dan menghapus semua karakter setelahnya
+    // Contoh : /path/to/file.cpp -> /path/to
     size_t lastBackslashPos = path.find_last_of("\\/");
+
+    // Jika backslash atau slash ditemukan dan posisinya
+    // berada di bagian tengah atau akhir dari path
+    // maka hapus semua karakter setelahnya
     if (lastBackslashPos != std::string::npos) path = path.substr(0, lastBackslashPos);
 
+    // Mengatur nilai basepath dengan nilai path
     basepath = path;
   };
 }
