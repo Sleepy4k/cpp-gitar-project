@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 
+#include "../helpers/parse.hpp"
 #include "../structs/node_struct.hpp"
 #include "../structs/user_struct.hpp"
 #include "../structs/pagination_struct.hpp"
@@ -231,11 +232,11 @@ private:
     if (!isDetail) return;
 
     if (data.price != 0)
-      cout << "Harga Tiket : Rp." << static_cast<double>(data.price) / 1000.0 << " / " << data.person << " orang" << endl;
+      cout << "Harga Tiket : Rp. " << Parse::intToCurrencyFormat(data.price) << " / " << data.person << " orang" << endl;
     else
       cout << "Harga Tiket : Gratis" << endl;
 
-    cout << "Jumlah Pengunjung : " << static_cast<double>(data.pengunjung) / 1000.0 << " orang" << endl;
+    cout << "Jumlah Pengunjung : " << Parse::intToDouble(data.pengunjung) << " orang" << endl;
     cout << "Jam Operasional : " << data.work_hours << endl;
   }
 
@@ -316,6 +317,43 @@ private:
     }
 
     return UserStruct{};
+  }
+
+  void removingNodeByData(DestinationStruct data) {
+    // Memberikan nilai head pada variable current node
+    currentNode = head;
+
+    // Inisialisasi variable isFound dengan nilai false
+    bool isFound = false;
+
+    do {
+      // Jika data name sama dengan data nama dari current node
+      // maka ubah nilai isFound menjadi true dan matikan loop
+      if (currentNode->data.name == data.name) {
+        isFound = true;
+        break;
+      }
+
+      // Mengganti nilai current menjadi node selanjutnya
+      currentNode = currentNode->next;
+
+      // jika nilai current node bukan head lanjut looping
+    } while (currentNode != head);
+
+    // Jika isFound bernilai true maka kembalikan data dari current node
+    // Jika tidak maka kembalikan struct DestinationStruct dengan data kosong
+    if (isFound) {
+      nodeHelper = currentNode->prev;
+      nodeHelper->next = currentNode->next;
+
+      nodeHelper = currentNode->next;
+      nodeHelper->prev = currentNode->prev;
+
+      delete currentNode;
+    } else {
+      cout << "Data tidak ditemukan" << endl;
+      return;
+    }
   }
 
 public:
@@ -528,49 +566,9 @@ public:
       return;
     }
 
-    // // Mencari data yang akan di hapus pada node
-    // // dengan parameter data yang akan dicari
-    // T foundData = findNode<T>(2, data);
-
-    // // Jika data yang dicari tidak ditemukan maka
-    // // tampilkan pesan bahwa data tidak ditemukan
-    // if (foundData == T{}) {
-    //   // Menampilkan pesan bahwa data tidak ditemukan
-    //   cout << "Data tidak ditemukan" << endl;
-
-    //   // Matikan method update
-    //   return;
-    // }
-
-    // // Jika data yang ditemukan adalah head
-    // if (foundData == head->data) {
-    //   // Jika data yang ditemukan adalah head dan tail
-    //   if (head == tail) {
-    //     // Menghapus data pada head dan tail
-    //     delete head;
-
-    //     // Memberikan nilai nullptr pada head dan tail
-    //     head = tail = nullptr;
-
-    //     // Matikan method remove
-    //     return;
-    //   }
-
-    //   // Memberikan nilai head menjadi node selanjutnya
-    //   head = head->next;
-
-    //   // Menghapus data pada node sebelum head
-    //   delete head->prev;
-
-    //   // Memberikan nilai prev dari head menjadi tail
-    //   head->prev = tail;
-
-    //   // Memberikan nilai next dari tail menjadi head
-    //   tail->next = head;
-
-    //   // Matikan method remove
-    //   return;
-    // }
+    // Memanggil method removingNodeByData untuk menghapus data
+    // pada node dengan parameter data yang akan di hapus
+    removingNodeByData(data);
   }
 
   /**
@@ -701,7 +699,7 @@ public:
    * @param id menggunakan id untuk mencari data pada node
    */
   template <typename T>
-  void showNodeData(bool isDetail = false) {
+  T showNodeData(bool isDetail = false) {
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
     // Jika node kosong maka tampilkan pesan bahwa belum ada data
@@ -710,7 +708,7 @@ public:
       cout << "Belum ada data yang tersedia" << endl;
 
       // Matikan method showNodeData
-      return;
+      return T{};
     }
 
     // Mencari data yang akan di tampilkan pada node
@@ -719,6 +717,9 @@ public:
 
     // Menampilkan data yang ditemukan pada node
     displayNode(foundData, isDetail);
+
+    // Mengembalikan nilai data yang ditemukan
+    return foundData;
   }
 };
 

@@ -226,6 +226,8 @@ namespace DataHandler {
       // Jika data ditemukan maka ubah data tersebut
       if (pos != std::string::npos) {
         // Mengubah data yang sudah ada dengan data yang baru
+        // dengan empat parameter yaitu posisi data yang akan diubah,
+        // panjang data yang akan diubah, dan data yang baru
         fileData.replace(pos, data.length(), newData);
 
         // Menulis data ke dalam file dengan menggunakan FileStorage::Write
