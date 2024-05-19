@@ -8,7 +8,8 @@ if %errorlevel% equ 0 (
   REM If success then we print compiling is success and run it
   echo Compiling success, Trying to run main.exe
 
-  "main.exe"
+  REM Run main.exe
+  main.exe
 ) else (
   echo Compiling error, something went wrong
 )
