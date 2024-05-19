@@ -170,9 +170,15 @@ namespace UserModel {
    * 
    * @return void
    */
-  void update(const std::string &data, const std::string &newData) {
+  void update(const UserStruct &data, const UserStruct &newData) {
+    // Merangkap data baru ke dalam string
+    std::string newDataString = newData.username + "," + newData.password + "," + std::to_string(newData.role);
+
+    // Merangkap data lama ke dalam string
+    std::string dataString = data.username + "," + data.password + "," + std::to_string(data.role);
+
     // Mengubah data yang sudah ada di dalam file dengan menggunakan DataHandler::update
-    DataHandler::update(USER_DATA_PATH, data, newData);
+    DataHandler::update(USER_DATA_PATH, dataString, newDataString);
   }
 
   /**
@@ -182,9 +188,9 @@ namespace UserModel {
    * 
    * @return void
    */
-  void remove(const std::string &data) {
+  void remove(const UserStruct &data) {
     // Menghapus data yang sudah ada di dalam file dengan menggunakan DataHandler::remove
-    DataHandler::remove(USER_DATA_PATH, data);
+    DataHandler::remove(USER_DATA_PATH, data.username);
   }
 }
 

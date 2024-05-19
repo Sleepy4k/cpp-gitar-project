@@ -137,9 +137,15 @@ namespace DestinationModel {
    * @param data string
    * @param newData string
    */
-  void update(const std::string &data, const std::string &newData) {
+  void update(const DestinationStruct &data, const DestinationStruct &newData) {
+    // Merangkap data baru ke dalam string
+    std::string newDataString = newData.name + "," + newData.description + "," + newData.location + "," + newData.work_hours + "," + std::to_string(newData.person) + "," + std::to_string(newData.price) + "," + std::to_string(newData.pengunjung) + "," + std::to_string(newData.type);
+
+    // Merangkap data lama ke dalam string
+    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + "," + std::to_string(data.person) + "," + std::to_string(data.price) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
+
     // Mengubah data yang sudah ada di dalam file dengan menggunakan DataHandler::update
-    DataHandler::update(DESTINATION_DATA_PATH, data, newData);
+    DataHandler::update(DESTINATION_DATA_PATH, dataString, newDataString);
   }
 
   /**
@@ -147,9 +153,9 @@ namespace DestinationModel {
    * 
    * @param data string
    */
-  void remove(const std::string &data) {
+  void remove(const DestinationStruct &data) {
     // Menghapus data yang sudah ada di dalam file dengan menggunakan DataHandler::remove
-    DataHandler::remove(DESTINATION_DATA_PATH, data);
+    DataHandler::remove(DESTINATION_DATA_PATH, data.name);
   }
 }
 
