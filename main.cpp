@@ -85,10 +85,10 @@ int main(int argc, char* argv[]) {
     system("cls"); // Untuk menghapus layar pada terminal
 
     cout << "=== Gitar - Guider for Tour and Recreation ===" << endl;
-    cout << "1. Destinasi Wisata" << endl;
-    cout << "2. Paket Wisata" << endl;
-    cout << "3. Authentikasi" << endl;
-    cout << "4. Keluar" << endl;
+    cout << "| 1. Destinasi Wisata                        |" << endl;
+    cout << "| 2. Paket Wisata                            |" << endl;
+    cout << "| 3. Authentikasi                            |" << endl;
+    cout << "| 4. Keluar                                  |" << endl;
     cout << "==============================================" << endl;
     cout << "Pilih menu : ";
     cin >> choice;
