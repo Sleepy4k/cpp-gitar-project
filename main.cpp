@@ -22,10 +22,13 @@
 // Email: sarahpalastrin@gmail.com
 //=================================================================================
 
+#include <ctime>
+#include <cstdlib>
 #include <iostream>
 
 #include "helpers/path.hpp"
 #include "controllers/user_controller.hpp"
+#include "controllers/package_controller.hpp"
 #include "controllers/destination_controller.hpp"
 
 int main(int argc, char* argv[]) {
@@ -66,17 +69,24 @@ int main(int argc, char* argv[]) {
    * proses CRUD data
    */
   UserController userController;
+  PackageController packageController;
   DestinationController destinationController;
 
   // Inisiasi data pada controller
   // karena ada masalah pada default constructor nya
   // yang bikin segment fault, jadi kita pake manual aja
   userController.init();
+  packageController.init();
   destinationController.init();
 
   // Deklarasi variabel untuk menyimpan pilihan user
   // dan variabel untuk menentukan apakah program masih berjalan
   int choice, isRunning = 1;
+
+  // Inisialisasi random seed
+  // untuk menghasilkan angka random yang berbeda
+  // setiap kali program dijalankan
+  srand(time(NULL));
 
   // Melakukan perulangan do-while
   // sehingga program akan berjalan terlebih dahulu
@@ -107,8 +117,11 @@ int main(int argc, char* argv[]) {
       break;
     // Jika user memilih menu 2
     case 2:
-      // Menampilkan menu paket wisata
-      cout << "Paket Wisata" << endl;
+      // Memanggil method menu pada packageController
+      // untuk menampilkan menu paket wisata
+      // dengan parameter userController untuk akses
+      // data user yang sedang login
+      packageController.menu(userController);
 
       // Menghentikan switch case
       break;
