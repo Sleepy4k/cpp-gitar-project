@@ -9,8 +9,10 @@
 #include "../helpers/parse.hpp"
 #include "../structs/node_struct.hpp"
 #include "../structs/user_struct.hpp"
+#include "../structs/package_struct.hpp"
 #include "../structs/pagination_struct.hpp"
 #include "../structs/destination_struct.hpp"
+#include "../enums/package_transport_enum.hpp"
 
 using std::cout;
 using std::cin;
@@ -255,6 +257,17 @@ private:
     if (!isDetail || data.password.empty()) return;
 
     cout << "Password : " << data.password << endl;
+  }
+
+  void displayNode(PackageStruct data, bool isDetail = false) {
+    if (data.name.empty() || data.description.empty()) return;
+
+    cout << "Nama : " << data.name << endl;
+    cout << data.description << endl;
+    cout << "Harga : Rp. " << Parse::intToCurrencyFormat(data.price) << " / " << data.people << " orang" << endl;
+    cout << "Jenis Transportasi : " << getFacilityName(data.transport) << endl;
+    cout << "Fasilitas : " << data.facility << endl;
+    cout << "Durasi : " << data.duration << " hari" << endl;
   }
 
   DestinationStruct updateNode(DestinationStruct data, DestinationStruct newData) {
