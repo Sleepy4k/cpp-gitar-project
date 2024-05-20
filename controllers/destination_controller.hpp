@@ -287,7 +287,7 @@ private:
    * @return bool 
    */
   bool adminMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
-    cout << "List of Destination Menu" << endl;
+    cout << "Menu List Destinasi Wisata" << endl;
     cout << "===================" << endl;
     cout << "1. Detail Destinasi" << endl;
     cout << "2. Tambah Destinasi" << endl;
@@ -397,7 +397,7 @@ private:
    * @return bool 
    */
   bool userMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
-    cout << "List of Destination Menu" << endl;
+    cout << "Menu List Destinasi Wisata" << endl;
     cout << "===================" << endl;
     cout << "1. Detail Destinasi" << endl;
     cout << "2. Lanjut ke halaman berikutnya" << endl;
