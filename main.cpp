@@ -22,8 +22,6 @@
 // Email: sarahpalastrin@gmail.com
 //=================================================================================
 
-#include <ctime>
-#include <cstdlib>
 #include <iostream>
 
 #include "helpers/path.hpp"
@@ -83,16 +81,11 @@ int main(int argc, char* argv[]) {
   // dan variabel untuk menentukan apakah program masih berjalan
   int choice, isRunning = 1;
 
-  // Inisialisasi random seed
-  // untuk menghasilkan angka random yang berbeda
-  // setiap kali program dijalankan
-  srand(time(NULL));
-
   // Melakukan perulangan do-while
   // sehingga program akan berjalan terlebih dahulu
   // sebelum melakukan pengecekan kondisi
   do {
-    system("cls"); // Untuk menghapus layar pada terminal
+    // system("cls"); // Untuk menghapus layar pada terminal
 
     cout << "=== Gitar - Guider for Tour and Recreation ===" << endl;
     cout << "| 1. Destinasi Wisata                        |" << endl;
