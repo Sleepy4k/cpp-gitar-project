@@ -223,7 +223,7 @@ private:
    *
    * @return void
    */
-  void displayNode(DestinationStruct data, bool isDetail = false) {
+  void displayNode(DestinationStruct data, bool isDetail = false, int _category) {
     if (data.name.empty() || data.description.empty() || data.location.empty())
       return;
 
@@ -249,7 +249,7 @@ private:
    *
    * @return void
    */
-  void displayNode(UserStruct data, bool isDetail = false) {
+  void displayNode(UserStruct data, bool isDetail = false, int _category) {
     if (data.username.empty()) return;
 
     cout << "Username : " << data.username << " (" << data.role << ")" << endl;
@@ -259,12 +259,16 @@ private:
     cout << "Password : " << data.password << endl;
   }
 
-  void displayNode(PackageStruct data, bool isDetail = false) {
+  void displayNode(PackageStruct data, bool isDetail = false, int category) {
     if (data.name.empty() || data.description.empty()) return;
+    if (data.type.empty() || data.type != category) return;
 
-    cout << "Nama : " << data.name << endl;
+    cout << "Nama : " << data.name << " (" << destinationTypeToString(data.type) << ")" endl;
     cout << data.description << endl;
     cout << "Harga : Rp. " << Parse::intToCurrencyFormat(data.price) << " / " << data.people << " orang" << endl;
+
+    if (!isDetail) return;
+
     cout << "Jenis Transportasi : " << getFacilityName(data.transport) << endl;
     cout << "Fasilitas : " << data.facility << endl;
     cout << "Durasi : " << data.duration << " hari" << endl;
@@ -629,7 +633,7 @@ public:
    *
    * @return PaginationStruct
    */
-  PaginationStruct showAllNodes(int page, int perpage, bool isDetail = false) {
+  PaginationStruct showAllNodes(int page, int perpage, bool isDetail = false, int category = 1) {
     // Insialisasi variable isBack dengan nilai false
     bool isBack = false;
 
