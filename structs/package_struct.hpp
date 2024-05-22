@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include "../enums/destination_type_enum.hpp"
 #include "../enums/package_transport_enum.hpp"
 
 /**
@@ -36,6 +37,7 @@ struct PackageStruct {
   std::string name, description;
   int duration, price, people;
   PackageTransport transport;
+  DestinationType type;
   std::string facility;
 };
 
