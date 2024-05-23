@@ -1,5 +1,10 @@
 #pragma once
 
+// Path file data destinasi wisata
+#ifndef PACKAGE_DATA_PATH
+#define PACKAGE_DATA_PATH "/data/destination_data.csv"
+#endif
+
 #ifndef PACKAGE_MODEL_HPP
 #define PACKAGE_MODEL_HPP
 
@@ -12,9 +17,6 @@
 #include "../structs/package_struct.hpp"
 #include "../enums/destination_type_enum.hpp"
 #include "../enums/package_transport_enum.hpp"
-
-// Path file data destinasi wisata
-static const std::string PACKAGE_DATA_PATH = "/data/destination_data.csv";
 
 /**
  * Deklarasi namespace PackageModel
@@ -31,9 +33,9 @@ namespace PackageModel {
   /**
    * @brief Membaca data paket dari file
    * 
-   * @return std::vector<PackageStruct>   
+   * @return vector<std::vector<PackageStruct>>
    */
-  std::vector<PackageStruct> read() {
+  std::vector<std::vector<PackageStruct>> read() {
     // Menggunakan std::ifstream untuk membaca data dari file
     using std::ifstream; // Import library ifstream
     // Menggunakan std::stringstream untuk mengkonversi data ke dalam string
@@ -52,14 +54,14 @@ namespace PackageModel {
 
     // Inisialisasi variable length untuk menyimpan jumlah data
     // dalam satu paket destinasi wisata
-    const int length = (rand() % 4) + 2;
+    int length = (rand() % 4) + 2;
 
     // Inisialisasi variabel index untuk menyimpan index data
     // Jika index lebih dari length maka index akan di reset
-    int index = 0, total = 0, gap = 0;
+    int index[TOTAL_TRANSPORT_ENUM] = {0, 0, 0}, total[TOTAL_TRANSPORT_ENUM] = {0, 0, 0};
 
     // Inisialisasi variabel data untuk menyimpan data yang sudah di baca
-    std::vector<PackageStruct> data, temp;
+    std::vector<std::vector<PackageStruct>> data(TOTAL_TRANSPORT_ENUM), temp(TOTAL_TRANSPORT_ENUM);
 
     // Inisialisasi variabel row untuk menyimpan data yang sudah di baca
     std::vector<std::string> row;
@@ -67,26 +69,8 @@ namespace PackageModel {
     // Menggunakan std::stringstream untuk mengkonversi data ke dalam string
     stringstream ss(fileData);
 
-    // Menghitung total data yang ada pada file
-    while (std::getline(ss, line, '\n')) {
-      // Jika pada baris tersebut tidak terdapat data "\n" maka akan di skip
-      // Jika ada maka akan di tambahkan ke dalam total
-      total++;
-    }
-
-    // Mengubah nilai gap menjadi total
-    gap = total;
-
-    // Mengubah nilai gap menjadi gap dikurangi total modulo length
-    // Menghindari data yang tidak lengkap pada paket destinasi wisata
-    gap -= total % length;
-
-    // Menggunakan std::stringstream untuk mengkonversi data ke dalam string
-    // karena ss sudah di gunakan sebelumnya maka kita harus membuat ulang
-    ss = stringstream(fileData);
-
     // Melakukan perulangan untuk membaca data per baris
-    while (std::getline(ss, line, '\n') && gap > 0) {
+    while (std::getline(ss, line, '\n')) {
       // Inisialisasi variabel word untuk menyimpan data yang sudah di split
       std::string word;
 
@@ -109,27 +93,48 @@ namespace PackageModel {
       package.price = std::stoi(row[4]);
       package.people = std::stoi(row[5]);
       package.type = static_cast<DestinationType>(std::stoi(row[7]));
-      package.transport = static_cast<PackageTransport>((rand() % 3) + 1);
+      package.transport = static_cast<PackageTransport>((rand() % 2) + 1);
       package.facility = getListOfFacility(package.transport);
 
       // Menambahkan data ke dalam variabel data
-      temp.push_back(package);
+      temp[std::stoi(row[7]) - 1].push_back(package);
 
-      // Menambah nilai index
-      index++;
+      // Menambah nilai total berdasarkan data type
+      total[std::stoi(row[7]) - 1] += 1;
 
       // Membersihkan data pada row
       row.clear();
-
-      // Mengurangi nilai dari variable gap
-      gap--;
     }
 
-    // Mengganti nilai total menjadi nilai index
-    total = index;
+    // Melakukan perulangan untuk mengecek semua data
+    // Jika ada total data yang lebih dari 0 dan kurang dari length
+    // maka data length akan di ubah menjadi total data
+    // sehingga mencegah error karena data yang kurang
+    for (int i = 0; i < TOTAL_TRANSPORT_ENUM; i++) {
+      // Jika total kurang dari 1 atau lebih dari length
+      // maka akan di skip
+      if (total[i] < 1 || total[i] > length) continue;
+
+      // Mengubah nilai length menjadi total data
+      length = total[i];
+    }
+
+    // Melakukan perulangan untuk mengurangi nilai total
+    // berdasarkan length yang sudah di tentukan
+    // jika total lebih dari 0 maka akan di kurangi
+    // dengan total modulus length
+    for (int i = 0; i < TOTAL_TRANSPORT_ENUM; i++) {
+      // Jika total kurang dari 1 maka akan di skip
+      if (total[i] < 1) continue;
+
+      // Mengurangi nilai total berdasarkan hasil modulus
+      total[i] -= total[i] % length;
+    }
 
     // Inisialisasi variabel highest untuk menyimpan nilai tertinggi
-    int highest = 0, inc = 0, each = length;
+    // dan variabel inc untuk menyimpan nilai increment
+    // serta variabel iter untuk menyimpan nilai iterasi perulangan
+    int highest[TOTAL_TRANSPORT_ENUM] = {0, 0, 0}, inc[TOTAL_TRANSPORT_ENUM] = {0, 0, 0}, iter = 0;
 
     // Melakukan manipulasi data pada temp paket destinasi wisata
     // dengan logika yang sudah di tentukan dibawah
@@ -140,52 +145,88 @@ namespace PackageModel {
     // dan deskripsi akan di gabungkan dari nama paket
     // dan durasi, harga, jumlah orang, transportasi, fasilitas akan diambil
     // dari data yang sudah di split
-    while (total > 0) {
-      // Inisialisasi variabel package untuk menyimpan data paket
-      PackageStruct package;
-      package.people = 0;
-      package.name = "Paket ";
-      package.description = "Lokasi wisata yang dikunjungi : ";
-      package.duration = (rand() % 3) + 1;
+    for (int x = 0; x < TOTAL_TRANSPORT_ENUM; x++) {
+      // Jika total kurang dari 1 maka akan di skip
+      if (temp[x].size() < 1) continue;
 
-      // Mengganti nilai index menjadi 0
-      index = inc;
+      // Ubah nilai iter menjadi 0 pada setiap perulangan
+      iter = 0;
 
-      // Mengubah data dari string ke dalam tipe data yang sesuai
-      for (int i = 0; i < each; i++) {
-        // Menambahkan data ke dalam variabel package
-        package.name += toupper(temp[i + index].name[0]);
-        package.description += temp[i + index].description;
-        package.people += temp[i + index].people;
-        package.price += temp[i + index].price;
+      // Melakukan perulangan untuk menggabungkan data
+      // berdasarkan length yang sudah di tentukan
+      // dan ketika total data kurang dari length
+      // maka perulangan akan di hentikan
+      while (total[x] > 0) {
+        // Inisialisasi variabel package untuk menyimpan data paket
+        PackageStruct package;
 
-        // Jika paket transportasi tertinggi dari sebelumnya
-        // maka variable highest akan di ganti dengan nilai tersebut
-        if (temp[i + index].transport > highest) {
-          highest = temp[i + index].transport;
+        // Mengisi data struct dengan nilai default
+        // mencegah terjadinya error karena nilai yang kosong
+        package.name = "Paket ";
+        package.description = "Lokasi wisata yang dikunjungi : ";
+        package.people = 0;
+        package.price = 0;
+        package.duration = (rand() % 3) + 1;
+        package.type = static_cast<DestinationType>(x + 1);
+
+        // Mengganti nilai index menjadi 0
+        // pada setiap perulangan
+        index[x] = 0;
+
+        // Melakukan perulangan untuk menggabungkan data
+        // berdasarkan length yang sudah di tentukan
+        for (int z = 0; z < length; z++) {
+          // Mengecek jika nilai z lebih dari 0 dan kurang dari length
+          // jika benar maka nilai index akan di tambah dengan length - 1
+          if (z > 0 && z < length) index[x] += length - 1;
+
+          // Mengecek jika total kurang dari length dan iterasi sama dengan 0
+          // maka nilai index akan di set menjadi 0
+          // menghindari error karena nilai index yang lebih dari total
+          // dimana terdapat case jika total data sama dengan length
+          // maka kita tidak perlu menambahkan nilai index
+          // sehingga menghasilkan data [0, 1, 2, ...]
+          if (total[x] <= length && iter == 0) index[x] = 0;
+
+          // Menambahkan data ke dalam variabel package
+          package.name += toupper(temp[x][z + index[x] + iter].name[0]);
+          package.description += temp[x][z + index[x] + iter].description;
+          package.people += temp[x][z + index[x] + iter].people;
+          package.price += temp[x][z + index[x] + iter].price;
+
+          // Jika paket transportasi tertinggi dari sebelumnya
+          // maka variable highest akan di ganti dengan nilai tersebut
+          if (temp[x][z + index[x] + iter].transport > highest[x]) {
+            highest[x] = temp[x][z + index[x] + iter].transport;
+          }
+
+          // Jika z kurang dari length - 1 maka akan menambahkan koma
+          if (z < length - 1) package.description += ", ";
         }
 
-        // Jika i kurang dari each - 1 maka akan menambahkan koma
-        if (i < each - 1) package.description += ", ";
+        std::cout << std::endl;
+
+        // Mengubah harga paket dengan mengalikan harga dengan durasi
+        package.price = package.price * package.duration;
+
+        // Mengubah data dari integer ke dalam tipe data yang sesuai
+        package.transport = static_cast<PackageTransport>(highest[x]);
+
+        // Menambahkan fasilitas berdasarkan transportasi tertinggi
+        package.facility = getListOfFacility(highest[x]);
+
+        // Menambahkan data ke dalam variabel data
+        data[x].push_back(package);
+
+        // Mengurangi nilai dari variable total
+        total[x] -= length;
+
+        // Menambahkan nilai iterasi perulangan
+        // karena perulangan sudah mencapai akhir
+        // sehingga nilai iterasi akan di tambah
+        // sampai nilai total kurang dari 1
+        iter++;
       }
-
-      // Mengubah harga paket dengan mengalikan harga dengan durasi
-      package.price = package.price * package.duration;
-
-      // Mengubah data dari integer ke dalam tipe data yang sesuai
-      package.transport = static_cast<PackageTransport>(highest);
-
-      // Menambahkan fasilitas berdasarkan transportasi tertinggi
-      package.facility = getListOfFacility(highest);
-
-      // Menambahkan data ke dalam variabel data
-      data.push_back(package);
-
-      // Mengurangi nilai dari variable total
-      total -= length;
-
-      // Menambah nilai inc dengan length - 1
-      inc += length - 1;
     }
 
     // Mengembalikan data
