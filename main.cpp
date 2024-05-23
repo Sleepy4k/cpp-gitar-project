@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
   // sehingga program akan berjalan terlebih dahulu
   // sebelum melakukan pengecekan kondisi
   do {
-    // system("cls"); // Untuk menghapus layar pada terminal
+    system("cls"); // Untuk menghapus layar pada terminal
 
     cout << "=== Gitar - Guider for Tour and Recreation ===" << endl;
     cout << "| 1. Destinasi Wisata                        |" << endl;
