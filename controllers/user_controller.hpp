@@ -234,6 +234,23 @@ private:
   }
 
   /**
+   * @brief Method untuk menampilkan profile user
+   * 
+   * @return void
+   */
+  void myProfile() {
+    // Mencetak pesan ke layar terminal
+    cout << "Profile" << endl;
+    cout << "===================" << endl;
+    cout << "Username : " << currentUser.username << endl;
+    cout << "Role : " << roleToString(currentUser.role) << endl;
+    cout << "===================" << endl;
+
+    // Menunggu user untuk menekan tombol apapun
+    system("pause");
+  }
+
+  /**
    * @brief Method untuk menampilkan menu user
    * 
    * @param choice
@@ -271,14 +288,14 @@ private:
     switch (*choice) {
     // Jika user memilih menu 1
     case 1:
-      // Memanggil method signin
+      // Memanggil method signin untuk autentikasi user
       signin();
 
       // Menghentikan pengecekan
       break;
     // Jika user memilih menu 2
     case 2:
-      // Memanggil method signup
+      // Memanggil method signup untuk registrasi user
       signup();
 
       // Menghentikan pengecekan
@@ -303,16 +320,17 @@ private:
   bool userMenu(int *choice) {
     cout << "List of User Menu" << endl;
     cout << "===================" << endl;
-    cout << "1. Logout" << endl;
-    cout << "2. Keluar" << endl;
+    cout << "1. Profile" << endl;
+    cout << "2. Logout" << endl;
+    cout << "3. Keluar" << endl;
     cout << "===================" << endl;
     cout << "Pilih menu : ";
     cin >> *choice;
 
     // Cek apakah pilihan user tidak valid
-    // Jika pilhan user kurang dari 1 atau lebih dari 2
+    // Jika pilhan user kurang dari 1 atau lebih dari 3
     // maka system akan mencetak pesan pilihan tidak valid
-    if (*choice < 1 || *choice > 2) {
+    if (*choice < 1 || *choice > 3) {
       // Mencetak pesan pilihan tidak valid
       cout << "Pilihan tidak valid" << endl;
 
@@ -321,7 +339,7 @@ private:
     }
 
     // Jika user memilih menu 3
-    if (*choice == 2) return false;
+    if (*choice == 3) return false;
 
     // Menghapus layar pada terminal
     system("cls");
@@ -330,7 +348,14 @@ private:
     switch (*choice) {
     // Jika user memilih menu 1
     case 1:
-      // Memanggil method logout
+      // Memanggil method myProfile untuk menampilkan profile user
+      myProfile();
+
+      // Menghentikan pengecekan
+      break;
+    // Jika user memilih menu 2
+    case 2:
+      // Memanggil method logout untuk keluar dari sistem
       logout();
 
       // Menunggu user untuk menekan tombol apapun
@@ -338,7 +363,7 @@ private:
 
       // Menghentikan pengecekan
       break;
-    // Jika user memilih selain 1
+    // Jika user memilih selain 1, 2
     default:
       // Menghentikan pengecekan
       break;
