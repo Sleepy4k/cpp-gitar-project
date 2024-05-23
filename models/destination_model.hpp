@@ -1,5 +1,10 @@
 #pragma once
 
+// Path file data destinasi wisata
+#ifndef DESTINATION_DATA_PATH
+#define DESTINATION_DATA_PATH "/data/destination_data.csv"
+#endif
+
 #ifndef DESTINATION_MODEL_HPP
 #define DESTINATION_MODEL_HPP
 
@@ -9,9 +14,6 @@
 #include "../enums/role_enum.hpp"
 #include "../handlers/data_handler.hpp"
 #include "../structs/destination_struct.hpp"
-
-// Path file data destinasi wisata
-static const std::string DESTINATION_DATA_PATH = "/data/destination_data.csv";
 
 /**
  * Deklarasi namespace DestinationModel

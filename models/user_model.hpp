@@ -1,5 +1,10 @@
 #pragma once
 
+// Path file data user
+#ifndef USER_DATA_PATH
+#define USER_DATA_PATH "/data/user_data.csv"
+#endif
+
 #ifndef USER_MODEL_HPP
 #define USER_MODEL_HPP
 
@@ -9,8 +14,6 @@
 #include "../enums/role_enum.hpp"
 #include "../structs/user_struct.hpp"
 #include "../handlers/data_handler.hpp"
-
-static const std::string USER_DATA_PATH = "/data/user_data.csv";
 
 /**
  * Deklarasi namespace UserModel
