@@ -223,7 +223,7 @@ private:
    *
    * @return void
    */
-  void displayNode(DestinationStruct data, bool isDetail = false, int _category) {
+  void displayNode(DestinationStruct data, bool isDetail = false, int _category = 1) {
     if (data.name.empty() || data.description.empty() || data.location.empty())
       return;
 
@@ -249,7 +249,7 @@ private:
    *
    * @return void
    */
-  void displayNode(UserStruct data, bool isDetail = false, int _category) {
+  void displayNode(UserStruct data, bool isDetail = false, int _category = 1) {
     if (data.username.empty()) return;
 
     cout << "Username : " << data.username << " (" << data.role << ")" << endl;
@@ -259,11 +259,10 @@ private:
     cout << "Password : " << data.password << endl;
   }
 
-  void displayNode(PackageStruct data, bool isDetail = false, int category) {
+  void displayNode(PackageStruct data, bool isDetail = false, int category = 1) {
     if (data.name.empty() || data.description.empty()) return;
-    if (data.type.empty() || data.type != category) return;
 
-    cout << "Nama : " << data.name << " (" << destinationTypeToString(data.type) << ")" endl;
+    cout << "Nama : " << data.name << " (" << destinationTypeToString(data.type) << ")" << endl;
     cout << data.description << endl;
     cout << "Harga : Rp. " << Parse::intToCurrencyFormat(data.price) << " / " << data.people << " orang" << endl;
 
@@ -682,7 +681,7 @@ public:
         cout << "ID : " << index + 1 << endl;
 
         // Menampilkan data yang ditemukan pada node
-        displayNode(currentNode->data, isDetail);
+        displayNode(currentNode->data, isDetail, category);
 
         // Menampilkan separator untuk memisahkan data
         cout << "====================" << endl;
