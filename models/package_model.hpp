@@ -115,7 +115,8 @@ namespace PackageModel {
       // maka akan di skip
       if (total[i] < 1 || total[i] > length) continue;
 
-      // Mengubah nilai length menjadi total data
+      // Jika total lebih dari length maka length akan di ubah
+      // menjadi total data
       length = total[i];
     }
 
@@ -188,6 +189,12 @@ namespace PackageModel {
           // sehingga menghasilkan data [0, 1, 2, ...]
           if (total[x] <= length && iter == 0) index[x] = 0;
 
+          // Mengecek jika nilai length pangkat 2 lebih dari total
+          // maka nilai index akan di set menjadi 0, menghindari error
+          // karena nilai index yang lebih dari total data
+          // sehingga menghasilkan data [0, 1, 2, ...]
+          if (length * length > total[x]) index[x] = 0;
+
           // Menambahkan data ke dalam variabel package
           package.name += toupper(temp[x][z + index[x] + iter].name[0]);
           package.description += temp[x][z + index[x] + iter].description;
@@ -203,8 +210,6 @@ namespace PackageModel {
           // Jika z kurang dari length - 1 maka akan menambahkan koma
           if (z < length - 1) package.description += ", ";
         }
-
-        std::cout << std::endl;
 
         // Mengubah harga paket dengan mengalikan harga dengan durasi
         package.price = package.price * package.duration;
