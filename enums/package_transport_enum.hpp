@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef TOTAL_TRANSPORT_ENUM
+#define TOTAL_TRANSPORT_ENUM 3
+#endif
+
 #ifndef PACKAGE_TRANSPORT_ENUM_HPP
 #define PACKAGE_TRANSPORT_ENUM_HPP
 
@@ -18,6 +22,13 @@ enum PackageTransport {
   AIRPLANE = 3
 };
 
+/**
+ * @brief Mengambil nama fasilitas transportasi
+ * 
+ * @param transport
+ * 
+ * @return string
+ */
 std::string getFacilityName(int transport) {
   switch (transport) {
     case 1:
@@ -31,6 +42,13 @@ std::string getFacilityName(int transport) {
   }
 }
 
+/**
+ * @brief Mengambil daftar fasilitas transportasi
+ * 
+ * @param transport
+ * 
+ * @return string
+ */
 std::string getListOfFacility(int transport) {
   switch (transport) {
     case 1:
