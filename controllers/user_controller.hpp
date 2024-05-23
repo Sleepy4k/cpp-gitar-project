@@ -358,9 +358,6 @@ private:
       // Memanggil method logout untuk keluar dari sistem
       logout();
 
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
-
       // Menghentikan pengecekan
       break;
     // Jika user memilih selain 1, 2
