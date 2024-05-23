@@ -39,7 +39,7 @@ private:
 
   // Inisialisasi variabel packageList untuk menyimpan data paket destinasi
   // dari class LinkedList dengan tipe data PackageStruct
-  List<PackageStruct> packageList;
+  List<PackageStruct> packageList[TOTAL_TRANSPORT_ENUM];
 
   /**
    * @brief Menampilkan laporan penjualan paket wisata
@@ -66,80 +66,89 @@ private:
    * @param index 
    * @param page 
    * @param pagination 
-   * @param result 
+   * @param category
    * 
-   * @return bool
+   * @return void
    */
-  bool adminMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
-    cout << "Menu Paket Wisata" << endl;
-    cout << "===================" << endl;
-    cout << "1. Lihat Jumlah Penjualan" << endl;
-    cout << "2. Lanjut ke halaman berikutnya" << endl;
-    cout << "3. Kembali ke halaman sebelumnya" << endl;
-    cout << "4. Keluar" << endl;
-    cout << "===================" << endl;
-    cout << "Pilihan : ";
-    cin >> *choice;
+  void adminMenu(int *choice, int *index, int *page, int *pagination, int category) {
+    while (true) {
+      // Mencetak data dari pagination
+      cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
 
-    // Cek apakah pilihan user tidak valid
-    // Jika pilhan user kurang dari 1 atau lebih dari 4
-    // maka system akan mencetak pesan pilihan tidak valid
-    if (*choice < 1 || *choice > 4) {
-      // Mencetak pesan pilihan tidak valid
-      cout << "Pilihan tidak valid" << endl;
+      // Menginisialisasi variabel result untuk menyimpan data
+      // dari linked list berdasarkan pilihan user
+      PaginationStruct result = packageList[category].showAllNodes(*index, *pagination, true);
 
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
+      // Mencetak garis untuk memisahkan antara data
+      cout << endl;
+
+      cout << "Menu Paket Wisata" << endl;
+      cout << "===================" << endl;
+      cout << "1. Lihat Jumlah Penjualan" << endl;
+      cout << "2. Lanjut ke halaman berikutnya" << endl;
+      cout << "3. Kembali ke halaman sebelumnya" << endl;
+      cout << "4. Kembali" << endl;
+      cout << "===================" << endl;
+      cout << "Pilihan : ";
+      cin >> *choice;
+
+      // Cek apakah pilihan user tidak valid
+      // Jika pilhan user kurang dari 1 atau lebih dari 4
+      // maka system akan mencetak pesan pilihan tidak valid
+      if (*choice < 1 || *choice > 4) {
+        // Mencetak pesan pilihan tidak valid
+        cout << "Pilihan tidak valid" << endl;
+
+        // Menunggu user untuk menekan tombol apapun
+        system("pause");
+      }
+
+      // Jika user memilih menu 4
+      if (*choice == 4) return;
+
+      // Menghapus layar pada terminal
+      system("cls");
+
+      // Melakukan pengecekan pilihan user
+      switch (*choice) {
+      // Jika user memilih menu 1
+      case 1:
+        // Memanggil method show_report
+        // untuk menampilkan laporan penjualan
+        show_report();
+
+        // Menghentikan pengecekan
+        break;
+      // Jika user memilih menu 2
+      case 2:
+        // Mengecek apakah data selanjutnya kosong
+        // Jika kosong maka system akan menghentikan proses
+        if (!result.next) break;
+
+        // Jika tidak kosong maka system akan menambahkan index dan page
+        *index += 1;
+        *page += *pagination;
+
+        // Menghentikan pengecekan
+        break;
+      // Jika user memilih menu 3
+      case 3:
+        // Mengecek apakah data sebelumnya kosong
+        // Jika kosong maka system akan menghentikan proses
+        if (!result.back) break;
+
+        // Jika tidak kosong maka system akan mengurangi index dan page
+        *index -= 1;
+        *page -= *pagination;
+
+        // Menghentikan pengecekan
+        break;
+      // Jika user memilih selain 1, 2, 3
+      default:
+        // Menghentikan pengecekan
+        break;
+      }
     }
-
-    // Jika user memilih menu 4
-    if (*choice == 4) return false;
-
-    // Menghapus layar pada terminal
-    system("cls");
-
-    // Melakukan pengecekan pilihan user
-    switch (*choice) {
-    // Jika user memilih menu 1
-    case 1:
-      // Memanggil method show_report
-      // untuk menampilkan laporan penjualan
-      show_report();
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih menu 2
-    case 2:
-      // Mengecek apakah data selanjutnya kosong
-      // Jika kosong maka system akan menghentikan proses
-      if (!result.next) break;
-
-      // Jika tidak kosong maka system akan menambahkan index dan page
-      *index += 1;
-      *page += *pagination;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih menu 3
-    case 3:
-      // Mengecek apakah data sebelumnya kosong
-      // Jika kosong maka system akan menghentikan proses
-      if (!result.back) break;
-
-      // Jika tidak kosong maka system akan mengurangi index dan page
-      *index -= 1;
-      *page -= *pagination;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih selain 1, 2, 3
-    default:
-      // Menghentikan pengecekan
-      break;
-    }
-
-    // Mengembalikan nilai true
-    return true;
   }
 
   /**
@@ -149,80 +158,89 @@ private:
    * @param index 
    * @param page 
    * @param pagination 
-   * @param result 
+   * @param category
    * 
-   * @return bool
+   * @return void
    */
-  bool userMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
-    cout << "Menu Paket Wisata" << endl;
-    cout << "===================" << endl;
-    cout << "1. Beli Paket Wisata" << endl;
-    cout << "2. Lanjut ke halaman berikutnya" << endl;
-    cout << "3. Kembali ke halaman sebelumnya" << endl;
-    cout << "4. Keluar" << endl;
-    cout << "===================" << endl;
-    cout << "Pilihan : ";
-    cin >> *choice;
+  void userMenu(int *choice, int *index, int *page, int *pagination, int category) {
+    while (true) {
+      // Mencetak data dari pagination
+      cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
 
-    // Cek apakah pilihan user tidak valid
-    // Jika pilhan user kurang dari 1 atau lebih dari 4
-    // maka system akan mencetak pesan pilihan tidak valid
-    if (*choice < 1 || *choice > 4) {
-      // Mencetak pesan pilihan tidak valid
-      cout << "Pilihan tidak valid" << endl;
+      // Menginisialisasi variabel result untuk menyimpan data
+      // dari linked list berdasarkan pilihan user
+      PaginationStruct result = packageList[category].showAllNodes(*index, *pagination, true);
 
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
+      // Mencetak garis untuk memisahkan antara data
+      cout << endl;
+
+      cout << "Menu Paket Wisata" << endl;
+      cout << "===================" << endl;
+      cout << "1. Beli Paket Wisata" << endl;
+      cout << "2. Lanjut ke halaman berikutnya" << endl;
+      cout << "3. Kembali ke halaman sebelumnya" << endl;
+      cout << "4. Kembali" << endl;
+      cout << "===================" << endl;
+      cout << "Pilihan : ";
+      cin >> *choice;
+
+      // Cek apakah pilihan user tidak valid
+      // Jika pilhan user kurang dari 1 atau lebih dari 4
+      // maka system akan mencetak pesan pilihan tidak valid
+      if (*choice < 1 || *choice > 4) {
+        // Mencetak pesan pilihan tidak valid
+        cout << "Pilihan tidak valid" << endl;
+
+        // Menunggu user untuk menekan tombol apapun
+        system("pause");
+      }
+
+      // Jika user memilih menu 4
+      if (*choice == 4) break;
+
+      // Menghapus layar pada terminal
+      system("cls");
+
+      // Melakukan pengecekan pilihan user
+      switch (*choice) {
+      // Jika user memilih menu 1
+      case 1:
+        // Memanggil method buy_package
+        // untuk membeli paket wisata
+        buy_package();
+
+        // Menghentikan pengecekan
+        break;
+      // Jika user memilih menu 2
+      case 2:
+        // Mengecek apakah data selanjutnya kosong
+        // Jika kosong maka system akan menghentikan proses
+        if (!result.next) break;
+
+        // Jika tidak kosong maka system akan menambahkan index dan page
+        *index += 1;
+        *page += *pagination;
+
+        // Menghentikan pengecekan
+        break;
+      // Jika user memilih menu 3
+      case 3:
+        // Mengecek apakah data sebelumnya kosong
+        // Jika kosong maka system akan menghentikan proses
+        if (!result.back) break;
+
+        // Jika tidak kosong maka system akan mengurangi index dan page
+        *index -= 1;
+        *page -= *pagination;
+
+        // Menghentikan pengecekan
+        break;
+      // Jika user memilih selain 1, 2, 3
+      default:
+        // Menghentikan pengecekan
+        break;
+      }
     }
-
-    // Jika user memilih menu 4
-    if (*choice == 4) return false;
-
-    // Menghapus layar pada terminal
-    system("cls");
-
-    // Melakukan pengecekan pilihan user
-    switch (*choice) {
-    // Jika user memilih menu 1
-    case 1:
-      // Memanggil method buy_package
-      // untuk membeli paket wisata
-      buy_package();
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih menu 2
-    case 2:
-      // Mengecek apakah data selanjutnya kosong
-      // Jika kosong maka system akan menghentikan proses
-      if (!result.next) break;
-
-      // Jika tidak kosong maka system akan menambahkan index dan page
-      *index += 1;
-      *page += *pagination;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih menu 3
-    case 3:
-      // Mengecek apakah data sebelumnya kosong
-      // Jika kosong maka system akan menghentikan proses
-      if (!result.back) break;
-
-      // Jika tidak kosong maka system akan mengurangi index dan page
-      *index -= 1;
-      *page -= *pagination;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih selain 1, 2, 3
-    default:
-      // Menghentikan pengecekan
-      break;
-    }
-
-    // Mengembalikan nilai true
-    return true;
   }
 
 public:
@@ -236,17 +254,21 @@ public:
     // Jika ada maka system akan membaca file tersebut
     // dan membuat data package wisata secara otomatis
     if (FileStorage::Exists(Path::getPath() + "/data/destination_data.csv")) {
-      // Mengecek apakah data destinasi kosong pada linked list
-      // Jika kosong maka system akan membaca data dari file csv
-      if (packageList.isEmpty()) {
-        // Membaca data dari file csv
-        std::vector<PackageStruct> data = PackageModel::read();
+      // Membaca data dari file csv
+      std::vector<std::vector<PackageStruct>> result = PackageModel::read();
 
-        // Melakukan perulangan untuk menambahkan data ke dalam linked list
-        // berdasarkan data yang sudah di baca dari file csv
-        for (int i = 0; i < data.size(); i++) {
+      // Melakukan perulangan untuk menambahkan data ke dalam linked list
+      // berdasarkan data yang sudah di baca dari file csv
+      for (int k = 0; k < TOTAL_TRANSPORT_ENUM; k++) {
+        // Mengecek apakah data destinasi kosong pada linked list
+        // Jika kosong maka system akan membaca data dari file csv
+        if (!packageList[k].isEmpty()) continue;
+
+        std::vector<PackageStruct> data = result[k];
+
+        for (int v = 0; v < data.size(); v++) {
           // Menambahkan data ke dalam linked list
-          packageList.push(data[i]);
+          packageList[k].push(data[v]);
         }
       }
     }
@@ -265,28 +287,51 @@ public:
 
     // Deklarasi variabel isRunning, choice, index, page, pagination
     bool isRunning = true;
-    int choice, index = 1, page = 5, pagination = 5;
+    int choice, index, page, pagination;
 
-    
     do {
+      choice = 0, index = 1, page = 5, pagination = 5;
+
       // Menghapus layar pada terminal
       system("cls");
 
       // Mencetak data dari pagination
-      cout << "Menampilkan list dari " << page - pagination << " - " << page << " data" << endl;
+      cout << "Menu Paket Wisata" << endl;
+      cout << "===================" << endl;
+      cout << "1. Lihat Paket Wisata Alam" << endl;
+      cout << "2. Lihat Paket Wisata Sejarah" << endl;
+      cout << "3. Lihat Paket Wisata Budaya" << endl;
+      cout << "4. Keluar" << endl;
+      cout << "===================" << endl;
+      cout << "Pilihan : ";
+      cin >> choice;
 
-      // Memanggil method showAllNodes pada package wisata
-      // untuk menampilkan semua data paket pada linked list
-      PaginationStruct result = packageList.showAllNodes(index, pagination, false);
+      // Menghapus layar pada terminal
+      system("cls");
 
-      // Mencetak garis untuk memisahkan antara data
-      cout << endl;
+      // Cek apakah pilihan user tidak valid
+      // Jika pilhan user kurang dari 1 atau lebih dari 4
+      // maka system akan mencetak pesan pilihan tidak valid
+      if (choice < 1 || choice > 4) {
+        // Mencetak pesan pilihan tidak valid
+        cout << "Pilihan tidak valid" << endl;
+
+        // Menunggu user untuk menekan tombol apapun
+        system("pause");
+
+        // Mengulangi perulangan dari awal
+        continue;
+      }
+
+      // Jika user memilih menu 4
+      // maka system akan menghentikan perulangan
+      if (choice == 4) break;
 
       // Melakukan pengecekan apakah user adalah admin atau tidak
       // Jika user adalah admin maka system akan menampilkan menu admin
       // Jika user bukan admin maka system akan menampilkan menu user
-      if (userData.isUserAdmin()) isRunning = adminMenu(&choice, &index, &page, &pagination, result);
-      else isRunning = userMenu(&choice, &index, &page, &pagination, result);
+      if (userData.isUserAdmin()) adminMenu(&choice, &index, &page, &pagination, choice - 1);
+      else userMenu(&choice, &index, &page, &pagination, choice - 1);
     } while (isRunning); // Melakukan perulangan selama isRunning bernilai true
   }
 };
