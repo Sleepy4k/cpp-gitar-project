@@ -7,144 +7,149 @@
 #include <fstream>
 
 /**
- * Deklarasi class FileStorage
- *
- * Class ini berfungsi untuk membantu dalam
- * proses penyimpanan data ke dalam file
+ * Deklarasi namespace FileStorage
+ * 
+ * Namespace ini berfungsi untuk membantu dalam
+ * proses CRUD file seperti membuat, membaca,
+ * menulis, dan menghapus file
+ * 
+ * Note : Namespace adalah kumpulan fungsi dan
+ *       variabel yang dikelompokkan dalam satu 
+ *       wadah, yang dapat digunakan untuk
+ *       menghindari konflik nama
  */
-class FileStorage {
-public:
-  /**
-   * Method untuk membuat file
-   *
-   * @param filename nama file yang akan dibaca
-   */
-  static void Create(const std::string &filename) {
-    // Menggunakan std::ofstream untuk membuat file
-    using std::ofstream; // Import library ofstream
+namespace FileStorage {
+/**
+ * Method untuk membuat file
+ *
+ * @param filename nama file yang akan dibaca
+ */
+static void Create(const std::string &filename) {
+  // Menggunakan std::ofstream untuk membuat file
+  using std::ofstream; // Import library ofstream
 
-    // Membuka file dengan nama filename
-    ofstream file(filename);
+  // Membuka file dengan nama filename
+  ofstream file(filename);
 
-    // Menutup file setelah selesai membuat
-    file.close();
-  }
+  // Menutup file setelah selesai membuat
+  file.close();
+}
 
-  /**
-   * Method untuk membaca file
-   *
-   * @param filename nama file yang akan dibaca
-   * 
-   * @return string data yang dibaca dari file
-   */
-  static std::string Read(const std::string &filename) {
-    // Menggunakan std::ifstream untuk membaca file
-    using std::ifstream; // Import library ifstream
+/**
+ * Method untuk membaca file
+ *
+ * @param filename nama file yang akan dibaca
+ * 
+ * @return string data yang dibaca dari file
+ */
+static std::string Read(const std::string &filename) {
+  // Menggunakan std::ifstream untuk membaca file
+  using std::ifstream; // Import library ifstream
 
-    // Inisialisasi variable line dan data
-    // line = untuk menyimpan data yang di baca
-    // data = untuk menyimpan data yang sudah di baca
-    std::string line, data = "";
+  // Inisialisasi variable line dan data
+  // line = untuk menyimpan data yang di baca
+  // data = untuk menyimpan data yang sudah di baca
+  std::string line, data = "";
 
-    // Membuka file dengan nama filename
-    ifstream file(filename);
+  // Membuka file dengan nama filename
+  ifstream file(filename);
 
-    // Jika file tidak ditemukan maka kembalikan data kosong
-    if (!file || !file.is_open()) {
-      // Menutup file setelah selesai membaca
-      file.close();
-
-      // Mengembalikan data kosong
-      return data;
-    }
-
-    // Looping hingga data yang di baca tidak kosong
-    while (getline(file, line)) {
-      data += line + "\n";
-    }
-
+  // Jika file tidak ditemukan maka kembalikan data kosong
+  if (!file || !file.is_open()) {
     // Menutup file setelah selesai membaca
     file.close();
 
-    // Mengembalikan data yang sudah di baca
+    // Mengembalikan data kosong
     return data;
   }
 
-  /**
-   * Method untuk menulis file
-   *
-   * @param filename nama file yang akan ditulis
-   * @param data data yang akan ditulis ke dalam file
-   * 
-   * @return bool status apakah data berhasil ditulis atau tidak
-   */
-  static bool Write(const std::string &filename, const std::string &data) {
-    // Menggunakan std::ofstream untuk menulis file
-    using std::ofstream; // Import library ofstream
+  // Looping hingga data yang di baca tidak kosong
+  while (getline(file, line)) {
+    data += line + "\n";
+  }
 
-    // Membuka file dengan nama filename
-    ofstream file(filename);
+  // Menutup file setelah selesai membaca
+  file.close();
 
-    // Menulis data ke dalam file
-    file << data;
+  // Mengembalikan data yang sudah di baca
+  return data;
+}
 
-    // Jika terjadi error saat menulis file maka kembalikan false
-    if (!file) {
-      // Menutup file
-      file.close();
+/**
+ * Method untuk menulis file
+ *
+ * @param filename nama file yang akan ditulis
+ * @param data data yang akan ditulis ke dalam file
+ * 
+ * @return bool status apakah data berhasil ditulis atau tidak
+ */
+static bool Write(const std::string &filename, const std::string &data) {
+  // Menggunakan std::ofstream untuk menulis file
+  using std::ofstream; // Import library ofstream
 
-      // Mengembalikan status false
-      return false;
-    }
+  // Membuka file dengan nama filename
+  ofstream file(filename);
 
-    // Menutup file setelah selesai menulis
+  // Menulis data ke dalam file
+  file << data;
+
+  // Jika terjadi error saat menulis file maka kembalikan false
+  if (!file) {
+    // Menutup file
     file.close();
 
-    // Mengembalikan status true
-    return true;
+    // Mengembalikan status false
+    return false;
   }
 
-  /**
-   * Method untuk menghapus file
-   *
-   * @param filename nama file yang akan dihapus
-   * 
-   * @return bool status apakah file berhasil dihapus atau tidak
-   */
-  static bool Delete(const std::string &filename) {
-    // Menggunakan std::remove untuk menghapus file
-    return std::remove(filename.c_str()) == 0;
-  }
+  // Menutup file setelah selesai menulis
+  file.close();
 
-  /**
-   * Method untuk mengecek apakah file ada atau tidak
-   *
-   * @param filename nama file yang akan dicek
-   * 
-   * @return bool status apakah file ada atau tidak
-   */
-  static bool Exists(const std::string &filename) {
-    // Menggunakan std::ifstream untuk membaca file
-    using std::ifstream; // Import library ifstream
+  // Mengembalikan status true
+  return true;
+}
 
-    // Membuka file dengan nama filename
-    ifstream file(filename);
+/**
+ * Method untuk menghapus file
+ *
+ * @param filename nama file yang akan dihapus
+ * 
+ * @return bool status apakah file berhasil dihapus atau tidak
+ */
+static bool Delete(const std::string &filename) {
+  // Menggunakan std::remove untuk menghapus file
+  return std::remove(filename.c_str()) == 0;
+}
 
-    // Jika file tidak ditemukan maka kembalikan false
-    if (!file || !file.is_open()) {
-      // Menutup file setelah selesai membaca
-      file.close();
+/**
+ * Method untuk mengecek apakah file ada atau tidak
+ *
+ * @param filename nama file yang akan dicek
+ * 
+ * @return bool status apakah file ada atau tidak
+ */
+static bool Exists(const std::string &filename) {
+  // Menggunakan std::ifstream untuk membaca file
+  using std::ifstream; // Import library ifstream
 
-      // Mengembalikan status false
-      return false;
-    }
+  // Membuka file dengan nama filename
+  ifstream file(filename);
 
+  // Jika file tidak ditemukan maka kembalikan false
+  if (!file || !file.is_open()) {
     // Menutup file setelah selesai membaca
     file.close();
 
-    // Mengembalikan nilai true
-    return true;
+    // Mengembalikan status false
+    return false;
   }
+
+  // Menutup file setelah selesai membaca
+  file.close();
+
+  // Mengembalikan nilai true
+  return true;
+}
 };
 
 #endif // FILE_STORAGE_HELPER_HPP
