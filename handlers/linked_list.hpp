@@ -217,6 +217,39 @@ private:
   }
 
   /**
+   * @brief Mencari node dengan parameter struct PackageStruct
+   *
+   * @param data untuk mencari data yang sama dalam node
+   *
+   * @return PackageStruct
+   */
+  PackageStruct findNode(PackageStruct data) {
+    // Memberikan nilai head pada variable current node
+    currentNode = head;
+
+    // Inisialisasi variable isFound dengan nilai false
+    bool isFound = false;
+
+    do {
+      // Jika data name sama dengan data nama dari current node
+      // maka ubah nilai isFound menjadi true dan matikan loop
+      if (currentNode->data.name == data.name) {
+        isFound = true;
+        break;
+      }
+
+      // Mengganti nilai current menjadi node selanjutnya
+      currentNode = currentNode->next;
+
+      // jika nilai current node bukan head lanjut looping
+    } while (currentNode != head);
+
+    // Jika isFound bernilai true maka kembalikan data dari current node
+    // Jika tidak maka kembalikan struct PackageStruct dengan data kosong
+    return (isFound) ? currentNode->data : PackageStruct{};
+  }
+
+  /**
    * @brief Menampilkan data dari struct DestinationStruct
    *
    * @param data yaitu data yang akan ditampilkan
