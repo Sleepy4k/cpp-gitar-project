@@ -421,6 +421,20 @@ public:
   }
 
   /**
+   * @brief Method untuk mendapatkan username user yang sedang login
+   * 
+   * @return string
+   */
+  std::string getUsername() {
+    // Memanggil method isAlreadyLogin untuk mengecek apakah user sudah login
+    // Jika sudah login, maka system akan mengembalikan username user yang sedang login
+    if (isAlreadyLogin()) return currentUser.username;
+
+    // Mengembalikan nilai kosong
+    return "Tamu";
+  }
+
+  /**
    * @brief Method untuk mengecek apakah user adalah admin
    * 
    * @return bool
