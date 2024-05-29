@@ -147,6 +147,21 @@ private:
     // dan mengisi dari data destinasi yang akan di inputkan
     DestinationStruct data = form_destination();
 
+    // Memanggil method findByName pada DestinationModel
+    // untuk mencari data destinasi berdasarkan nama
+    DestinationStruct isDuplicated = DestinationModel::findByName(data.name);
+
+    // Cek apakah data yang di inputkan sudah ada atau belum
+    // Jika sudah ada maka system akan mencetak pesan data sudah ada
+    // dan menghentikan proses
+    if (!isDuplicated.name.empty() || !isDuplicated.description.empty()) {
+      // Mencetak pesan data sudah ada
+      cout << "Data sudah ada" << endl;
+
+      // Menghentikan proses
+      return;
+    }
+
     // Memanggil method insert pada destinationList
     // untuk menambahkan data destinasi pada linked list
     destinationList.push(data);
@@ -154,6 +169,8 @@ private:
     // Memanggil method insert pada Destination
     // untuk menambahkan data destinasi pada file csv
     DestinationModel::insert(data);
+
+    system("pause");
   }
 
   /**
@@ -204,6 +221,13 @@ private:
     // Mencetak garis untuk memisahkan antara data
     cout << "===================" << endl;
 
+    // Cek apakah data yang akan di ubah kosong atau tidak
+    // Jika kosong maka system akan menghentikan proses
+    if (oldData.name.empty() || oldData.description.empty() || oldData.location.empty()) {
+      // Menghentikan proses
+      return;
+    }
+
     // Mencetak judul untuk mengubah destinasi
     cout << "Ubah Destinasi" << endl;
 
@@ -227,6 +251,9 @@ private:
     }
 
     // Memanggil method update pada Destination
+    DestinationModel::update(oldData, newData);
+
+    // Memanggil method update pada Destination
     cout << "Data " << result.name << " berhasil diubah" << endl;
 
     // Menunggu user untuk menekan tombol apapun
@@ -242,6 +269,13 @@ private:
     // Deklarasi variabel data dengan tipe data DestinationStruct
     // untuk menyimpan data destinasi yang akan dihapus
     DestinationStruct data = destinationList.showNodeData<DestinationStruct>(true);
+
+    // Cek apakah data yang akan dihapus kosong atau tidak
+    // Jika kosong maka system akan menghentikan proses
+    if (data.name.empty() || data.description.empty() || data.location.empty()) {
+      // Menghentikan proses
+      return;
+    }
 
     // Deklarasi variabel confirmation
     char confirmation;
@@ -270,6 +304,8 @@ private:
 
     // Memanggil method delete pada Destination untuk menghapus data
     cout << "Data " << data.name << " berhasil dihapus" << endl;
+
+    DestinationModel::remove(data);
 
     // Menunggu user untuk menekan tombol apapun
     system("pause");
