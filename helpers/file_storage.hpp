@@ -90,17 +90,17 @@ namespace FileStorage {
     // Membuka file dengan nama filename
     ofstream file(filename);
 
-    // Menulis data ke dalam file
-    file << data;
-
-    // Jika terjadi error saat menulis file maka kembalikan false
-    if (!file) {
-      // Menutup file
+    // Jika file tidak ditemukan maka kembalikan false
+    if (!file || !file.is_open()) {
+      // Menutup file setelah selesai menulis
       file.close();
 
       // Mengembalikan status false
       return false;
     }
+
+    // Menulis data ke dalam file
+    file << data;
 
     // Menutup file setelah selesai menulis
     file.close();
