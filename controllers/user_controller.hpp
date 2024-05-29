@@ -11,11 +11,11 @@
 #include "../helpers/hashing.hpp"
 #include "../enums/role_enum.hpp"
 #include "../models/user_model.hpp"
+#include "../helpers/input_data.hpp"
 #include "../structs/user_struct.hpp"
 #include "../helpers/file_storage.hpp"
 #include "../handlers/linked_list.hpp"
 
-using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
@@ -68,12 +68,16 @@ private:
     }
 
     // Meminta inputan dari user berupa username
-    cout << "Masukan nama pengguna : ";
-    cin >> username;
+    username = InputData::getInput(
+      "Masukan nama pengguna : ",
+      "Kata sandi tidak boleh kosong serta tidak boleh mengandung spasi"
+    );
 
     // Meminta inputan dari user berupa password
-    cout << "Masukan kata sandi : ";
-    cin >> password;
+    password = InputData::getInput(
+      "Masukan kata sandi : ",
+      "Kata sandi tidak boleh kosong serta tidak boleh mengandung spasi"
+    );
   }
 
   /**
@@ -195,8 +199,10 @@ private:
     string password_confirmation;
 
     // Meminta inputan dari user berupa konfirmasi password
-    cout << "Masukan ulang kata sandi : ";
-    cin >> password_confirmation;
+    password_confirmation = InputData::getInput(
+      "Masukan ulang kata sandi : ",
+      "Kata sandi tidak boleh kosong serta tidak boleh mengandung spasi"
+    );
 
     // Membandingkan password yang diinputkan
     // oleh user dengan konfirmasi password
@@ -264,19 +270,12 @@ private:
     cout << "2. Sign Up" << endl;
     cout << "3. Kembali" << endl;
     cout << "===================" << endl;
-    cout << "Pilih menu : ";
-    cin >> *choice;
 
-    // Cek apakah pilihan user tidak valid
-    // Jika pilhan user kurang dari 1 atau lebih dari 3
-    // maka system akan mencetak pesan pilihan tidak valid
-    if (*choice < 1 || *choice > 3) {
-      // Mencetak pesan pilihan tidak valid
-      cout << "Pilihan tidak valid" << endl;
-
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
-    }
+    *choice = InputData::getInputIntRange(
+      "Pilih menu : ",
+      "Pilihan tidak valid",
+      1, 3
+    );
 
     // Jika user memilih menu 3
     if (*choice == 3) return false;
@@ -324,19 +323,12 @@ private:
     cout << "2. Logout" << endl;
     cout << "3. Keluar" << endl;
     cout << "===================" << endl;
-    cout << "Pilih menu : ";
-    cin >> *choice;
 
-    // Cek apakah pilihan user tidak valid
-    // Jika pilhan user kurang dari 1 atau lebih dari 3
-    // maka system akan mencetak pesan pilihan tidak valid
-    if (*choice < 1 || *choice > 3) {
-      // Mencetak pesan pilihan tidak valid
-      cout << "Pilihan tidak valid" << endl;
-
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
-    }
+    *choice = InputData::getInputIntRange(
+      "Pilih menu : ",
+      "Pilihan tidak valid",
+      1, 3
+    );
 
     // Jika user memilih menu 3
     if (*choice == 3) return false;

@@ -10,6 +10,7 @@
 #include "../helpers/path.hpp"
 #include "../helpers/time.hpp"
 #include "../helpers/parse.hpp"
+#include "../helpers/input_data.hpp"
 #include "../handlers/hash_table.hpp"
 #include "../handlers/linked_list.hpp"
 #include "../helpers/file_storage.hpp"
@@ -75,19 +76,12 @@ private:
       cout << "2. Kembali ke halaman sebelumnya" << endl;
       cout << "3. Kembali" << endl;
       cout << "===================" << endl;
-      cout << "Pilihan : ";
-      cin >> choice;
 
-      // Cek apakah pilihan user tidak valid
-      // Jika pilhan user kurang dari 1 atau lebih dari 3
-      // maka system akan mencetak pesan pilihan tidak valid
-      if (choice < 1 || choice > 3) {
-        // Mencetak pesan pilihan tidak valid
-        cout << "Pilihan tidak valid" << endl;
-
-        // Menunggu user untuk menekan tombol apapun
-        system("pause");
-      }
+      choice = InputData::getInputIntRange(
+        "Pilihan menu : ",
+        "Pilihan harus berupa angka! dan diantara 1 sampai 3!",
+        1, 3
+      );
 
       // Menghapus layar pada terminal
       system("cls");
@@ -177,8 +171,10 @@ private:
     std::string id;
 
     // Meminta user untuk memasukkan id dari struk pembelian
-    cout << "Masukkan ID Struk Pembelian : ";
-    cin >> id;
+    id = InputData::getInput(
+      "Masukkan ID Struk Pembelian : ",
+      "Struk Pembelian tidak boleh kosong! dan tidak boleh ada spasi!"
+    );
 
     // Menghapus layar pada terminal
     system("cls");
@@ -254,8 +250,12 @@ private:
       cout << "3. Kembali ke halaman sebelumnya" << endl;
       cout << "4. Kembali" << endl;
       cout << "===================" << endl;
-      cout << "Pilihan : ";
-      cin >> choice;
+
+      choice = InputData::getInputIntRange(
+        "Pilihan menu : ",
+        "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
+        1, 4
+      );
 
       // Menghapus layar pada terminal
       if (choice != 1) system("cls");
@@ -306,12 +306,6 @@ private:
         break;
       // Jika user memilih selain 1, 2, 3, 4
       default:
-        // Mencetak pesan pilihan tidak valid
-        cout << "Pilihan tidak valid" << endl;
-
-        // Menunggu user untuk menekan tombol apapun
-        system("pause");
-
         // Menghentikan pengecekan
         break;
       }
@@ -354,8 +348,10 @@ private:
     char confirm;
 
     // Meminta user untuk mengkonfirmasi pembelian
-    cout << "Apakah anda yakin ingin membeli paket ini ? (Y/n) : ";
-    cin >> confirm;
+    confirm = InputData::getInputChar(
+      "Apakah anda yakin ingin membeli paket ini ? (Y/n) : ",
+      "Konfirmasi tidak valid! silahkan masukkan y atau N"
+    );
 
     // Mengecek apakah user tidak yakin
     // Jika tidak yakin maka system akan menghentikan proses
@@ -371,8 +367,10 @@ private:
     std::string phone;
 
     // Meminta user untuk memasukkan nomor telepon
-    cout << "Masukkan Nomor Telepon : 62";
-    cin >> phone;
+    phone = InputData::getInput(
+      "Masukkan Nomor Telepon : ",
+      "Nomor Telepon tidak boleh kosong! dan tidak boleh ada spasi!"
+    );
 
     // Memasukkan data ke dalam variabel reciept
     reciept.name = userData.getUsername();
@@ -425,19 +423,12 @@ private:
       cout << "4. Kembali ke halaman sebelumnya" << endl;
       cout << "5. Kembali" << endl;
       cout << "===================" << endl;
-      cout << "Pilihan : ";
-      cin >> *choice;
 
-      // Cek apakah pilihan user tidak valid
-      // Jika pilhan user kurang dari 1 atau lebih dari 5
-      // maka system akan mencetak pesan pilihan tidak valid
-      if (*choice < 1 || *choice > 5) {
-        // Mencetak pesan pilihan tidak valid
-        cout << "Pilihan tidak valid" << endl;
-
-        // Menunggu user untuk menekan tombol apapun
-        system("pause");
-      }
+      *choice = InputData::getInputIntRange(
+        "Pilihan : ",
+        "Pilihan harus berupa angka! dan diantara 1 sampai 5!",
+        1, 5
+      );
 
       // Jika user memilih menu 4
       if (*choice == 5) return;
@@ -526,19 +517,12 @@ private:
       cout << "4. Kembali ke halaman sebelumnya" << endl;
       cout << "5. Kembali" << endl;
       cout << "===================" << endl;
-      cout << "Pilihan : ";
-      cin >> *choice;
 
-      // Cek apakah pilihan user tidak valid
-      // Jika pilhan user kurang dari 1 atau lebih dari 5
-      // maka system akan mencetak pesan pilihan tidak valid
-      if (*choice < 1 || *choice > 5) {
-        // Mencetak pesan pilihan tidak valid
-        cout << "Pilihan tidak valid" << endl;
-
-        // Menunggu user untuk menekan tombol apapun
-        system("pause");
-      }
+      *choice = InputData::getInputIntRange(
+        "Pilihan : ",
+        "Pilihan harus berupa angka! dan diantara 1 sampai 5!",
+        1, 5
+      );
 
       // Jika user memilih menu 5
       if (*choice == 5) break;
@@ -653,25 +637,15 @@ public:
       cout << "3. Lihat Paket Wisata Budaya" << endl;
       cout << "4. Keluar" << endl;
       cout << "===================" << endl;
-      cout << "Pilihan : ";
-      cin >> choice;
+
+      choice = InputData::getInputIntRange(
+        "Pilih menu : ",
+        "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
+        1, 4
+      );
 
       // Menghapus layar pada terminal
       system("cls");
-
-      // Cek apakah pilihan user tidak valid
-      // Jika pilhan user kurang dari 1 atau lebih dari 4
-      // maka system akan mencetak pesan pilihan tidak valid
-      if (choice < 1 || choice > 4) {
-        // Mencetak pesan pilihan tidak valid
-        cout << "Pilihan tidak valid" << endl;
-
-        // Menunggu user untuk menekan tombol apapun
-        system("pause");
-
-        // Mengulangi perulangan dari awal
-        continue;
-      }
 
       // Jika user memilih menu 4
       // maka system akan menghentikan perulangan

@@ -9,13 +9,13 @@
 #include "user_controller.hpp"
 #include "../helpers/path.hpp"
 #include "../enums/role_enum.hpp"
+#include "../helpers/input_data.hpp"
 #include "../handlers/linked_list.hpp"
 #include "../helpers/file_storage.hpp"
 #include "../models/destination_model.hpp"
 #include "../structs/pagination_struct.hpp"
 #include "../structs/destination_struct.hpp"
 
-using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
@@ -57,43 +57,61 @@ private:
     // Inisialisasi variabel data untuk menyimpan data destinasi
     DestinationStruct data;
 
-    // Jika pada input sebelumnya ada yang tersisa
-    // maka kita akan menghapusnya terlebih dahulu
-    if (cin.peek() == '\n') cin.ignore();
-
     // Meminta input dari user untuk mengisi nama destinasi
-    cout << "Masukan nama destinasi : ";
-    getline(cin, data.name);
+    data.name = InputData::getInputLine(
+      "Masukan nama destinasi : ",
+      "Nama destinasi tidak boleh kosong"
+    );
 
     // Meminta input dari user untuk mengisi deskripsi destinasi
-    cout << "Masukan deskripsi destinasi : ";
-    getline(cin, data.description);
+    data.description = InputData::getInputLine(
+      "Masukan deskripsi destinasi : ",
+      "Deskripsi destinasi tidak boleh kosong"
+    );
 
     // Meminta input dari user untuk mengisi lokasi destinasi
-    cout << "Masukan lokasi destinasi : ";
-    getline(cin, data.location);
+    data.location = InputData::getInputLine(
+      "Masukan lokasi destinasi : ",
+      "Lokasi destinasi tidak boleh kosong"
+    );
 
     // Meminta input dari user untuk mengisi jam operasional destinasi
-    cout << "Masukan jam operasional : ";
-    getline(cin, data.work_hours);
+    data.work_hours = InputData::getInputLine(
+      "Masukan jam operasional : ",
+      "Jam operasional tidak boleh kosong"
+    );
 
     // Meminta input dari user untuk mengisi jumlah orang per tiket
-    cout << "Masukan jumlah orang per tiket : ";
-    cin >> data.person;
+    data.person = InputData::getInputIntRange(
+      "Masukan jumlah orang per tiket : ",
+      "Jumlah orang harus berupa angka! dan diantara 1 sampai 100!",
+      1,
+      100
+    );
 
     // Meminta input dari user untuk mengisi harga per tiket
-    cout << "Masukan harga per tiket : ";
-    cin >> data.price;
+    data.price = InputData::getInputIntRange(
+      "Masukan harga per tiket : ",
+      "Harga harus berupa angka! dan diantara 1 sampai 1000000!",
+      1,
+      1000000
+    );
 
-    // Meminta input dari user untuk mengisi jenis destinasi
+    // Menaampilkan jenis destinasi
     cout << "Jenis destinasi" << endl;
     cout << "==================" << endl;
     cout << "1. Alam" << endl;
     cout << "2. Sejarah" << endl;
     cout << "3. Budaya" << endl;
     cout << "==================" << endl;
-    cout << "Masukan jenis destinasi : ";
-    cin >> type;
+
+    // Meminta input dari user untuk mengisi jenis destinasi
+    type = InputData::getInputIntRange(
+      "Masukan jenis destinasi : ",
+      "Pilihan harus berupa angka! dan diantara 1 sampai 3!",
+      1,
+      3
+    );
 
     // Melakukan pengecekan jenis destinasi
     switch (type) {
@@ -281,8 +299,10 @@ private:
     char confirmation;
 
     // Meminta konfirmasi dari user apakah yakin
-    cout << "Apakah kamu yakin mau menghapus? (y/N) : ";
-    cin >> confirmation;
+    confirmation = InputData::getInputChar(
+      "Apakah kamu yakin mau menghapus? (y/N) : ",
+      "Pilihan harus berupa karakter! dan diantara y atau N!"
+    );
 
     // Jika konfirmasi tidak y maka menghentikan proses
     if (tolower(confirmation) != 'y') return;
@@ -333,19 +353,13 @@ private:
     cout << "6. Kembali ke halaman sebelumnya" << endl;
     cout << "7. Kembali" << endl;
     cout << "===================" << endl;
-    cout << "Pilih menu : ";
-    cin >> *choice;
 
-    // Cek apakah pilihan user tidak valid
-    // Jika pilhan user kurang dari 1 atau lebih dari 7
-    // maka system akan mencetak pesan pilihan tidak valid
-    if (*choice < 1 || *choice > 7) {
-      // Mencetak pesan pilihan tidak valid
-      cout << "Pilihan tidak valid" << endl;
-
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
-    }
+    *choice = InputData::getInputIntRange(
+      "Pilih menu : ",
+      "Pilihan harus berupa angka! dan diantara 1 sampai 7!",
+      1,
+      7
+    );
 
     // Jika user memilih menu 7
     if (*choice == 7) return false;
@@ -440,19 +454,13 @@ private:
     cout << "3. Kembali ke halaman sebelumnya" << endl;
     cout << "4. Kembali" << endl;
     cout << "===================" << endl;
-    cout << "Pilih menu : ";
-    cin >> *choice;
 
-    // Cek apakah pilihan user tidak valid
-    // Jika pilhan user kurang dari 1 atau lebih dari 4
-    // maka system akan mencetak pesan pilihan tidak valid
-    if (*choice < 1 || *choice > 4) {
-      // Mencetak pesan pilihan tidak valid
-      cout << "Pilihan tidak valid" << endl;
-
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
-    }
+    *choice = InputData::getInputIntRange(
+      "Pilih menu : ",
+      "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
+      1,
+      4
+    );
 
     // Jika user memilih menu 4
     if (*choice == 4) return false;
