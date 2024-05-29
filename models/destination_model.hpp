@@ -158,8 +158,11 @@ namespace DestinationModel {
    * @param data string
    */
   void remove(const DestinationStruct &data) {
+    // Merangkap data ke dalam string
+    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + "," + std::to_string(data.person) + "," + std::to_string(data.price) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
+
     // Menghapus data yang sudah ada di dalam file dengan menggunakan DataHandler::remove
-    DataHandler::remove(DESTINATION_DATA_PATH, data.name);
+    DataHandler::remove(DESTINATION_DATA_PATH, dataString);
   }
 }
 
