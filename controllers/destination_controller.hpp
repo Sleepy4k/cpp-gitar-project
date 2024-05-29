@@ -3,11 +3,12 @@
 #ifndef DESTINATION_CONTROLLER_HPP
 #define DESTINATION_CONTROLLER_HPP
 
-#include <iostream>
 #include <string>
+#include <iostream>
 
 #include "user_controller.hpp"
 #include "../helpers/path.hpp"
+#include "comment_controller.hpp"
 #include "../enums/role_enum.hpp"
 #include "../helpers/input_data.hpp"
 #include "../handlers/linked_list.hpp"
@@ -40,6 +41,10 @@ private:
   // Inisialisasi variabel userData untuk menyimpan data user
   // dari class UserController
   UserController userData;
+
+  // Inisialisasi variabel commentController untuk menyimpan
+  // data ulasan dari class CommentController
+  CommentController commentController;
 
   // Inisialisasi variabel destinationList untuk menyimpan data destinasi
   // dari class LinkedList dengan tipe data DestinationStruct
@@ -197,6 +202,19 @@ private:
    * @return void
    */
   void show_destination() {
+    // Cek apakah data destinasi kosong atau tidak
+    // Jika kosong maka system akan mencetak pesan data masih kosong
+    if (destinationList.size() < 1) {
+      // Mencetak pesan data masih kosong
+      cout << "Data masih kosong" << endl;
+
+      // Menunggu user untuk menekan tombol apapun
+      system("pause");
+
+      // Menghentikan proses
+      return;
+    }
+
     // Mencetak judul detail destinasi
     cout << "Detail Destinasi" << endl;
 
@@ -205,10 +223,27 @@ private:
 
     // Memanggil method showNodeData pada destination
     // untuk menampilkan data destinasi
-    destinationList.showNodeData<DestinationStruct>(true);
+    DestinationStruct data = destinationList.showNodeData<DestinationStruct>(true);
 
     // Mencetak garis untuk memisahkan antara data
     cout << "===================" << endl;
+    cout << "1. Buka Menu Komentar" << endl;
+    cout << "2. Kembali" << endl;
+    cout << "===================" << endl;
+
+    // Deklarasi variabel choice
+    int choice;
+
+    // Meminta input dari user untuk memilih menu
+    choice = InputData::getInputIntRange(
+      "Pilih menu : ",
+      "Pilihan harus berupa angka! dan diantara 1 sampai 2!",
+      1, 2
+    );
+
+    // Jika user memilih menu 1
+    // Maka system akan membuka menu komentar
+    if (choice == 1) commentController.menu(userData, data.name);
 
     // Menunggu user untuk menekan tombol apapun
     // untuk melanjutkan proses
@@ -221,6 +256,19 @@ private:
    * @return void
    */
   void update_destination() {
+    // Cek apakah data destinasi kosong atau tidak
+    // Jika kosong maka system akan mencetak pesan data masih kosong
+    if (destinationList.size() < 1) {
+      // Mencetak pesan data masih kosong
+      cout << "Data masih kosong" << endl;
+
+      // Menunggu user untuk menekan tombol apapun
+      system("pause");
+
+      // Menghentikan proses
+      return;
+    }
+
     // Deklarasi variabel oldData, newData, dan result
     // dengan tipe data DestinationStruct
     // untuk menyimpan data lama, data baru, dan hasil
@@ -284,6 +332,30 @@ private:
    * @return void
    */
   void delete_destination() {
+    // Cek apakah data destinasi kosong atau tidak
+    // Jika kosong maka system akan mencetak pesan data masih kosong
+    if (destinationList.size() < 1) {
+      // Mencetak pesan data masih kosong
+      cout << "Data masih kosong" << endl;
+
+      // Menunggu user untuk menekan tombol apapun
+      system("pause");
+
+      // Menghentikan proses
+      return;
+    }
+
+    // Cek apakah data destinasi hanya satu atau tidak
+    // Jika hanya satu maka system akan menghapus data
+    // menggunakan method pop pada destinationList
+    if (destinationList.size() == 1) {
+      // Menghapus data menggunakan method pop
+      destinationList.pop();
+
+      // Menghapus data menggunakan method remove pada Destination
+      return;
+    }
+
     // Deklarasi variabel data dengan tipe data DestinationStruct
     // untuk menyimpan data destinasi yang akan dihapus
     DestinationStruct data = destinationList.showNodeData<DestinationStruct>(true);
@@ -522,9 +594,9 @@ public:
     // Mengecek apakah file destination_data.csv tidak ada
     // Jika tidak ada maka system akan membuat file destination_data.csv
     // dan menambahkan data destinasi secara default
-    if (!FileStorage::Exists(Path::getPath() + "/data/destination_data.csv")) {
+    if (!FileStorage::Exists(Path::getPath() + DESTINATION_DATA_PATH)) {
       // Membuat file destination_data.csv
-      FileStorage::Create(Path::getPath() + "/data/destination_data.csv");
+      FileStorage::Create(Path::getPath() + DESTINATION_DATA_PATH);
 
       // Menambahkan data destinasi secara default
       DestinationModel::insert(DestinationStruct{"Taman Nasional Bromo Tengger Semeru", "Taman Nasional Bromo Tengger Semeru adalah sebuah kawasan konservasi alam di Jawa Timur", "Probolinggo Jawa Timur", "24 Jam", 1, 50000, Nature});
