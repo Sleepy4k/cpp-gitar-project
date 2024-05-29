@@ -97,8 +97,10 @@ namespace DestinationModel {
    * @param data DestinationStruct
    */
   void insert(const DestinationStruct &data) {
+    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + "," + std::to_string(data.person) + "," + std::to_string(data.price) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
+
     // Menyimpan data ke dalam file dengan menggunakan DataHandler::insert
-    DataHandler::insert(DESTINATION_DATA_PATH, data.name + "," + data.description + "," + data.location + "," + data.work_hours + "," + std::to_string(data.person) + "," + std::to_string(data.price) + "," + std::to_string(data.type));
+    DataHandler::insert(DESTINATION_DATA_PATH, dataString);
   }
 
   /**
