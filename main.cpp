@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include "helpers/path.hpp"
+#include "helpers/input_data.hpp"
 #include "controllers/user_controller.hpp"
 #include "controllers/package_controller.hpp"
 #include "controllers/destination_controller.hpp"
@@ -93,8 +94,12 @@ int main(int argc, char* argv[]) {
     cout << "| 3. Authentikasi                            |" << endl;
     cout << "| 4. Keluar                                  |" << endl;
     cout << "==============================================" << endl;
-    cout << "Pilih menu : ";
-    cin >> choice;
+
+    choice = InputData::GetInputIntRange(
+      "Pilih menu : ",
+      "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
+      1, 4
+    );
 
     // Pilihan menu
     switch (choice) {
