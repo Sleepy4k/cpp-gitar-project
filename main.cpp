@@ -50,13 +50,11 @@ int main(int argc, char* argv[]) {
   /**
    * Import beberapa fungsi dari namespace std
    * 
-   * std::cin  = untuk mengambil input dari user
    * std::cout = untuk menampilkan output ke user
    * std::endl = untuk memberikan baris baru
    * 
    * Note : Kita hanya menggunakan fungsi yang kita butuhkan saja
    */
-  using std::cin;
   using std::cout;
   using std::endl;
 
@@ -95,7 +93,7 @@ int main(int argc, char* argv[]) {
     cout << "| 4. Keluar                                  |" << endl;
     cout << "==============================================" << endl;
 
-    choice = InputData::GetInputIntRange(
+    choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
       1, 4
