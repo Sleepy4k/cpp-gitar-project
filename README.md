@@ -18,7 +18,7 @@ On this project we learn how to management app work like, and we learn how impor
 
 ## Geting Started
 
-From this point, if you are indonesian, silahkan baca instruksi dalam bahasa indonesia pada [**Tutorial Indonesia**](https://github.com/Sleepy4k/cpp-gitar-project/tree/main/tutorial/ID.md)
+From this point, if you are indonesian, silahkan baca instruksi dalam bahasa indonesia pada [**Tutorial Indonesia**](https://github.com/Sleepy4k/cpp-gitar-project/tree/main/tutorial/IDN.md)
 
 But if you are not, please read this instruction on [**English Tutorial**](https://github.com/Sleepy4k/cpp-gitar-project/tree/main/tutorial/EN.md), or read below instruction
 
