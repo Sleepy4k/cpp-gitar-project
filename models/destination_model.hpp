@@ -11,7 +11,6 @@
 #include <string>
 
 #include "../helpers/path.hpp"
-#include "../enums/role_enum.hpp"
 #include "../handlers/data_handler.hpp"
 #include "../structs/destination_struct.hpp"
 
@@ -140,6 +139,8 @@ namespace DestinationModel {
    * @param filename string
    * @param data string
    * @param newData string
+   * 
+   * @return void
    */
   void update(const DestinationStruct &data, const DestinationStruct &newData) {
     // Merangkap data baru ke dalam string
@@ -156,6 +157,8 @@ namespace DestinationModel {
    * @brief Menghapus data yang sudah ada di dalam file
    * 
    * @param data string
+   * 
+   * @return void
    */
   void remove(const DestinationStruct &data) {
     // Merangkap data ke dalam string
