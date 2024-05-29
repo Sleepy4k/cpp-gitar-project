@@ -10,7 +10,7 @@ Console based app built with c++, with purpose for manage list of tour destinati
 
 - This project is for educational purposes
 - Any names or assets in this project only used as data display
-**I don't take any responsibility for what you do with this program in the future**
+- **I don't take any responsibility for what you do with this program in the future**
 
 ## Conclusion
 
