@@ -28,6 +28,7 @@
 #include "helpers/input_data.hpp"
 #include "controllers/user_controller.hpp"
 #include "controllers/package_controller.hpp"
+#include "controllers/comment_controller.hpp"
 #include "controllers/destination_controller.hpp"
 
 int main(int argc, char* argv[]) {
@@ -67,6 +68,7 @@ int main(int argc, char* argv[]) {
    */
   UserController userController;
   PackageController packageController;
+  CommentController CommentController;
   DestinationController destinationController;
 
   // Inisiasi data pada controller
@@ -74,6 +76,7 @@ int main(int argc, char* argv[]) {
   // yang bikin segment fault, jadi kita pake manual aja
   userController.init();
   packageController.init();
+  CommentController.init();
   destinationController.init();
 
   // Deklarasi variabel untuk menyimpan pilihan user
