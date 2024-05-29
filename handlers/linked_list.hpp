@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../helpers/parse.hpp"
+#include "../helpers/input_data.hpp"
 #include "../structs/node_struct.hpp"
 #include "../structs/user_struct.hpp"
 #include "../structs/package_struct.hpp"
@@ -15,7 +16,6 @@
 #include "../enums/package_transport_enum.hpp"
 
 using std::cout;
-using std::cin;
 using std::endl;
 using std::string;
 
@@ -498,8 +498,11 @@ public:
     // Jika tipe data adalah 1
     case 1:
       // Meminta inputan dari user untuk mencari data
-      cout << "Masukan id : ";
-      cin >> position;
+      position = InputData::getInputIntRange(
+        "Masukan id : ",
+        "ID harus berupa angka",
+        1, totalNodeData()
+      );
 
       // Mencari data pada node dengan parameter position
       data = findNode<T>(position);
