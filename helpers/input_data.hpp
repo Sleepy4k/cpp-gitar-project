@@ -43,6 +43,13 @@ namespace InputData {
       // Inisialisasi variabel input untuk menyimpan data yang diinputkan
       string input;
 
+      // Cek jika pada input sebelumnya terdapat data yang tersisa
+      if (cin.peek() == '\n') {
+        // Membersihkan input buffer
+        cin.clear();
+        cin.ignore(10000, '\n');
+      }
+
       // Mengambil input dari user
       cin >> input;
 
@@ -91,7 +98,7 @@ namespace InputData {
       string input;
 
       // Cek jika pada input sebelumnya terdapat data yang tersisa
-      if (cin.peek() != '\n') {
+      if (cin.peek() == '\n') {
         // Membersihkan input buffer
         cin.clear();
         cin.ignore(10000, '\n');
@@ -132,6 +139,13 @@ namespace InputData {
 
       // Inisialisasi variabel input untuk menyimpan data yang diinputkan
       string input;
+
+      // Cek jika pada input sebelumnya terdapat data yang tersisa
+      if (cin.peek() == '\n') {
+        // Membersihkan input buffer
+        cin.clear();
+        cin.ignore(10000, '\n');
+      }
 
       // Mengambil input dari user
       cin >> input;
@@ -223,6 +237,13 @@ namespace InputData {
 
       // Inisialisasi variabel input untuk menyimpan data yang diinputkan
       string input;
+
+      // Cek jika pada input sebelumnya terdapat data yang tersisa
+      if (cin.peek() == '\n') {
+        // Membersihkan input buffer
+        cin.clear();
+        cin.ignore(10000, '\n');
+      }
 
       // Mengambil input dari user
       cin >> input;
