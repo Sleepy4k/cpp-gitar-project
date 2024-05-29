@@ -3,8 +3,8 @@
 #ifndef LINKED_LIST_HPP
 #define LINKED_LIST_HPP
 
-#include <iostream>
 #include <string>
+#include <iostream>
 
 #include "../helpers/parse.hpp"
 #include "../helpers/input_data.hpp"
@@ -27,7 +27,8 @@ using std::string;
  * agar berjalan sesuai dengan definisi nya
  * serta dapat menyimpan secara dinamik untuk
  * semua struct yang sudah kita buat seperti
- * destination dan user
+ * destination dan user menggunakan algorithm
+ * stack (LIFO - Last In First Out)
  *
  * Note : Class adalah tipe data yang ditentukan
  *        oleh pengguna untuk menyimpan banyak
@@ -419,6 +420,18 @@ public:
     // tail diinisialisasi dengan nilai nullptr
     // sehingga head dan tail memiliki nilai yang sama
     head = tail = nullptr;
+  }
+
+  /**
+   * @brief Menghitung jumlah data yang ada pada node
+   * 
+   * @return integer
+   */
+  int size() {
+    // Memanggil method totalNodeData untuk menghitung
+    // jumlah data yang ada pada node dan mengembalikan nilai
+    // dari total data yang ada pada node
+    return totalNodeData();
   }
 
   /**
