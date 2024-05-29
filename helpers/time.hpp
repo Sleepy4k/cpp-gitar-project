@@ -23,8 +23,10 @@ namespace Time {
    * 
    * @return time_t
    */
-  std::time_t getCurrentTime() {
+  static std::time_t getCurrentTime() {
     // Menginisialisasi variabel currentTime dengan waktu saat ini
+    // menggunakan fungsi time(0), dimana 0 adalah argumen yang diberikan
+    // untuk mendapatkan waktu saat ini
     std::time_t currentTime = time(0);
 
     // Mengembalikan nilai currentTime
@@ -37,15 +39,26 @@ namespace Time {
    * 
    * @return string
    */
-  std::string getFormattedTime() {
+  static std::string getFormattedTime() {
     // Memanggil fungsi getCurrentTime untuk mendapatkan waktu saat ini
     std::time_t currentTime = getCurrentTime();
 
     // Menginisialisasi variabel timeInfo dengan waktu saat ini
+    // menggunakan fungsi dar localtime dengan argumen currentTime
+    // yang merupakan waktu saat ini
     std::tm *timeInfo = localtime(&currentTime);
 
-    char formatted_date[11]; // Room for "dd-mm-yyyy\0"
+    // Menginisialisasi variabel formatted_date dengan panjang 11
+    // Bertipe data char untuk menyimpan hasil format waktu
+    // panjang 11 karena format waktu adalah "dd-mm-yyyy\0"
+    // 2 karakter untuk tanggal, 2 karakter untuk bulan, 4 karakter untuk tahun
+    // dan 1 karakter untuk null terminator
+    char formatted_date[11];
 
+    // Menggunakan std::strftime untuk memformat waktu
+    // dengan format "dd-mm-yyyy" dan menyimpannya ke dalam formatted_date
+    // sizeof(formatted_date) digunakan untuk mengetahui panjang dari formatted_date
+    // timeInfo digunakan untuk menyimpan waktu yang akan diformat
     std::strftime(formatted_date, sizeof(formatted_date), "%d-%m-%Y", timeInfo);
 
     // Mengembalikan nilai result

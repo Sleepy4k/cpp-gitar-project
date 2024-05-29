@@ -24,7 +24,7 @@ namespace Parse {
    * 
    * @return string
    */
-  std::string intToCurrencyFormat(int value) {
+  static std::string intToCurrencyFormat(int value) {
     // Mengkonversi nilai integer menjadi string
     std::string str = std::to_string(value);
 
@@ -45,7 +45,10 @@ namespace Parse {
         counter = 0;
       }
 
+      // Nilai counter ditambahkan dengan nilai 1
       counter++;
+
+      // Menambahkan karakter dari str ke dalam result
       result = str[i] + result;
     }
 
@@ -60,7 +63,7 @@ namespace Parse {
    * 
    * @return double
    */
-  double intToDouble(int value) {
+  static double intToDouble(int value) {
     // Mengkonversi nilai integer menjadi double
     double converted = static_cast<double>(value);
 

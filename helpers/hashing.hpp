@@ -1,11 +1,14 @@
 #pragma once
 
+#ifndef HASH_SALT_HELPER_HPP
+#define HASH_SALT_HELPER_HPP
+  static const char salt[10] = "?^&*%$#@!";
+#endif // HASH_SALT_HELPER_HPP
+
 #ifndef HASH_HELPER_HPP
 #define HASH_HELPER_HPP
 
 #include <string>
-
-static const char salt[10] = "?^&*%$#@!";
 
 /**
  * Deklarasi namespace Hashing

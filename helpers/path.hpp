@@ -27,7 +27,7 @@ namespace Path {
    * 
    * @return string
    */
-  const std::string getPath() {
+  static std::string getPath() {
     // Mengembalikan nilai basepath
     return basepath;
   };
@@ -39,7 +39,7 @@ namespace Path {
    * 
    * @return void
    */
-  const void setPath(std::string path) {
+  static void setPath(std::string path) {
     // Mengambil posisi dari backslash atau slash terakhir
     // dan menghapus semua karakter setelahnya
     // Contoh : /path/to/file.cpp -> /path/to
