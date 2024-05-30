@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
       // untuk menampilkan menu destinasi wisata
       // dengan parameter userController untuk akses
       // data user yang sedang login
-      destinationController.menu(userController);
+      destinationController.menu(userController, CommentController);
 
       // Menghentikan switch case
       break;
