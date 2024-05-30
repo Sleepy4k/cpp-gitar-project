@@ -420,7 +420,7 @@ public:
     int start = offset - perpage;
 
     // Insialisasi variable index dengan nilai 0
-    int index = 0;
+    int index = 0, count = 0;
 
     // Memberikan nilai head pada variable current node
     currentNode = head;
@@ -428,14 +428,11 @@ public:
     // Menampilkan separator untuk memisahkan data
     cout << "====================" << endl;
 
-    // Melakukan looping hingga index sama dengan offset
+    // Melakukan perulangan pada setiap data, hingga semua
+    // data yang memiliki nama destinasi yang sama sudah habis
     do {
-      // Jika index sama atau lebih besar dari start
-      // dan index lebih kecil dari total data
-      // serta index lebih kecil dari offset
-      // maka tampilkan data yang ada pada node
-      if (index >= start && index < total && index < offset
-      && currentNode->data.destination_name == destinationName) {
+      if (currentNode->data.destination_name == destinationName
+      && count < perpage && index < total && count >= start && count < offset) {
         // Menampilkan id data yang ada pada node
         cout << "ID : " << index + 1 << endl;
 
@@ -444,16 +441,14 @@ public:
 
         // Menampilkan separator untuk memisahkan data
         cout << "====================" << endl;
+
+        count++;
       }
 
-      // Menambahkan satu nilai untuk variable index
       index++;
 
-      // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
-
-      // jika nilai current node bukan head lanjut looping
-    } while (index <= offset);
+    } while (currentNode != head);
 
     // Jika offset lebih kecil dari total data
     // maka ubah nilai isNext menjadi true
