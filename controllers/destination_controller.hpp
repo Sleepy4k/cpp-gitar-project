@@ -622,12 +622,16 @@ public:
    * @brief Menampilkan menu destinasi
    * 
    * @param user 
+   * @param comment
    * 
    * @return void
    */
-  void menu(UserController user) {
+  void menu(UserController user, CommentController comment) {
     // Mengisi data user dari class UserController
     userData = user;
+
+    // Mengisi data comment dari class CommentController
+    commentController = comment;
 
     // Deklarasi variabel isRunning, choice, index, page, pagination
     bool isRunning = true;
