@@ -157,26 +157,6 @@ namespace CommentModel {
   }
 
   /**
-   * @brief Mengubah data yang sudah ada di dalam file
-   * 
-   * @param filename string
-   * @param data string
-   * @param newData string
-   * 
-   * @return void
-   */
-  void update(const CommentStruct &data, const CommentStruct &newData) {
-    // Merangkap data baru ke dalam string
-    std::string newDataString = newData.destination_name + "," + newData.username + "," + newData.comment + "," + std::to_string(newData.rating);
-
-    // Merangkap data lama ke dalam string
-    std::string dataString = data.destination_name + "," + data.username + "," + data.comment + "," + std::to_string(data.rating);
-
-    // Mengubah data yang sudah ada di dalam file dengan menggunakan DataHandler::update
-    DataHandler::update(COMMENT_DATA_PATH, dataString, newDataString);
-  }
-
-  /**
    * @brief Menghapus data yang sudah ada di dalam file
    * 
    * @param data string
