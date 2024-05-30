@@ -65,18 +65,18 @@ private:
     // Cek apakah node kosong, jika iya maka kembalikan nilai 0
     if (isNodeEmpty()) return total;
 
-    // Memberikan nilai head pada variable current node
-    currentNode = head;
+    // Memberikan nilai tail pada variable current node
+    currentNode = tail;
 
     do {
       // Menambahkan satu nilai untuk variable total
       total++;
 
-      // Mengganti nilai current menjadi node selanjutnya
-      currentNode = currentNode->next;
+      // Mengganti nilai current menjadi node sebelumnya
+      currentNode = currentNode->prev;
 
-      // jika nilai current node bukan head lanjut looping
-    } while (currentNode != head);
+      // jika nilai current node bukan tail lanjut looping
+    } while (currentNode != tail);
 
     // Kembalikan nilai total
     return total;
@@ -518,7 +518,7 @@ public:
       );
 
       // Mencari data pada node dengan parameter position
-      data = findNode<T>(position);
+      data = findNode<T>(position + 1);
 
       // Matikan pengecekan tipe data
       break;
@@ -646,26 +646,14 @@ public:
     // apakah node masih kosong atau tidak
     // Jika node tidak kosong maka hapus semua data
     if (!isNodeEmpty()) {
-      // Memberikan nilai currentNode menjadi head
-      currentNode = head->next;
+      // Inisialisasi variable total dengan nilai totalNodeData
+      int total = totalNodeData();
 
-      // Melakukan looping hingga currentNode sama dengan head
-      while (currentNode != head) {
-        // Memberikan nilai nodeHelper menjadi node selanjutnya
-        nodeHelper = currentNode->next;
-
-        // Menghapus data pada currentNode
-        delete currentNode;
-
-        // Memberikan nilai currentNode menjadi nodeHelper
-        currentNode = nodeHelper;
+      // Melakukan looping hingga total data lebih besar dari 0
+      for (int i = 0; i < total; i++) {
+        // Memanggil method pop untuk menghapus data pada node
+        pop();
       }
-
-      // Menghapus data pada head ketika currentNode sama dengan head
-      delete head;
-
-      // Memberikan nilai nullptr pada head dan tail
-      head = tail = nullptr;
     }
 
     // Menampilkan pesan bahwa semua data berhasil di hapus
@@ -714,7 +702,7 @@ public:
     int index = 0;
 
     // Memberikan nilai head pada variable current node
-    currentNode = head;
+    currentNode = tail;
 
     // Menampilkan separator untuk memisahkan data
     cout << "====================" << endl;
@@ -727,7 +715,7 @@ public:
       // maka tampilkan data yang ada pada node
       if (index >= start && index < total && index < offset) {
         // Menampilkan id data yang ada pada node
-        cout << "ID : " << index + 1 << endl;
+        cout << "ID : " << total - index << endl;
 
         // Menampilkan data yang ditemukan pada node
         displayNode(currentNode->data, isDetail, category);
@@ -739,8 +727,8 @@ public:
       // Menambahkan satu nilai untuk variable index
       index++;
 
-      // Mengganti nilai current menjadi node selanjutnya
-      currentNode = currentNode->next;
+      // Mengganti nilai current menjadi node sebelumnya
+      currentNode = currentNode->prev;
 
       // jika nilai current node bukan head lanjut looping
     } while (index <= offset);
