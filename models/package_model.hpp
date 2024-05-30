@@ -47,7 +47,7 @@ namespace PackageModel {
     // Inisialisasi random seed
     // untuk menghasilkan angka random yang berbeda
     // setiap kali program dijalankan
-    srand(time(NULL));
+    srand(time(0));
 
     // Inisialisasi variabel line untuk menyimpan data yang di baca
     std::string line;
