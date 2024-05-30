@@ -53,10 +53,12 @@ private:
 
   /**
    * @brief Menghitung jumlah data yang ada pada node
+   * 
+   * @param destinationName untuk memberikan nilai nama destinasi yang akan di cari
    *
    * @return integer
    */
-  int totalNodeData() {
+  int totalNodeData(const string &destinationName = "") {
     // Inisialisasi variable total dengan nilai 0
     int total = 0;
 
@@ -67,6 +69,23 @@ private:
     currentNode = head;
 
     do {
+      // Mengecek apakah variable destinationName kosong atau tidak
+      // Jika tidak, lanjut ke pengecekan selanjutnya apakah data yang
+      // ditemukan sama dengan destinationName yang di cari
+      if (!destinationName.empty()) {
+        // Jika data yang ditemukan adalah data yang dicari
+        if (currentNode->data.destination_name == destinationName) {
+          // Menambahkan satu nilai untuk variable total
+          total++;
+        }
+
+        // Mengganti nilai current menjadi node selanjutnya
+        currentNode = currentNode->next;
+
+        // Jika node kosong lanjut looping
+        continue;
+      }
+
       // Menambahkan satu nilai untuk variable total
       total++;
 
@@ -411,6 +430,9 @@ public:
     // Inisialisasi variable total dengan nilai 0
     int total = totalNodeData();
 
+    // Inisialisasi variable spesificTotal dengan nilai 0
+    int spesificTotal = totalNodeData(destinationName);
+
     // Inisialisasi variable offset
     // dengan nilai page dikurangi 1 dikali perpage
     int offset = page * perpage;
@@ -420,7 +442,10 @@ public:
     int start = offset - perpage;
 
     // Insialisasi variable index dengan nilai 0
-    int index = 0, count = 0;
+    int index = 0;
+
+    // Insialisasi variable found dengan nilai 0
+    int found = 0;
 
     // Memberikan nilai head pada variable current node
     currentNode = head;
@@ -431,28 +456,45 @@ public:
     // Melakukan perulangan pada setiap data, hingga semua
     // data yang memiliki nama destinasi yang sama sudah habis
     do {
-      if (currentNode->data.destination_name == destinationName
-      && count < perpage && index < total && count >= start && count < offset) {
-        // Menampilkan id data yang ada pada node
-        cout << "ID : " << index + 1 << endl;
+      // Jika index lebih besar atau sama dengan start
+      // dan index lebih kecil dari total data
+      // serta index lebih kecil dari offset
+      // serta data yang ditemukan sama dengan destinationName
+      // maka tampilkan data yang ada pada node
+      if (
+          index < total && found < offset
+          && currentNode->data.destination_name == destinationName
+        )
+      {
+        // Jika found lebih besar atau sama dengan start
+        // maka tampilkan data yang ditemukan pada node
+        if (found >= start) {
+          // Menampilkan id data yang ada pada node
+          cout << "ID : " << found + 1 << endl;
 
-        // Menampilkan data yang ditemukan pada node
-        displayNode(currentNode->data, isDetail);
+          // Menampilkan data yang ditemukan pada node
+          displayNode(currentNode->data, isDetail);
 
-        // Menampilkan separator untuk memisahkan data
-        cout << "====================" << endl;
+          // Menampilkan separator untuk memisahkan data
+          cout << "====================" << endl;
+        }
 
-        count++;
+        // Menambahkan satu nilai untuk variable found
+        found++;
       }
 
+      // Menambahkan satu nilai untuk variable index
       index++;
 
+      // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
+
+      // jika nilai current node bukan head lanjut looping
     } while (currentNode != head);
 
-    // Jika offset lebih kecil dari total data
+    // Jika offset lebih kecil dari spesificTotal data
     // maka ubah nilai isNext menjadi true
-    if (offset < total) isNext = true;
+    if (offset < spesificTotal) isNext = true;
 
     // Jika page lebih besar dari 1
     // maka ubah nilai isBack menjadi true
@@ -495,6 +537,9 @@ public:
     // Inisialisasi variable total dengan nilai 0
     int total = totalNodeData();
 
+    // Inisialisasi variable spesificTotal dengan nilai 0
+    int spesificTotal = totalNodeData(destinationName);
+
     // Inisialisasi variable offset
     // dengan nilai page dikurangi 1 dikali perpage
     int offset = page * perpage;
@@ -506,6 +551,9 @@ public:
     // Insialisasi variable index dengan nilai 0
     int index = 0;
 
+    // Insialisasi variable found dengan nilai 0
+    int found = 0;
+
     // Memberikan nilai head pada variable current node
     currentNode = head;
 
@@ -514,21 +562,32 @@ public:
 
     // Melakukan looping hingga index sama dengan offset
     do {
-      // Jika index sama atau lebih besar dari start
+      // Jika index lebih besar atau sama dengan start
       // dan index lebih kecil dari total data
       // serta index lebih kecil dari offset
+      // serta data yang ditemukan sama dengan destinationName
       // maka tampilkan data yang ada pada node
-      if (index >= start && index < total && index < offset
-      && currentNode->data.username == username
-      && currentNode->data.destination_name == destinationName) {
-        // Menampilkan id data yang ada pada node
-        cout << "ID : " << index + 1 << endl;
+      if (
+          index < total && found < offset
+          && currentNode->data.destination_name == destinationName
+          && currentNode->data.username == username
+        )
+      {
+        // Jika found lebih besar atau sama dengan start
+        // maka tampilkan data yang ditemukan pada node
+        if (found >= start) {
+          // Menampilkan id data yang ada pada node
+          cout << "ID : " << found + 1 << endl;
 
-        // Menampilkan data yang ditemukan pada node
-        displayNode(currentNode->data, isDetail);
+          // Menampilkan data yang ditemukan pada node
+          displayNode(currentNode->data, isDetail);
 
-        // Menampilkan separator untuk memisahkan data
-        cout << "====================" << endl;
+          // Menampilkan separator untuk memisahkan data
+          cout << "====================" << endl;
+        }
+
+        // Menambahkan satu nilai untuk variable found
+        found++;
       }
 
       // Menambahkan satu nilai untuk variable index
@@ -540,9 +599,9 @@ public:
       // jika nilai current node bukan head lanjut looping
     } while (index <= offset);
 
-    // Jika offset lebih kecil dari total data
+    // Jika offset lebih kecil dari spesificTotal data
     // maka ubah nilai isNext menjadi true
-    if (offset < total) isNext = true;
+    if (offset < spesificTotal) isNext = true;
 
     // Jika page lebih besar dari 1
     // maka ubah nilai isBack menjadi true
