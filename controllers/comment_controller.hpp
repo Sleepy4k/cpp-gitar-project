@@ -3,21 +3,17 @@
 #ifndef COMMENT_CONTROLLER_HPP
 #define COMMENT_CONTROLLER_HPP
 
-#include <string>
 #include <iostream>
 
 #include "user_controller.hpp"
 #include "../helpers/path.hpp"
+#include "../helpers/system.hpp"
 #include "../helpers/input_data.hpp"
-#include "../handlers/queue_list.hpp"
+#include "../handlers/hash_table.hpp"
 #include "../helpers/file_storage.hpp"
 #include "../models/comment_model.hpp"
 #include "../structs/comment_struct.hpp"
 #include "../structs/pagination_struct.hpp"
-
-using std::cout;
-using std::endl;
-using std::string;
 
 /**
  * Deklarasi class CommentController
@@ -33,15 +29,15 @@ using std::string;
 class CommentController {
 private:
   // Inisialisasi variabel destinationName untuk menyimpan nama destinasi
-  string destinationName;
+  std::string destinationName;
 
   // Inisialisasi variabel userData untuk menyimpan data user
   // dari class UserController
   UserController userData;
 
-  // Inisialisasi variabel commentList untuk menyimpan data ulasan
-  // dari class QueueList dengan tipe data CommentStruct
-  Queue<CommentStruct> commentList;
+  // Inisialisasi variabel hashTable untuk menyimpan data ulasan
+  // dari class HashTable dengan tipe data CommentStruct
+  HashTable<CommentStruct> commentList;
 
   /**
    * @brief Menampilkan semua ulasan
@@ -49,8 +45,14 @@ private:
    * @return void
    */
   void showAllComment(int choice = 0, int index = 1, int page = 5, int pagination = 5) {
-    // Menghapus layar pada terminal
-    system("cls");
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Menampilkan data ulasan
     cout << "Ulasan Destinasi Wisata" << endl;
@@ -61,7 +63,7 @@ private:
 
     // Memanggil method showAll pada destination
     // untuk menampilkan semua data ulasan pada queue
-    PaginationStruct result = commentList.showAll(destinationName, index, pagination, false);
+    PaginationStruct result = commentList.showAll(index, pagination, false, destinationName);
 
     // Mencetak garis untuk memisahkan antara data
     cout << endl;
@@ -114,9 +116,6 @@ private:
       // Menghentikan pengecekan
       break;
     }
-
-    // Menunggu user menekan tombol apapun
-    system("pause");
 
     // Memanggil method showAllComment
     showAllComment(choice, index, page, pagination);
@@ -128,77 +127,37 @@ private:
    * @return void
    */
   void showMyComment(int choice = 0, int index = 1, int page = 5, int pagination = 5) {
-    // Menghapus layar pada terminal
-    system("cls");
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Menampilkan data ulasan
     cout << "Ulasan Saya" << endl;
     cout << "===================" << endl;
 
-    // Mencetak data dari pagination
-    cout << "Menampilkan list dari " << page - pagination << " - " << page << " data" << endl;
-
-    // Memanggil method showAllByUsername pada destination
-    // untuk menampilkan semua data ulasan pada queue
-    PaginationStruct result = commentList.showAllByUsername(destinationName, userData.getUsername(), index, pagination, false);
-
-    // Mencetak garis untuk memisahkan antara data
-    cout << endl;
+    // Memanggil method showByUsername pada destination
+    // untuk menampilkan data ulasan user
+    commentList.showByUsername(destinationName, userData.getUsername());
 
     cout << "===================" << endl;
-    cout << "1. Lanjut ke halaman berikutnya" << endl;
-    cout << "2. Kembali ke halaman sebelumnya" << endl;
-    cout << "3. Kembali" << endl;
+    cout << "1. Kembali" << endl;
     cout << "===================" << endl;
 
     // Meminta input dari user
     choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 3!",
-      1, 3
+      1, 1
     );
 
-    // Jika user memilih menu 3
-    // maka akan keluar dari menu
-    if (choice == 3) return;
-
-    // Melakukan pengecekan pilihan user
-    switch (choice) {
     // Jika user memilih menu 1
-    case 1:
-      // Mengecek apakah data selanjutnya kosong
-      // Jika kosong maka system akan menghentikan proses
-      if (!result.next) break;
-
-      // Jika tidak kosong maka system akan menambahkan index dan page
-      index += 1;
-      page += pagination;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih menu 2
-    case 2:
-      // Mengecek apakah data sebelumnya kosong
-      // Jika kosong maka system akan menghentikan proses
-      if (!result.back) break;
-
-      // Jika tidak kosong maka system akan mengurangi index dan page
-      index -= 1;
-      page -= pagination;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih selain 1, 2, 3
-    default:
-      // Menghentikan pengecekan
-      break;
-    }
-
-    // Menunggu user menekan tombol apapun
-    system("pause");
-
-    // Memanggil method showMyComment
-    showMyComment(choice, index, page, pagination);
+    // maka akan keluar dari menu
+    if (choice == 1) return;
   }
 
   /**
@@ -207,8 +166,14 @@ private:
    * @return void
    */
   void addComment() {
-    // Menghapus layar pada terminal
-    system("cls");
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Inisialisasi variabel comment untuk menyimpan data ulasan
     CommentStruct comment, isDuplicated = CommentModel::findByUsernameAndDestinationName(userData.getUsername(), destinationName);
@@ -258,7 +223,7 @@ private:
     );
 
     // Menambahkan data ulasan ke dalam queue list
-    commentList.enqueue(comment);
+    commentList.insert(comment);
 
     // Menambahkan data ulasan ke dalam file csv
     CommentModel::insert(comment);
@@ -270,8 +235,14 @@ private:
    * @return void
    */
   void deleteComment() {
-    // Menghapus layar pada terminal
-    system("cls");
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Inisialisasi variabel comment untuk menyimpan data ulasan
     CommentStruct comment;
@@ -288,8 +259,9 @@ private:
       // Menampilkan pesan error
       cout << "Ulasan tidak ditemukan!" << endl;
 
-      // Menunggu user menekan tombol apapun
-      system("pause");
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
 
       // Menghentikan proses
       return;
@@ -352,7 +324,7 @@ private:
     // Jika user memilih y maka akan menghapus data ulasan
     if (confirm == 'y') {
       // Menghapus data ulasan dari queue list
-      commentList.dequeue(destinationName, userData.getUsername());
+      commentList.remove(isExist);
 
       // Menghapus data ulasan dari file csv
       CommentModel::remove(isExist);
@@ -365,11 +337,17 @@ private:
    * @return void
    */
   void showMainMenu() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Inisialisasi variabel choice untuk menyimpan pilihan user
     int choice;
 
-    // Menghapus layar pada terminal
-    system("cls");
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Menampilkan menu utama
     cout << "Menu Ulasan Destinasi Wisata" << endl;
@@ -462,8 +440,9 @@ private:
       break;
     }
 
-    // Menunggu user menekan tombol apapun
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
 
     // Memanggil method showMainMenu
     showMainMenu();
@@ -490,14 +469,14 @@ public:
 
     // Mengcek apakah data ulasan kosong pada queue list
     // Jika kosong maka system akan menambahkan data ulasan
-    if (commentList.isEmpty()) {
+    if (commentList.empty()) {
       // Membaca data ulasan dari file csv
       std::vector<CommentStruct> comments = CommentModel::read();
 
       // Melakukan perulangan untuk menambahkan data ulasan ke dalam queue list
       // berdasarkan data yang sudah di baca
       for (CommentStruct comment : comments) {
-        commentList.enqueue(comment);
+        commentList.insert(comment);
       }
     }
   }

@@ -3,15 +3,15 @@
 #ifndef PACKAGE_CONTROLLER_HPP
 #define PACKAGE_CONTROLLER_HPP
 
-#include <string>
 #include <iostream>
 
 #include "user_controller.hpp"
 #include "../helpers/path.hpp"
 #include "../helpers/time.hpp"
 #include "../helpers/parse.hpp"
+#include "../helpers/system.hpp"
 #include "../helpers/input_data.hpp"
-#include "../handlers/hash_table.hpp"
+#include "../handlers/queue_list.hpp"
 #include "../handlers/linked_list.hpp"
 #include "../helpers/file_storage.hpp"
 #include "../models/package_model.hpp"
@@ -42,9 +42,9 @@ private:
   // dari class LinkedList dengan tipe data PackageStruct
   List<PackageStruct> packageList[TOTAL_TRANSPORT_ENUM];
 
-  // Inisialisasi variabel hashTable untuk menyimpan data paket destinasi
+  // Inisialisasi variabel hashTable untuk menyimpan data struk pembelian
   // dari class HashTable dengan tipe data RecieptStruct
-  HashTable<RecieptStruct> hashTable;
+  Queue<RecieptStruct> recieptList;
 
   /**
    * @brief Menampilkan laporan penjualan paket wisata
@@ -52,44 +52,84 @@ private:
    * @return void
    */
   void show_report() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Deklarasi variabel isRunning, choice, index, page, pagination
+    char confirm;
     bool isRunning = true;
     int choice, index = 1, page = 5, pagination = 5;
 
     do {
-      // Menghapus layar pada terminal
-      system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Mencetak data dari pagination
       cout << "Menampilkan list data penjualan dari " << page - pagination << " - " << page << " data" << endl;
 
       // Menginisialisasi variabel result untuk menyimpan data
       // dari hash table berdasarkan pilihan user
-      PaginationStruct result = hashTable.getAll(index, pagination, true, userData.getUsername(), true);
+      PaginationStruct result = recieptList.showAll(index, pagination, true, userData.getUsername(), true);
 
       // Mencetak garis untuk memisahkan antara data
       cout << endl;
 
       cout << "Menu Laporan Penjualan" << endl;
       cout << "===================" << endl;
-      cout << "1. Lanjut ke halaman berikutnya" << endl;
-      cout << "2. Kembali ke halaman sebelumnya" << endl;
-      cout << "3. Kembali" << endl;
+      cout << "1. Hapus Data Penjualan" << endl;
+      cout << "2. Lanjut ke halaman berikutnya" << endl;
+      cout << "3. Kembali ke halaman sebelumnya" << endl;
+      cout << "4. Kembali" << endl;
       cout << "===================" << endl;
 
       choice = InputData::getInputIntRange(
         "Pilihan menu : ",
         "Pilihan harus berupa angka! dan diantara 1 sampai 3!",
-        1, 3
+        1, 4
       );
 
-      // Menghapus layar pada terminal
-      system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Melakukan pengecekan pilihan user
       switch (choice) {
       // Jika user memilih menu 1
       case 1:
+        // Mengecek apakah data kosong
+        // Jika kosong maka system akan menghentikan proses
+        if (recieptList.isEmpty()) {
+          // Mencetak pesan data tidak ditemukan
+          cout << "Data tidak ditemukan" << endl;
+
+          // Menghentikan pengecekan
+          break;
+        }
+
+        // Memanggil method reciept_template untuk mencetak struk pembelian
+        reciept_template(recieptList.get(0));
+
+        // Meminta user untuk mengkonfirmasi penghapusan data
+        confirm = InputData::getInputChar(
+          "Apakah anda yakin ingin menghapus data ini ? (Y/n) : ",
+          "Konfirmasi tidak valid! silahkan masukkan y atau N"
+        );
+
+        // Mengecek apakah user tidak yakin
+        // Jika tidak yakin maka system akan menghentikan proses
+        if (tolower(confirm) != 'y') break;
+
+        // Memanggil method dequeue dari hashTable
+        // untuk menghapus data struk pembelian terakhir
+        recieptList.dequeue();
+
+        // Menghentikan pengecekan
+        break;
+      // Jika user memilih menu 2
+      case 2:
         // Mengecek apakah data selanjutnya kosong
         // Jika kosong maka system akan menghentikan proses
         if (!result.next) break;
@@ -100,8 +140,8 @@ private:
 
         // Menghentikan pengecekan
         break;
-      // Jika user memilih menu 2
-      case 2:
+      // Jika user memilih menu 3
+      case 3:
         // Mengecek apakah data sebelumnya kosong
         // Jika kosong maka system akan menghentikan proses
         if (!result.back) break;
@@ -112,14 +152,14 @@ private:
 
         // Menghentikan pengecekan
         break;
-      // Jika user memilih menu 3
-      case 3:
+      // Jika user memilih menu $
+      case 4:
         // Mengubah nilai isRunning menjadi false
         isRunning = false;
 
         // Menghentikan pengecekan
         break;
-      // Jika user memilih selain 1, 2, 3
+      // Jika user memilih selain 1, 2, 3, $
       default:
         // Menghentikan pengecekan
         break;
@@ -130,16 +170,19 @@ private:
   /**
    * @brief Mencetak struk pembelian paket wisata
    * 
-   * @param id Nilai dari variabel id
    * @param reciept Nilai dari struct RecieptStruct
    * 
    * @return void
    */
-  void reciept_template(int id, RecieptStruct reciept) {
+  void reciept_template(RecieptStruct reciept) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Mencetak struk pembelian
     cout << "Struk Pembelian" << endl;
     cout << "===================" << endl;
-    cout << "ID Pembelian   : " << id << endl;
     cout << "Nama           : " << reciept.name << endl;
     cout << "Telepon        : " << reciept.phone << endl;
     cout << "Paket          : " << reciept.package << endl;
@@ -156,6 +199,11 @@ private:
    * @return void
    */
   void show_reciept() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Mengecek apakah user sudah login atau belum
     // Jika belum maka system akan mencetak pesan
     // silahkan login terlebih dahulu
@@ -176,12 +224,13 @@ private:
       "Struk Pembelian tidak boleh kosong! dan tidak boleh ada spasi!"
     );
 
-    // Menghapus layar pada terminal
-    system("cls");
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Memanggil method get dari hashTable untuk mendapatkan data
     // dari struk pembelian berdasarkan id yang di masukkan user
-    RecieptStruct reciept = hashTable.get(std::stoi(id));
+    RecieptStruct reciept = recieptList.get(std::stoi(id));
 
     // Mengecek apakah data yang di cari tidak ada
     // Jika tidak ada maka system akan mencetak pesan data tidak ditemukan
@@ -205,7 +254,7 @@ private:
     }
 
     // Memanggil method reciept_template untuk mencetak struk pembelian
-    reciept_template(std::stoi(id), reciept);
+    reciept_template(reciept);
   }
 
   /**
@@ -214,6 +263,11 @@ private:
    * @return void
    */
   void show_history() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Mengecek apakah user sudah login atau belum
     // Jika belum maka system akan mencetak pesan
     // silahkan login terlebih dahulu
@@ -230,15 +284,16 @@ private:
     int choice, index = 1, page = 5, pagination = 5;
 
     do {
-      // Menghapus layar pada terminal
-      system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Mencetak data dari pagination
       cout << "Menampilkan list data pembelian dari " << page - pagination << " - " << page << " data" << endl;
 
       // Menginisialisasi variabel result untuk menyimpan data
       // dari hash table berdasarkan pilihan user
-      PaginationStruct result = hashTable.getAll(index, pagination, false, userData.getUsername(), false);
+      PaginationStruct result = recieptList.showAll(index, pagination, false, userData.getUsername(), false);
 
       // Mencetak garis untuk memisahkan antara data
       cout << endl;
@@ -257,8 +312,9 @@ private:
         1, 4
       );
 
-      // Menghapus layar pada terminal
-      if (choice != 1) system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      if (choice != 1) SYS::clear();
 
       // Melakukan pengecekan pilihan user
       switch (choice) {
@@ -268,8 +324,9 @@ private:
         // untuk menampilkan struk pembelian
         show_reciept();
 
-        // Menampilkan pesan ke layar terminal
-        system("pause");
+        // Memanggil method pause pada SYS
+        // untuk menjeda layar terminal
+        SYS::pause();
 
         // Menghentikan pengecekan
         break;
@@ -309,6 +366,10 @@ private:
         // Menghentikan pengecekan
         break;
       }
+
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear(); 
     } while (isRunning); // Melakukan perulangan selama isRunning bernilai true
   }
 
@@ -320,6 +381,11 @@ private:
    * @return void
    */
   void buy_package(int category) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Mengecek apakah user sudah login atau belum
     // Jika belum maka system akan mencetak pesan
     // silahkan login terlebih dahulu
@@ -383,13 +449,14 @@ private:
 
     // Memanggil method insert dari hashTable
     // untuk menyimpan data struk pembelian
-    int id = hashTable.insert(reciept);
+    recieptList.enqueue(reciept);
 
     // Memanggil method reciept_template untuk mencetak struk pembelian
-    reciept_template(id, reciept);
+    reciept_template(reciept);
 
-    // Menampilkan pesan ke layar terminal
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
   }
 
   /**
@@ -404,6 +471,11 @@ private:
    * @return void
    */
   void adminMenu(int *choice, int *index, int *page, int *pagination, int category) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     while (true) {
       // Mencetak data dari pagination
       cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
@@ -449,8 +521,9 @@ private:
         // untuk menampilkan riwayat pembelian
         show_reciept();
 
-        // Menampilkan pesan ke layar terminal
-        system("pause");
+        // Memanggil method pause pada SYS
+        // untuk menjeda layar terminal
+        SYS::pause();
 
         // Menghentikan pengecekan
         break;
@@ -498,6 +571,11 @@ private:
    * @return void
    */
   void userMenu(int *choice, int *index, int *page, int *pagination, int category) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     while (true) {
       // Mencetak data dari pagination
       cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
@@ -602,7 +680,7 @@ public:
 
         for (int v = 0; v < data.size(); v++) {
           // Menambahkan data ke dalam linked list
-          packageList[k].push(data[v]);
+          packageList[k].insertHead(data[v]);
         }
       }
     }
@@ -616,6 +694,11 @@ public:
    * @return void
    */
   void menu(UserController user) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Mengisi data user dari class UserController
     userData = user;
 
@@ -626,8 +709,9 @@ public:
     do {
       choice = 0, index = 1, page = 5, pagination = 5;
 
-      // Menghapus layar pada terminal
-      system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Mencetak data dari pagination
       cout << "Menu Paket Wisata" << endl;
@@ -644,8 +728,9 @@ public:
         1, 4
       );
 
-      // Menghapus layar pada terminal
-      system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Jika user memilih menu 4
       // maka system akan menghentikan perulangan

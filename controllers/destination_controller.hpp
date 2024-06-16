@@ -3,23 +3,19 @@
 #ifndef DESTINATION_CONTROLLER_HPP
 #define DESTINATION_CONTROLLER_HPP
 
-#include <string>
 #include <iostream>
 
 #include "user_controller.hpp"
 #include "../helpers/path.hpp"
+#include "../helpers/system.hpp"
 #include "comment_controller.hpp"
 #include "../enums/role_enum.hpp"
 #include "../helpers/input_data.hpp"
-#include "../handlers/linked_list.hpp"
+#include "../handlers/stack_list.hpp"
 #include "../helpers/file_storage.hpp"
 #include "../models/destination_model.hpp"
 #include "../structs/pagination_struct.hpp"
 #include "../structs/destination_struct.hpp"
-
-using std::cout;
-using std::endl;
-using std::string;
 
 /**
  * Deklarasi class DestinationController
@@ -48,7 +44,7 @@ private:
 
   // Inisialisasi variabel destinationList untuk menyimpan data destinasi
   // dari class LinkedList dengan tipe data DestinationStruct
-  List<DestinationStruct> destinationList;
+  Stack<DestinationStruct> destinationList;
 
   /**
    * @brief Membuat form untuk mengisi data destinasi
@@ -56,6 +52,11 @@ private:
    * @return DestinationStruct 
    */
   DestinationStruct form_destination() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Inisialisasi variabel type dan data untuk menyimpan data
     int type;
 
@@ -163,6 +164,11 @@ private:
    * @return void
    */
   void insert_destination() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Deklarasi varaible position untuk menyimpan posisi data
     int position;
 
@@ -193,7 +199,9 @@ private:
     // untuk menambahkan data destinasi pada file csv
     DestinationModel::insert(data);
 
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar
+    SYS::pause();
   }
 
   /**
@@ -202,14 +210,20 @@ private:
    * @return void
    */
   void show_destination() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Cek apakah data destinasi kosong atau tidak
     // Jika kosong maka system akan mencetak pesan data masih kosong
-    if (destinationList.size() < 1) {
+    if (destinationList.empty()) {
       // Mencetak pesan data masih kosong
       cout << "Data masih kosong" << endl;
 
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar
+      SYS::pause();
 
       // Menghentikan proses
       return;
@@ -223,7 +237,7 @@ private:
 
     // Memanggil method showNodeData pada destination
     // untuk menampilkan data destinasi
-    DestinationStruct data = destinationList.showNodeData<DestinationStruct>(true);
+    DestinationStruct data = destinationList.showNodeData(true);
 
     // Mencetak garis untuk memisahkan antara data
     cout << "===================" << endl;
@@ -245,85 +259,9 @@ private:
     // Maka system akan membuka menu komentar
     if (choice == 1) commentController.menu(userData, data.name);
 
-    // Menunggu user untuk menekan tombol apapun
-    // untuk melanjutkan proses
-    system("pause");
-  }
-
-  /**
-   * @brief Mengubah data destinasi
-   * 
-   * @return void
-   */
-  void update_destination() {
-    // Cek apakah data destinasi kosong atau tidak
-    // Jika kosong maka system akan mencetak pesan data masih kosong
-    if (destinationList.size() < 1) {
-      // Mencetak pesan data masih kosong
-      cout << "Data masih kosong" << endl;
-
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
-
-      // Menghentikan proses
-      return;
-    }
-
-    // Deklarasi variabel oldData, newData, dan result
-    // dengan tipe data DestinationStruct
-    // untuk menyimpan data lama, data baru, dan hasil
-    DestinationStruct result, oldData, newData;
-
-    // Mencetak judul detail destinasi
-    cout << "Detail Destinasi" << endl;
-
-    // Mencetak garis untuk memisahkan antara judul
-    cout << "===================" << endl;
-
-    // Memanggil method showNodeData pada destination
-    // untuk menampilkan data destinasi
-    oldData = destinationList.showNodeData<DestinationStruct>(true);
-
-    // Mencetak garis untuk memisahkan antara data
-    cout << "===================" << endl;
-
-    // Cek apakah data yang akan di ubah kosong atau tidak
-    // Jika kosong maka system akan menghentikan proses
-    if (oldData.name.empty() || oldData.description.empty() || oldData.location.empty()) {
-      // Menghentikan proses
-      return;
-    }
-
-    // Mencetak judul untuk mengubah destinasi
-    cout << "Ubah Destinasi" << endl;
-
-    // Memanggil method form_destination untuk membuat form
-    // dan mengisi dari data destinasi yang akan di inputkan
-    newData = form_destination();
-
-    // Memanggil method update pada destinationList
-    // untuk mengubah data destinasi pada linked list
-    result = destinationList.update(oldData, newData);
-
-    // Cek apakah hasil data yang di update kosong atau tidak
-    // Jika kosong maka system akan mencetak pesan data tidak ditemukan
-    // dan menghentikan proses
-    if (result.name.empty() || result.description.empty() || result.location.empty()) {
-      // Mencetak pesan data tidak ditemukan
-      cout << "Data tidak ditemukan" << endl;
-
-      // Menghentikan proses
-      return;
-    }
-
-    // Memanggil method update pada Destination
-    DestinationModel::update(oldData, newData);
-
-    // Memanggil method update pada Destination
-    cout << "Data " << result.name << " berhasil diubah" << endl;
-
-    // Menunggu user untuk menekan tombol apapun
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar
+    SYS::pause();
   }
 
   /**
@@ -332,40 +270,27 @@ private:
    * @return void
    */
   void delete_destination() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Cek apakah data destinasi kosong atau tidak
     // Jika kosong maka system akan mencetak pesan data masih kosong
-    if (destinationList.size() < 1) {
+    if (destinationList.empty()) {
       // Mencetak pesan data masih kosong
       cout << "Data masih kosong" << endl;
 
-      // Menunggu user untuk menekan tombol apapun
-      system("pause");
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar
+      SYS::pause();
 
       // Menghentikan proses
       return;
     }
 
-    // Cek apakah data destinasi hanya satu atau tidak
-    // Jika hanya satu maka system akan menghapus data
-    // menggunakan method pop pada destinationList
-    if (destinationList.size() == 1) {
-      // Menghapus data menggunakan method pop
-      destinationList.pop();
-
-      // Menghapus data menggunakan method remove pada Destination
-      return;
-    }
-
-    // Deklarasi variabel data dengan tipe data DestinationStruct
-    // untuk menyimpan data destinasi yang akan dihapus
-    DestinationStruct data = destinationList.showNodeData<DestinationStruct>(true);
-
-    // Cek apakah data yang akan dihapus kosong atau tidak
-    // Jika kosong maka system akan menghentikan proses
-    if (data.name.empty() || data.description.empty() || data.location.empty()) {
-      // Menghentikan proses
-      return;
-    }
+    // Mencetak data teratas dari stack
+    DestinationStruct data = destinationList.peek();
 
     // Deklarasi variabel confirmation
     char confirmation;
@@ -379,28 +304,17 @@ private:
     // Jika konfirmasi tidak y maka menghentikan proses
     if (tolower(confirmation) != 'y') return;
 
-    // Cek apakah data yang akan dihapus kosong atau tidak
-    // Jika kosong maka system akan mencetak pesan data tidak ditemukan
-    // dan menghentikan proses
-    if (data.name.empty() || data.description.empty() || data.location.empty()) {
-      // Mencetak pesan data tidak ditemukan
-      cout << "Data tidak ditemukan" << endl;
-
-      // Menghentikan proses
-      return;
-    }
-
-    // Memanggil method delete pada Destination untuk menghapus data
-    // pada linked list
-    destinationList.removeByData(data);
+    // Menghapus data teratas dari stack
+    destinationList.pop();
 
     // Memanggil method delete pada Destination untuk menghapus data
     cout << "Data " << data.name << " berhasil dihapus" << endl;
 
     DestinationModel::remove(data);
 
-    // Menunggu user untuk menekan tombol apapun
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar
+    SYS::pause();
   }
 
   /**
@@ -415,15 +329,19 @@ private:
    * @return bool 
    */
   bool adminMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     cout << "Menu List Destinasi Wisata" << endl;
     cout << "===================" << endl;
     cout << "1. Detail Destinasi" << endl;
     cout << "2. Tambah Destinasi" << endl;
-    cout << "3. Ubah Destinasi" << endl;
-    cout << "4. Hapus Destinasi" << endl;
-    cout << "5. Lanjut ke halaman berikutnya" << endl;
-    cout << "6. Kembali ke halaman sebelumnya" << endl;
-    cout << "7. Kembali" << endl;
+    cout << "3. Hapus Destinasi" << endl;
+    cout << "4. Lanjut ke halaman berikutnya" << endl;
+    cout << "5. Kembali ke halaman sebelumnya" << endl;
+    cout << "6. Kembali" << endl;
     cout << "===================" << endl;
 
     *choice = InputData::getInputIntRange(
@@ -436,8 +354,9 @@ private:
     // Jika user memilih menu 7
     if (*choice == 7) return false;
 
-    // Menghapus layar pada terminal
-    system("cls");
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar
+    SYS::clear();
 
     // Melakukan pengecekan pilihan user
     switch (*choice) {
@@ -459,22 +378,14 @@ private:
       break;
     // Jika user memilih menu 3
     case 3:
-      // Memanggil method update_destination
-      // untuk mengubah data destinasi
-      update_destination();
-
-      // Menghentikan pengecekan
-      break;
-    // Jika user memilih menu 4
-    case 4:
       // Memanggil method delete_destination
       // untuk menghapus data destinasi
       delete_destination();
 
       // Menghentikan pengecekan
       break;
-    // Jika user memilih menu 5
-    case 5:
+    // Jika user memilih menu 4
+    case 4:
       // Mengecek apakah data selanjutnya kosong
       // Jika kosong maka system akan menghentikan proses
       if (!result.next) break;
@@ -485,8 +396,8 @@ private:
 
       // Menghentikan pengecekan
       break;
-    // Jika user memilih menu 6
-    case 6:
+    // Jika user memilih menu 5
+    case 5:
       // Mengecek apakah data sebelumnya kosong
       // Jika kosong maka system akan menghentikan proses
       if (!result.back) break;
@@ -497,7 +408,7 @@ private:
 
       // Menghentikan pengecekan
       break;
-    // Jika user memilih selain 1, 2, 3, 4, 5, 6
+    // Jika user memilih selain 1, 2, 3, 4, 5
     default:
       // Menghentikan pengecekan
       break;
@@ -519,6 +430,11 @@ private:
    * @return bool 
    */
   bool userMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     cout << "Menu List Destinasi Wisata" << endl;
     cout << "===================" << endl;
     cout << "1. Detail Destinasi" << endl;
@@ -537,8 +453,9 @@ private:
     // Jika user memilih menu 4
     if (*choice == 4) return false;
 
-    // Menghapus layar pada terminal
-    system("cls");
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar
+    SYS::clear();
 
     // Melakukan pengecekan pilihan user
     switch (*choice) {
@@ -603,16 +520,16 @@ public:
       DestinationModel::insert(DestinationStruct{"Candi Borobudur", "Candi Borobudur adalah sebuah candi Buddha yang terletak di Magelang Jawa Tengah", "Magelang Jawa Tengah", "06.00 - 17.00", 1, 50000, History});
     }
 
-    // Mengecek apakah data destinasi kosong pada linked list
+    // Mengecek apakah data destinasi kosong pada stack
     // Jika kosong maka system akan membaca data dari file csv
-    if (destinationList.isEmpty()) {
+    if (destinationList.empty()) {
       // Membaca data dari file csv
       std::vector<DestinationStruct> data = DestinationModel::read();
 
-      // Melakukan perulangan untuk menambahkan data ke dalam linked list
+      // Melakukan perulangan untuk menambahkan data ke dalam stack
       // berdasarkan data yang sudah di baca dari file csv
       for (int i = 0; i < data.size(); i++) {
-        // Menambahkan data ke dalam linked list
+        // Menambahkan data ke dalam stack
         destinationList.push(data[i]);
       }
     }
@@ -627,6 +544,11 @@ public:
    * @return void
    */
   void menu(UserController user, CommentController comment) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Mengisi data user dari class UserController
     userData = user;
 
@@ -638,8 +560,9 @@ public:
     int choice, index = 1, page = 5, pagination = 5;
 
     do {
-      // Menghapus layar pada terminal
-      system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar
+      SYS::clear();
 
       // Mencetak data dari pagination
       cout << "Menampilkan list dari " << page - pagination << " - " << page << " data" << endl;

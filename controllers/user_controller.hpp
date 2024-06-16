@@ -4,10 +4,10 @@
 #define USER_CONTROLLER_HPP
 
 #include <vector>
-#include <string>
 #include <iostream>
 
 #include "../helpers/path.hpp"
+#include "../helpers/system.hpp"
 #include "../helpers/hashing.hpp"
 #include "../enums/role_enum.hpp"
 #include "../models/user_model.hpp"
@@ -15,10 +15,6 @@
 #include "../structs/user_struct.hpp"
 #include "../helpers/file_storage.hpp"
 #include "../handlers/linked_list.hpp"
-
-using std::cout;
-using std::endl;
-using std::string;
 
 /**
  * Deklarasi class UserController
@@ -41,7 +37,7 @@ private:
   // Deklarasi variabel yang akan digunakan
   // untuk menyimpan data username dan password
   // dengan tipe data string
-  string username, password;
+  std::string username, password;
 
   // Deklarasi variabel yang akan digunakan
   // untuk menyimpan data user yang sedang login
@@ -57,6 +53,11 @@ private:
    * @return void
    */
   void basic_form() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Cek apakah user sudah login
     // jika sudah, maka tampilkan pesan anda sudah login
     if (isAlreadyLogin()) {
@@ -86,6 +87,11 @@ private:
    * @return void
    */
   void process_signin() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Deklarasi variabel result dan tempUser
     // yang akan digunakan untuk menyimpan data user
     // yang sudah terdaftar dan data user yang akan
@@ -132,6 +138,11 @@ private:
    * @return void
    */
   void process_signup() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Deklarasi variabel result dan tempUser
     // yang akan digunakan untuk menyimpan data user
     // yang sudah terdaftar dan data user yang akan
@@ -158,7 +169,7 @@ private:
     tempUser.password = Hashing::encrypt(password);
 
     // Menambahkan data user yang baru ke dalam userList
-    userList.push(tempUser);
+    userList.insertHead(tempUser);
 
     // Menyimpan data user yang baru ke dalam file user_data.csv
     UserModel::insert(tempUser);
@@ -182,8 +193,9 @@ private:
     // Memanggil method process_signin untuk memproses autentikasi user
     process_signin();
 
-    // Menampilkan pesan ke layar terminal
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
   }
 
   /**
@@ -192,6 +204,13 @@ private:
    * @return void
    */
   void signup() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+    // Menggunakan std::string
+    using std::string;
+
     // Memanggil method basic_form untuk menampilkan form dasar
     basic_form();
 
@@ -219,8 +238,9 @@ private:
     // Memanggil method process_signup untuk memproses registrasi user
     process_signup();
 
-    // Menampilkan pesan ke layar terminal
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
   }
 
   /**
@@ -229,14 +249,20 @@ private:
    * @return void
    */
   void logout() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Menghapus data user yang sedang login
     currentUser = UserStruct{};
 
     // Menampilkan pesan ke layar terminal
     cout << "Anda berhasil keluar" << endl;
 
-    // Menampilkan pesan ke layar terminal
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
   }
 
   /**
@@ -245,6 +271,11 @@ private:
    * @return void
    */
   void myProfile() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Mencetak pesan ke layar terminal
     cout << "Profile" << endl;
     cout << "===================" << endl;
@@ -252,8 +283,9 @@ private:
     cout << "Role : " << roleToString(currentUser.role) << endl;
     cout << "===================" << endl;
 
-    // Menunggu user untuk menekan tombol apapun
-    system("pause");
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
   }
 
   /**
@@ -264,6 +296,11 @@ private:
    * @return bool
    */
   bool guestMenu(int *choice) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     cout << "List of User Menu" << endl;
     cout << "===================" << endl;
     cout << "1. Sign In" << endl;
@@ -280,8 +317,9 @@ private:
     // Jika user memilih menu 3
     if (*choice == 3) return false;
 
-    // Menghapus layar pada terminal
-    system("cls");
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Melakukan pengecekan pilihan user
     switch (*choice) {
@@ -317,6 +355,11 @@ private:
    * @return bool
    */
   bool userMenu(int *choice) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     cout << "List of User Menu" << endl;
     cout << "===================" << endl;
     cout << "1. Profile" << endl;
@@ -333,8 +376,9 @@ private:
     // Jika user memilih menu 3
     if (*choice == 3) return false;
 
-    // Menghapus layar pada terminal
-    system("cls");
+    // Memanggil method clear pada SYS
+    // untuk membersihkan layar terminal
+    SYS::clear();
 
     // Melakukan pengecekan pilihan user
     switch (*choice) {
@@ -391,7 +435,7 @@ public:
       // berdasarkan data yang sudah di baca dari file csv
       for (int i = 0; i < data.size(); i++) {
         // Menambahkan data ke dalam linked list
-        userList.push(data[i]);
+        userList.insertHead(data[i]);
       }
     }
   }
@@ -456,8 +500,9 @@ public:
     int choice, isRunning = 1;
 
     do {
-      // Menghapus layar pada terminal
-      system("cls");
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Cek apakah user sudah login
       // Jika sudah, maka tampilkan pesan anda sudah login
