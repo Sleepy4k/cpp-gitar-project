@@ -3,7 +3,6 @@
 #ifndef LINKED_LIST_HPP
 #define LINKED_LIST_HPP
 
-#include <string>
 #include <iostream>
 
 #include "../helpers/parse.hpp"
@@ -12,12 +11,7 @@
 #include "../structs/user_struct.hpp"
 #include "../structs/package_struct.hpp"
 #include "../structs/pagination_struct.hpp"
-#include "../structs/destination_struct.hpp"
 #include "../enums/package_transport_enum.hpp"
-
-using std::cout;
-using std::endl;
-using std::string;
 
 /**
  * Deklarasi class List
@@ -27,20 +21,19 @@ using std::string;
  * agar berjalan sesuai dengan definisi nya
  * serta dapat menyimpan secara dinamik untuk
  * semua struct yang sudah kita buat seperti
- * destination dan user menggunakan algorithm
- * stack (LIFO - Last In First Out)
+ * data user
  *
  * Note : Class adalah tipe data yang ditentukan
  *        oleh pengguna untuk menyimpan banyak
  *        fungsi dan data yang disatukan dalam
  *        satu tempat atau wadah
  */
-template <typename C>
+template <typename T>
 class List {
 private:
   // Inisialisasi variable bertipe data struct Node dengan
   // template dari typename class
-  NodeStruct<C> *head, *tail, *newNode, *currentNode, *nodeHelper;
+  NodeStruct<T> *head, *tail, *newNode, *currentNode, *nodeHelper;
 
   /**
    * @brief Mengecek apakah data dalam node masih kosong atau tidak
@@ -65,18 +58,18 @@ private:
     // Cek apakah node kosong, jika iya maka kembalikan nilai 0
     if (isNodeEmpty()) return total;
 
-    // Memberikan nilai tail pada variable current node
-    currentNode = tail;
+    // Memberikan nilai head pada variable current node
+    currentNode = head;
 
     do {
       // Menambahkan satu nilai untuk variable total
       total++;
 
       // Mengganti nilai current menjadi node sebelumnya
-      currentNode = currentNode->prev;
+      currentNode = currentNode->next;
 
-      // jika nilai current node bukan tail lanjut looping
-    } while (currentNode != tail);
+      // jika nilai current node bukan head lanjut looping
+    } while (currentNode != head);
 
     // Kembalikan nilai total
     return total;
@@ -85,15 +78,13 @@ private:
   /**
    * @brief Membuat node baru pada variable new node
    *
-   * @tparam T Jenis data yang akan di masukan pada node
    * @param data untuk memberikan nilai pada field data
    *
    * @return void
    */
-  template <typename T>
   void createNode(T data) {
     // Membuat node baru dengan template typename class
-    newNode = new NodeStruct<C>();
+    newNode = new NodeStruct<T>();
 
     // Memberikan nilai data pada field data dari newNode
     newNode->data = data;
@@ -118,60 +109,44 @@ private:
   /**
    * @brief Mencari node dengan paratemer posisi
    *
-   * @tparam T Jenis data yang akan di kembalikan
+   * @tparam C yaitu tipa data yang akan di cari
    * @param position untuk mencari posisi node
    *
-   * @return T
+   * @return C
    */
-  template <typename T>
-  T findNode(int position) {
+  template <typename C>
+  C findNode(int position) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
+    // Memanggil method isNodeEmpty untuk mengecek
+    if (isNodeEmpty()) return C{};
+
+    // Jika posisi lebih besar dari total data node
+    // maka tampilkan pesan bahwa data tidak ditemukan
+    if (position > totalNodeData()) {
+      // Menampilkan pesan bahwa data tidak ditemukan
+      cout << "Data tidak ditemukan" << endl;
+
+      // Mengembalikan nilai data kosong
+      return T{};
+    }
+
     // Memberikan nilai head pada variable current node
     currentNode = head;
 
     // Inisialisasi variable index dengan nilai 0
     int index = 0;
 
-    // Jika posisi lebih besar dari total data node
-    // maka tampilkan pesan bahwa data tidak ditemukan
-    if (position > totalNodeData()) {
-      cout << "Data tidak ditemukan" << endl;
-      return T{};
-    }
+    do {
+      // Jika index sama dengan position - 1
+      // maka matikan looping
+      if (index == position - 1) return currentNode->data;
 
-    // Melakukan loop hingga index sama dengan position - 1
-    while (index < position - 1) {
       // Menambahkan satu nilai untuk variable index
       index++;
-
-      // Mengganti nilai current menjadi node selanjutnya
-      currentNode = currentNode->next;
-    }
-
-    // Mengembalikan data dari variable current node
-    return currentNode->data;
-  }
-
-  /**
-   * @brief Mencari node dengan parameter struct DestinationStruct
-   *
-   * @param data untuk mencari data yang sama dalam node
-   *
-   * @return DestinationStruct
-   */
-  DestinationStruct findNode(DestinationStruct data) {
-    // Memberikan nilai head pada variable current node
-    currentNode = head;
-
-    // Inisialisasi variable isFound dengan nilai false
-    bool isFound = false;
-
-    do {
-      // Jika data name sama dengan data nama dari current node
-      // maka ubah nilai isFound menjadi true dan matikan loop
-      if (currentNode->data.name == data.name) {
-        isFound = true;
-        break;
-      }
 
       // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
@@ -179,15 +154,17 @@ private:
       // jika nilai current node bukan head lanjut looping
     } while (currentNode != head);
 
-    // Jika isFound bernilai true maka kembalikan data dari current node
-    // Jika tidak maka kembalikan struct DestinationStruct dengan data kosong
-    return (isFound) ? currentNode->data : DestinationStruct{};
+    // Jika data tidak ditemukan maka tampilkan pesan
+    cout << "Data tidak ditemukan" << endl;
+
+    // Mengembalikan data dari variable current node
+    return C{};
   }
 
   /**
    * @brief Mencari node dengan parameter struct UserStruct
    *
-   * @param data untuk mencari data yang sama dalam node
+   * @param user untuk mencari data yang sama dalam node
    *
    * @return UserStruct
    */
@@ -202,7 +179,10 @@ private:
       // Jika data username sama dengan data usernama dari current node
       // maka ubah nilai isFound menjadi true dan matikan loop
       if (currentNode->data.username == user.username) {
+        // Mengubah nilai isFound menjadi true
         isFound = true;
+
+        // Matikan looping
         break;
       }
 
@@ -251,93 +231,73 @@ private:
   }
 
   /**
-   * @brief Menampilkan data dari struct DestinationStruct
-   *
-   * @param data yaitu data yang akan ditampilkan
-   *
-   * @return void
-   */
-  void displayNode(DestinationStruct data, bool isDetail = false, int _category = 1) {
-    if (data.name.empty() || data.description.empty() || data.location.empty())
-      return;
-
-    cout << "Nama : " << data.name << " (" << destinationTypeToString(data.type) << ")" << endl;
-    cout << "Lokasi : " << data.location << endl;
-    cout << "Deskripsi : " << data.description << endl;
-
-    if (!isDetail) return;
-
-    if (data.price != 0)
-      cout << "Harga Tiket : Rp. " << Parse::intToCurrencyFormat(data.price) << " / " << data.person << " orang" << endl;
-    else
-      cout << "Harga Tiket : Gratis" << endl;
-
-    cout << "Jumlah Pengunjung : " << Parse::intToDouble(data.pengunjung) << " orang" << endl;
-    cout << "Jam Operasional : " << data.work_hours << endl;
-  }
-
-  /**
    * @brief Menampilkan data dari struct UserStruct
    *
    * @param data yaitu data yang akan ditampilkan
+   * @param isDetail untuk memberikan nilai detail data yang akan di tampilkan
+   * @param _category untuk memberikan nilai kategori data yang akan di tampilkan
    *
    * @return void
    */
   void displayNode(UserStruct data, bool isDetail = false, int _category = 1) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
+    // Jiak data username kosong maka mengembalikan nilai void
     if (data.username.empty()) return;
 
+    // Menampilkan data yang ada pada node
     cout << "Username : " << data.username << " (" << data.role << ")" << endl;
 
+    // Jika isDetail bernilai false maka kembalikan nilai void
     if (!isDetail || data.password.empty()) return;
 
+    // Menampilkan data password yang ada pada node
     cout << "Password : " << data.password << endl;
   }
 
+  /**
+   * @brief Menampilkan data dari struct PackageStruct
+   *
+   * @param data yaitu data yang akan ditampilkan
+   * @param isDetail untuk memberikan nilai detail data yang akan di tampilkan
+   * @param category untuk memberikan nilai kategori data yang akan di tampilkan
+   *
+   * @return void
+   */
   void displayNode(PackageStruct data, bool isDetail = false, int category = 1) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
+    // Jika data name kosong maka mengembalikan nilai void
     if (data.name.empty() || data.description.empty()) return;
 
+    // Menampilkan data yang ada pada node
     cout << "Nama : " << data.name << " (" << destinationTypeToString(data.type) << ")" << endl;
     cout << data.description << endl;
     cout << "Harga : Rp. " << Parse::intToCurrencyFormat(data.price) << " / " << data.people << " orang" << endl;
 
+    // Jika isDetail bernilai false maka kembalikan nilai void
     if (!isDetail) return;
 
+    // Menampilkan detail data yang ada pada node
     cout << "Jenis Transportasi : " << getFacilityName(data.transport) << endl;
     cout << "Fasilitas : " << data.facility << endl;
     cout << "Durasi : " << data.duration << " hari" << endl;
   }
 
-  DestinationStruct updateNode(DestinationStruct data, DestinationStruct newData) {
-    // Memberikan nilai head pada variable current node
-    currentNode = head;
-
-    // Inisialisasi variable isFound dengan nilai false
-    bool isFound = false;
-
-    do {
-      // Jika data name sama dengan data nama dari current node
-      // maka ubah nilai isFound menjadi true dan matikan loop
-      if (currentNode->data.name == data.name) {
-        isFound = true;
-        break;
-      }
-
-      // Mengganti nilai current menjadi node selanjutnya
-      currentNode = currentNode->next;
-
-      // jika nilai current node bukan head lanjut looping
-    } while (currentNode != head);
-
-    // Jika isFound bernilai true maka kembalikan data dari current node
-    // Jika tidak maka kembalikan struct DestinationStruct dengan data kosong
-    if (isFound) {
-      currentNode->data = newData;
-      return currentNode->data;
-    }
-
-    return DestinationStruct{};
-  }
-
+  /**
+   * @brief Mengupdate data pada node dengan parameter data dan newData
+   *
+   * @param data untuk mencari data yang akan di update
+   * @param newData untuk memberikan nilai data yang baru
+   *
+   * @return UserStruct
+   */
   UserStruct updateNode(UserStruct data, UserStruct newData) {
     // Memberikan nilai head pada variable current node
     currentNode = head;
@@ -349,7 +309,10 @@ private:
       // Jika data username sama dengan data username dari current node
       // maka ubah nilai isFound menjadi true dan matikan loop
       if (currentNode->data.username == data.username) {
+        // Mengubah nilai isFound menjadi true
         isFound = true;
+
+        // Matikan looping
         break;
       }
 
@@ -362,48 +325,15 @@ private:
     // Jika isFound bernilai true maka kembalikan data dari current node
     // Jika tidak maka kembalikan struct UserStruct dengan data kosong
     if (isFound) {
+      // Mengupdate data pada node dengan parameter data dan newData
       currentNode->data = newData;
+
+      // Mengembalikan nilai data dari current node
       return currentNode->data;
     }
 
+    // Jika data tidak ditemukan maka kembalikan nilai data kosong
     return UserStruct{};
-  }
-
-  void removingNodeByData(DestinationStruct data) {
-    // Memberikan nilai head pada variable current node
-    currentNode = head;
-
-    // Inisialisasi variable isFound dengan nilai false
-    bool isFound = false;
-
-    do {
-      // Jika data name sama dengan data nama dari current node
-      // maka ubah nilai isFound menjadi true dan matikan loop
-      if (currentNode->data.name == data.name) {
-        isFound = true;
-        break;
-      }
-
-      // Mengganti nilai current menjadi node selanjutnya
-      currentNode = currentNode->next;
-
-      // jika nilai current node bukan head lanjut looping
-    } while (currentNode != head);
-
-    // Jika isFound bernilai true maka kembalikan data dari current node
-    // Jika tidak maka kembalikan struct DestinationStruct dengan data kosong
-    if (isFound) {
-      nodeHelper = currentNode->prev;
-      nodeHelper->next = currentNode->next;
-
-      nodeHelper = currentNode->next;
-      nodeHelper->prev = currentNode->prev;
-
-      delete currentNode;
-    } else {
-      cout << "Data tidak ditemukan" << endl;
-      return;
-    }
   }
 
 public:
@@ -420,6 +350,19 @@ public:
     // tail diinisialisasi dengan nilai nullptr
     // sehingga head dan tail memiliki nilai yang sama
     head = tail = nullptr;
+  }
+
+  /**
+   * @brief Destructor dari class List yang akan
+   *       menghapus semua data yang ada pada node
+   *       ketika class List di hancurkan
+   * 
+   * @return void
+   */
+  ~List() {
+    // Menghapus semua memory yang ada pada node
+    // mengubah nilai menjadi nullptr
+    newNode = currentNode = nodeHelper = nullptr;
   }
 
   /**
@@ -451,11 +394,53 @@ public:
    * @brief Menambahkan data pada head node dengan
    *       parameter data yang akan di masukan
    * 
-   * @tparam T Jenis data yang akan di masukan pada node
    * @param data nilai yang akan di masukan pada node dengan tipe data T
+   * 
+   * @return void
    */
-  template <typename T>
-  void push(T data) {
+  void insertHead(T data) {
+    // Memanggil method createNode untuk membuat node baru
+    // dengan parameter data yang akan di masukan
+    // sehingga newNode akan memiliki nilai data yang sama
+    createNode(data);
+
+    // Memanggil method isNodeEmpty untuk mengecek
+    // apakah node masih kosong atau tidak
+    // Jika node kosong maka memanggil method insertHeadAndTail
+    if (isNodeEmpty()) {
+      // Memanggil method insertHeadAndTail untuk memberikan
+      // nilai pada head dan tail menjadi newNode
+      insertHeadAndTail();
+
+      // Matikan method insertHead
+      return;
+    }
+
+    // Memberikan nilai prev dari head menjadi newNode
+    head->prev = newNode;
+
+    // Memberikan nilai next dari newNode menjadi head
+    newNode->next = head;
+
+    // Memberikan nilai next dari tail menjadi newNode
+    tail->next = newNode;
+
+    // Memberikan nilai prev dari newNode menjadi tail
+    newNode->prev = tail;
+
+    // Memberikan nilai head menjadi newNode
+    head = newNode;
+  }
+
+  /**
+   * @brief Menambahkan data pada tail node dengan
+   *       parameter data yang akan di masukan
+   * 
+   * @param data nilai yang akan di masukan pada node dengan tipe data T
+   * 
+   * @return void
+   */
+  void insertTail(T data) {
     // Memanggil method createNode untuk membuat node baru
     // dengan parameter data yang akan di masukan
     // sehingga newNode akan memiliki nilai data yang sama
@@ -490,18 +475,105 @@ public:
   }
 
   /**
+   * @brief Menambahkan data pada node dengan
+   *       parameter data yang akan di masukan
+   * 
+   * @param position posisi node yang akan di masukan
+   * @param data nilai yang akan di masukan pada node dengan tipe data T
+   * 
+   * @return void
+   */
+  void insertAt(int position, T data) {
+    // Jika posisi sama dengan 1 maka masukan data pada head
+    if (position == 1) {
+      // Memanggil method insertHead untuk memasukan data pada head
+      insertHead(data);
+
+      // Matikan method insertAt
+      return;
+    }
+
+    // Jika posisi sama dengan total data node
+    // maka masukan data pada tail
+    if (position == totalNodeData()) {
+      // Memanggil method insertTail untuk memasukan data pada tail
+      insertTail(data);
+
+      // Matikan method insertAt
+      return;
+    }
+
+    // Memanggil method createNode untuk membuat node baru
+    // dengan parameter data yang akan di masukan
+    // sehingga newNode akan memiliki nilai data yang sama
+    createNode(data);
+
+    // Memanggil method isNodeEmpty untuk mengecek
+    // apakah node masih kosong atau tidak
+    // Jika node kosong maka memanggil method insertHeadAndTail
+    if (isNodeEmpty()) {
+      // Memanggil method insertHeadAndTail untuk memberikan
+      // nilai pada head dan tail menjadi newNode
+      insertHeadAndTail();
+
+      // Matikan method insertHead
+      return;
+    }
+
+    // Memberikan nilai head pada variable current node
+    currentNode = head;
+
+    // Inisialisasi variable index dengan nilai 0
+    int index = 0;
+
+    do {
+      // Jika index sama dengan position - 1
+      // maka masukan data pada node
+      if (index == position - 1) {
+        // Memberikan nilai next dari newNode menjadi current node
+        newNode->next = currentNode;
+
+        // Memberikan nilai prev dari newNode menjadi current node sebelumnya
+        newNode->prev = currentNode->prev;
+
+        // Memberikan nilai next dari current node sebelumnya menjadi newNode
+        currentNode->prev->next = newNode;
+
+        // Memberikan nilai prev dari current node menjadi newNode
+        currentNode->prev = newNode;
+
+        // Matikan looping
+        break;
+      }
+
+      // Menambahkan satu nilai untuk variable index
+      index++;
+
+      // Mengganti nilai current menjadi node selanjutnya
+      currentNode = currentNode->next;
+
+      // jika nilai current node bukan head lanjut looping
+    } while (currentNode != head);
+  }
+
+  /**
    * @brief Mencari data pada node dengan parameter
    *       data yang akan di cari
    * 
-   * @tparam T Jenis data yang akan di masukan pada node
+   * @tparam C Jenis data yang akan di masukan pada node
    * @param data nilai yang akan di masukan pada node dengan tipe data T
    */
-  template <typename T>
-  T findNodeData(int type, T data = T{}) {
+  template <typename C>
+  C findNodeData(int type, C data = C{}) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
     // Jika node kosong maka kembalikan nilai data kosong
-    if (isNodeEmpty()) return T{};
+    if (isNodeEmpty()) return C{};
 
     // Inisialisasi variable position dengan nilai 0
     int position;
@@ -513,12 +585,12 @@ public:
       // Meminta inputan dari user untuk mencari data
       position = InputData::getInputIntRange(
         "Masukan id : ",
-        "ID harus berupa angka",
+        "ID harus berupa angka, dan lebih dari 0 serta kurang dari " + std::to_string(totalNodeData() + 1) + "!",
         1, totalNodeData()
       );
 
       // Mencari data pada node dengan parameter position
-      data = findNode<T>(position + 1);
+      data = findNode<C>(position);
 
       // Matikan pengecekan tipe data
       break;
@@ -547,12 +619,17 @@ public:
    *        data yang akan di update dan newData yang
    *       akan di masukan pada node
    * 
-   * @tparam T Jenis data yang akan di update pada node
+   * @tparam C Jenis data yang akan di update pada node
    * @param data nilai yang akan dicari pada node
    * @param newData nilai yang akan di update pada node
    */
-  template <typename T>
-  T update(T data, T newData) {
+  template <typename C>
+  C update(C data, C newData) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
     // Jika node kosong maka tampilkan pesan bahwa belum ada data
@@ -561,7 +638,7 @@ public:
       cout << "Belum ada data yang tersedia" << endl;
 
       // Matikan method update
-      return T{};
+      return C{};
     }
 
     // Memanggil method updateNode untuk mengupdate data
@@ -570,70 +647,58 @@ public:
   }
 
   /**
-   * @brief Menghapus data pada tail node
-   * 
+   * @brief Menghapus data pada node
+   *
    * @return void
    */
-  void pop() {
+  void removeHead() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
     // Jika node kosong maka tampilkan pesan bahwa belum ada data
-    if (isNodeEmpty()) {
+    if (isEmpty()) {
       // Menampilkan pesan bahwa belum ada data yang tersedia
       cout << "Belum ada data yang tersedia" << endl;
 
-      // Matikan method update
+      // Matikan method removeHead
       return;
     }
 
-    // Jika data yang ditemukan adalah head
-    if (head == tail) {
-      // Menghapus data pada head dan tail
+    // Memanggil method totalNodeData untuk menghitung
+    // jumlah data yang ada pada node
+    int total = totalNodeData();
+
+    // Jika total data sama dengan 1
+    // maka hapus data pada head
+    if (total == 1) {
+      // Menghapus data pada head
       delete head;
 
       // Memberikan nilai nullptr pada head dan tail
       head = tail = nullptr;
 
-      // Matikan method remove
+      // Matikan method removeHead
       return;
     }
 
-    // Memberikan nilai tail menjadi node sebelum tail
-    tail = tail->prev;
+    // Memberikan nilai nodeHelper pada head
+    nodeHelper = head;
 
-    // Menghapus data pada node setelah tail
-    delete tail->next;
+    // Memberikan nilai head pada nodeHelper
+    head = head->next;
 
     // Memberikan nilai next dari tail menjadi head
     tail->next = head;
 
     // Memberikan nilai prev dari head menjadi tail
     head->prev = tail;
-  }
 
-  /**
-   * @brief Menghapus data pada node dengan parameter
-   *        data yang akan di hapus
-   * 
-   * @tparam T Jenis data yang akan di hapus pada node
-   * @param data nilai yang akan di hapus pada node
-   */
-  template <typename T>
-  void removeByData(T data) {
-    // Memanggil method isNodeEmpty untuk mengecek
-    // apakah node masih kosong atau tidak
-    // Jika node kosong maka tampilkan pesan bahwa belum ada data
-    if (isNodeEmpty()) {
-      // Menampilkan pesan bahwa belum ada data yang tersedia
-      cout << "Belum ada data yang tersedia" << endl;
-
-      // Matikan method update
-      return;
-    }
-
-    // Memanggil method removingNodeByData untuk menghapus data
-    // pada node dengan parameter data yang akan di hapus
-    removingNodeByData(data);
+    // Menghapus data pada nodeHelper
+    delete nodeHelper;
   }
 
   /**
@@ -642,6 +707,11 @@ public:
    * @return void
    */
   void clear() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
     // Jika node tidak kosong maka hapus semua data
@@ -651,8 +721,8 @@ public:
 
       // Melakukan looping hingga total data lebih besar dari 0
       for (int i = 0; i < total; i++) {
-        // Memanggil method pop untuk menghapus data pada node
-        pop();
+        // Memanggil method removeHead untuk menghapus data pada node
+        removeHead();
       }
     }
 
@@ -670,6 +740,11 @@ public:
    * @return PaginationStruct
    */
   PaginationStruct showAllNodes(int page, int perpage, bool isDetail = false, int category = 1) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Insialisasi variable isBack dengan nilai false
     bool isBack = false;
 
@@ -702,7 +777,7 @@ public:
     int index = 0;
 
     // Memberikan nilai head pada variable current node
-    currentNode = tail;
+    currentNode = head;
 
     // Menampilkan separator untuk memisahkan data
     cout << "====================" << endl;
@@ -715,7 +790,7 @@ public:
       // maka tampilkan data yang ada pada node
       if (index >= start && index < total && index < offset) {
         // Menampilkan id data yang ada pada node
-        cout << "ID : " << total - index << endl;
+        cout << "ID : " << index + 1 << endl;
 
         // Menampilkan data yang ditemukan pada node
         displayNode(currentNode->data, isDetail, category);
@@ -727,11 +802,11 @@ public:
       // Menambahkan satu nilai untuk variable index
       index++;
 
-      // Mengganti nilai current menjadi node sebelumnya
-      currentNode = currentNode->prev;
+      // Mengganti nilai current menjadi node setelahnya
+      currentNode = currentNode->next;
 
       // jika nilai current node bukan head lanjut looping
-    } while (index <= offset);
+    } while (index < offset);
 
     // Jika offset lebih kecil dari total data
     // maka ubah nilai isNext menjadi true
@@ -749,10 +824,18 @@ public:
    * @brief Menampilkan data yang ada pada node
    *        dengan parameter data yang akan di tampilkan
    * 
+   * @tparam C Jenis data yang akan di tampilkan pada node
    * @param id menggunakan id untuk mencari data pada node
+   * 
+   * @return C
    */
-  template <typename T>
-  T showNodeData(bool isDetail = false) {
+  template <typename C>
+  C showNodeData(bool isDetail = false) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
     // Jika node kosong maka tampilkan pesan bahwa belum ada data
@@ -761,12 +844,12 @@ public:
       cout << "Belum ada data yang tersedia" << endl;
 
       // Matikan method showNodeData
-      return T{};
+      return C{};
     }
 
     // Mencari data yang akan di tampilkan pada node
     // dengan parameter data yang akan dicari
-    T foundData = findNodeData<T>(1);
+    C foundData = findNodeData<T>(1);
 
     // Menampilkan data yang ditemukan pada node
     displayNode(foundData, isDetail);

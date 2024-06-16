@@ -3,19 +3,13 @@
 #ifndef QUEUE_LIST_HPP
 #define QUEUE_LIST_HPP
 
-#include <string>
 #include <iostream>
 
 #include "../helpers/parse.hpp"
 #include "../helpers/input_data.hpp"
 #include "../structs/node_struct.hpp"
-#include "../structs/comment_struct.hpp"
+#include "../structs/reciept_struct.hpp"
 #include "../structs/pagination_struct.hpp"
-#include "../structs/destination_struct.hpp"
-
-using std::cout;
-using std::endl;
-using std::string;
 
 /**
  * Deklarasi class Queue
@@ -38,7 +32,7 @@ class Queue {
 private:
   // Inisialisasi variable bertipe data struct Node
   // dengan template dati typename class
-  NodeStruct<C> *head, *tail, *newNode, *currentNode, *nodeHelper;
+  NodeStruct<C> *front, *back, *newNode, *currentNode, *nodeHelper;
 
   /**
    * @brief Mengecek apakah data dalam node masih kosong atau tidak
@@ -46,54 +40,41 @@ private:
    * @return boolean
    */
   bool isNodeEmpty() {
-    // Jika head bernilai nullptr maka kembalikan nilai true,
-    // Jika head tidak bernilai nullptr maka kembalikan nilai false
-    return head == nullptr;
+    // Jika front dan back memiliki nilai nullptr
+    // maka kembalikan nilai true
+    // Jika front dan back memiliki nilai selain nullptr
+    // maka kembalikan nilai false
+    return (front == nullptr && back == nullptr);
   }
 
   /**
    * @brief Menghitung jumlah data yang ada pada node
    * 
-   * @param destinationName untuk memberikan nilai nama destinasi yang akan di cari
-   *
    * @return integer
    */
-  int totalNodeData(const string &destinationName = "") {
+  int totalNodeData() {
     // Inisialisasi variable total dengan nilai 0
     int total = 0;
 
     // Cek apakah node kosong, jika iya maka kembalikan nilai 0
     if (isNodeEmpty()) return total;
 
-    // Memberikan nilai head pada variable current node
-    currentNode = head;
+    // Memberikan nilai front pada variable current node
+    currentNode = front;
 
+    // Jika current node sama dengan back maka kembalikan nilai 1
+    if (currentNode == back) return 1;
+
+    // Melakukan perulangan hingga current node tidak sama dengan nullptr
     do {
-      // Mengecek apakah variable destinationName kosong atau tidak
-      // Jika tidak, lanjut ke pengecekan selanjutnya apakah data yang
-      // ditemukan sama dengan destinationName yang di cari
-      if (!destinationName.empty()) {
-        // Jika data yang ditemukan adalah data yang dicari
-        if (currentNode->data.destination_name == destinationName) {
-          // Menambahkan satu nilai untuk variable total
-          total++;
-        }
-
-        // Mengganti nilai current menjadi node selanjutnya
-        currentNode = currentNode->next;
-
-        // Jika node kosong lanjut looping
-        continue;
-      }
-
       // Menambahkan satu nilai untuk variable total
       total++;
 
       // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
 
-      // jika nilai current node bukan head lanjut looping
-    } while (currentNode != head);
+      // jika nilai current node bukan front lanjut looping
+    } while (currentNode != nullptr);
 
     // Kembalikan nilai total
     return total;
@@ -120,16 +101,16 @@ private:
   }
 
   /**
-   * @brief Memberikan nilai pada head dan tail menjadi new node
+   * @brief Memberikan nilai pada front dan back menjadi new node
    *
    * @return void
    */
-  void insertHeadAndTail() {
-    // Memberikan nilai head dan tail menjadi newNode
-    head = tail = newNode;
+  void insertFrontAndBack() {
+    // Memberikan nilai front dan bacl menjadi newNode
+    front = back = newNode;
 
-    // Memberikan nilai next dan prev dari newNode menjadi head
-    newNode->next = newNode->prev = head;
+    // Memberikan nilai next dan prev dari newNode menjadi front
+    newNode->next = front;
   }
 
   /**
@@ -140,50 +121,45 @@ private:
    *
    * @return void
    */
-  void displayNode(CommentStruct data, bool isDetail) {
-    if (data.username.empty() || data.comment.empty()) return;
+  void displayNode(int id, RecieptStruct data, bool isDetail) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
 
-    cout << "Nama Destinasi : " << data.destination_name << endl;
-    cout << "Nama Pengguna : " << data.username << endl;
-    cout << "Komentar : " << data.comment << endl;
+    // Melakukan pengecekan apakah data name dan phone kosong
+    // jika iya maka kembalikan nilai void
+    if (data.name.empty() || data.phone.empty()) return;
 
+    cout << "ID             : " << id << endl;
+    cout << "Nama           : " << data.name << endl;
+    cout << "Telepon        : " << data.phone << endl;
+    cout << "Paket          : " << data.package << endl;
+    cout << "Tanggal        : " << data.date << endl;
+
+    // Melakukan pengecekan apakah isDetail bernilai true
+    // jika iya maka kita akan menampilkan data lebih detail
     if (!isDetail) return;
 
-    if (data.rating < 1 || data.rating > 5) return;
-
-    switch (data.rating) {
-    case 1:
-      cout << "Rating : 1 (Sangat Buruk)" << endl;
-      break;
-    case 2:
-      cout << "Rating : 2 (Buruk)" << endl;
-      break;
-    case 3:
-      cout << "Rating : 3 (Cukup)" << endl;
-      break;
-    case 4:
-      cout << "Rating : 4 (Baik)" << endl;
-      break;
-    case 5:
-      cout << "Rating : 5 (Sangat Baik)" << endl;
-      break;
-    }
+    cout << "Durasi         : " << data.duration << " hari" << endl;
+    cout << "Harga          : Rp. " << Parse::intToCurrencyFormat(data.price) << endl;
+    cout << "Jumlah         : " <<  data.people << " orang" << endl;
   }
 
 public:
   /**
    * @brief Constructor dari class List yang akan
-   *       memberikan nilai nullptr pada head dan tail
+   *       memberikan nilai nullptr pada front dan back
    *      ketika class List di inisialisasi
    * 
    * @return void
    */
   Queue() {
-    // Memberikan nilai nullptr pada head dan tail
-    // dengan alur head = tail, yang mana nilai dari
-    // tail diinisialisasi dengan nilai nullptr
-    // sehingga head dan tail memiliki nilai yang sama
-    head = tail = nullptr;
+    // Memberikan nilai nullptr pada front dan back
+    // dengan alur front = back, yang mana nilai dari
+    // back diinisialisasi dengan nilai nullptr
+    // sehingga front dan bacl memiliki nilai yang sama
+    front = back = nullptr;
   }
 
   /**
@@ -211,6 +187,45 @@ public:
     return isNodeEmpty();
   }
 
+  C get(int index) {
+    // Inisialisasi variable data dengan nilai default
+    C data = C{};
+
+    // Memanggil method isNodeEmpty untuk mengecek
+    // apakah node masih kosong atau tidak
+    // Jika node kosong maka kembalikan nilai data
+    if (isNodeEmpty()) return data;
+
+    // Inisialisasi variable index dengan nilai 0
+    int i = 0;
+
+    // Memberikan nilai front pada variable current node
+    currentNode = front;
+
+    // Melakukan perulangan hingga index lebih kecil dari total data
+    do {
+      // Jika index sama dengan nilai yang di cari
+      if (i == index) {
+        // Memberikan nilai data pada field data dari currentNode
+        // ke dalam variable data
+        data = currentNode->data;
+
+        // Menghentikan perulangan
+        break;
+      }
+
+      i++;
+
+      // Mengganti nilai current menjadi node selanjutnya
+      currentNode = currentNode->next;
+
+      // jika nilai current node bukan front lanjut looping
+    } while (currentNode != front);
+
+    // Mengembalikan nilai data
+    return data;
+  }
+
   /**
    * @brief Menambahkan data ke dalam node
    *
@@ -228,30 +243,21 @@ public:
 
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
-    // Jika node kosong maka memanggil method insertHeadAndTail
+    // Jika node kosong maka memanggil method insertFrontAndBack
     if (isNodeEmpty()) {
-      // Memanggil method insertHeadAndTail untuk memberikan
-      // nilai pada head dan tail menjadi newNode
-      insertHeadAndTail();
+      // Memanggil method InsertFrontAndBack untuk memberikan
+      // nilai pada front dan back menjadi newNode
+      insertFrontAndBack();
 
-      // Matikan method insertHead
+      // Matikan method enqueue
       return;
     }
 
-    // Memberikan nilai next dari tail menjadi newNode
-    tail->next = newNode;
+    // Memberikan nilai back pada field next dari newNode
+    back->next = newNode;
 
-    // Memberikan nilai prev dari newNode menjadi tail
-    newNode->prev = tail;
-
-    // Memberikan nilai next dari newNode menjadi head
-    newNode->next = head;
-
-    // Memberikan nilai prev dari head menjadi newNode
-    head->prev = newNode;
-
-    // Memberikan nilai head menjadi newNode
-    head = newNode;
+    // Memberikan nilai front pada field prev dari newNode
+    back = newNode;
   }
 
   /**
@@ -260,6 +266,11 @@ public:
    * @return void
    */
   void dequeue() {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Memanggil method isNodeEmpty untuk mengecek
     // apakah node masih kosong atau tidak
     // Jika node kosong maka tampilkan pesan bahwa belum ada data
@@ -271,145 +282,33 @@ public:
       return;
     }
 
-    // Jika data yang ditemukan adalah head
-    if (head == tail) {
-      delete head;
+    // Memberikan nilai front pada variable nodeHelper
+    currentNode = front;
 
-      // Memberikan nilai nullptr pada head dan tail
-      head = tail = nullptr;
+    // Memberikan nilai front pada field next dari front
+    front = front->next;
 
-      // Matikan method update
-      return;
-    }
-
-    // Memberikan nilai nodeHelper pada head
-    nodeHelper = head;
-
-    // Memberikan nilai head pada node selanjutnya
-    head = head->next;
-
-    // Memberikan nilai prev dari head menjadi nullptr
-    head->prev = tail;
-
-    // Memberikan nilai next dari tail menjadi head
-    tail->next = head;
-
-    // Menghapus nodeHelper
-    delete nodeHelper;
-  }
-
-  /**
-   * @brief Menghapus data dari node
-   *
-   * @param destinationName untuk memberikan nilai nama destinasi yang akan di hapus
-   * @param username untuk memberikan nilai username yang akan di hapus
-   *
-   * @return void
-   */
-  void dequeue(const string &destinationName, const string &username) {
-    // Memanggil method isNodeEmpty untuk mengecek
-    // apakah node masih kosong atau tidak
-    // Jika node kosong maka tampilkan pesan bahwa belum ada data
-    if (isNodeEmpty()) {
-      // Menampilkan pesan bahwa belum ada data yang tersedia
-      cout << "Belum ada data yang tersedia" << endl;
-
-      // Matikan method update
-      return;
-    }
-
-    // Jika data yang ditemukan adalah head
-    if (head == tail) {
-      // Jika data yang ditemukan adalah data yang dicari
-      if (head->data.username == username && head->data.destination_name == destinationName) {
-        delete head;
-
-        // Memberikan nilai nullptr pada head dan tail
-        head = tail = nullptr;
-
-        // Matikan method update
-        return;
-      }
-    }
-
-    // Memberikan nilai nodeHelper pada head
-    nodeHelper = head;
-
-    // Melakukan looping hingga nodeHelper sama dengan tail
-    do {
-      // Jika data yang ditemukan adalah data yang dicari
-      if (nodeHelper->data.username != username
-      && nodeHelper->data.destination_name != destinationName) {
-        // Mengganti nilai nodeHelper menjadi node selanjutnya
-        nodeHelper = nodeHelper->next;
-
-        // Jika nodeHelper bukan head lanjut looping
-        continue;
-      }
-
-      // Jika data yang ditemukan adalah head
-      if (nodeHelper == head) {
-        // Memberikan nilai head pada node selanjutnya
-        head = head->next;
-
-        // Memberikan nilai prev dari head menjadi tail
-        head->prev = tail;
-
-        // Memberikan nilai next dari tail menjadi head
-        tail->next = head;
-
-        // Menghapus nodeHelper
-        delete nodeHelper;
-
-        // Matikan method update
-        return;
-      }
-
-      // Jika data yang ditemukan adalah tail
-      if (nodeHelper == tail) {
-        // Memberikan nilai tail pada node sebelumnya
-        tail = tail->prev;
-
-        // Memberikan nilai next dari tail menjadi head
-        tail->next = head;
-
-        // Memberikan nilai prev dari head menjadi tail
-        head->prev = tail;
-
-        // Menghapus nodeHelper
-        delete nodeHelper;
-
-        // Matikan method update
-        return;
-      }
-
-      // Memberikan nilai next dari node sebelumnya
-      nodeHelper->prev->next = nodeHelper->next;
-
-      // Memberikan nilai prev dari node selanjutnya
-      nodeHelper->next->prev = nodeHelper->prev;
-
-      // Menghapus nodeHelper
-      delete nodeHelper;
-
-      // Matikan method update
-      return;
-
-      // Jika nodeHelper bukan head lanjut looping
-    } while (nodeHelper != head);
+    // Menghapus currentNode
+    delete currentNode;
   }
 
   /**
    * @brief Menampilkan semua data yang ada pada node
    *
-   * @param destinationName untuk memberikan nilai nama destinasi yang akan di cari
    * @param page untuk memberikan nilai halaman yang akan di tampilkan
    * @param perpage untuk memberikan nilai data per halaman yang akan di tampilkan
    * @param isDetail untuk memberikan nilai detail data yang akan di tampilkan
+   * @param username untuk memberikan nilai username yang akan di cari
+   * @param isAdmin untuk memberikan nilai status admin yang akan di cari
    *
    * @return PaginationStruct
    */
-  PaginationStruct showAll(const string &destinationName, int page, int perpage, bool isDetail = false) {
+  PaginationStruct showAll(int page, int perpage, bool isDetail, std::string username, bool isAdmin) {
+    // Menggunakan std::cout
+    using std::cout;
+    // Menggunakan std::endl
+    using std::endl;
+
     // Insialisasi variable isBack dengan nilai false
     bool isBack = false;
 
@@ -430,9 +329,6 @@ public:
     // Inisialisasi variable total dengan nilai 0
     int total = totalNodeData();
 
-    // Inisialisasi variable spesificTotal dengan nilai 0
-    int spesificTotal = totalNodeData(destinationName);
-
     // Inisialisasi variable offset
     // dengan nilai page dikurangi 1 dikali perpage
     int offset = page * perpage;
@@ -447,8 +343,8 @@ public:
     // Insialisasi variable found dengan nilai 0
     int found = 0;
 
-    // Memberikan nilai head pada variable current node
-    currentNode = head;
+    // Memberikan nilai front pada variable current node
+    currentNode = front;
 
     // Menampilkan separator untuk memisahkan data
     cout << "====================" << endl;
@@ -459,21 +355,14 @@ public:
       // Jika index lebih besar atau sama dengan start
       // dan index lebih kecil dari total data
       // serta index lebih kecil dari offset
-      // serta data yang ditemukan sama dengan destinationName
+      // serta data yang ditemukan sama dengan username
       // maka tampilkan data yang ada pada node
-      if (
-          index < total && found < offset
-          && currentNode->data.destination_name == destinationName
-        )
-      {
+      if (index < total && found < offset) {
         // Jika found lebih besar atau sama dengan start
         // maka tampilkan data yang ditemukan pada node
         if (found >= start) {
-          // Menampilkan id data yang ada pada node
-          cout << "ID : " << found + 1 << endl;
-
           // Menampilkan data yang ditemukan pada node
-          displayNode(currentNode->data, isDetail);
+          displayNode(found + 1, currentNode->data, isDetail);
 
           // Menampilkan separator untuk memisahkan data
           cout << "====================" << endl;
@@ -489,119 +378,12 @@ public:
       // Mengganti nilai current menjadi node selanjutnya
       currentNode = currentNode->next;
 
-      // jika nilai current node bukan head lanjut looping
-    } while (currentNode != head);
+      // jika nilai current node bukan front lanjut looping
+    } while (index < total);
 
-    // Jika offset lebih kecil dari spesificTotal data
+    // Jika offset lebih kecil dari total data
     // maka ubah nilai isNext menjadi true
-    if (offset < spesificTotal) isNext = true;
-
-    // Jika page lebih besar dari 1
-    // maka ubah nilai isBack menjadi true
-    if (page > 1) isBack = true;
-
-    // Mengembalikan nilai struct PaginationStruct
-    return PaginationStruct{isBack, isNext};
-  }
-
-  /**
-   * @brief Menampilkan semua data yang ada pada node
-   *        berdasarkan username yang di cari
-   * 
-   * @param destinationName untuk memberikan nilai nama destinasi yang akan di cari
-   * @param username untuk memberikan nilai username yang akan di cari
-   * @param page untuk memberikan nilai halaman yang akan di tampilkan
-   * @param perpage untuk memberikan nilai data per halaman yang akan di tampilkan
-   * @param isDetail untuk memberikan nilai detail data yang akan di tampilkan
-   *
-   * @return PaginationStruct
-   */
-  PaginationStruct showAllByUsername(const string &destinationName, const string &username, int page, int perpage, bool isDetail = false) {
-    // Insialisasi variable isBack dengan nilai false
-    bool isBack = false;
-
-    // Insialisasi variable isNext dengan nilai false
-    bool isNext = false;
-
-    // Memanggil method isNodeEmpty untuk mengecek
-    // apakah node masih kosong atau tidak
-    // Jika node kosong maka tampilkan pesan bahwa belum ada data
-    if (isNodeEmpty()) {
-      // Menampilkan pesan bahwa belum ada data yang tersedia
-      cout << "Belum ada data yang tersedia" << endl;
-
-      // Mengembalikan nilai struct PaginationStruct dengan nilai default
-      return PaginationStruct{isBack, isNext};
-    }
-
-    // Inisialisasi variable total dengan nilai 0
-    int total = totalNodeData();
-
-    // Inisialisasi variable spesificTotal dengan nilai 0
-    int spesificTotal = totalNodeData(destinationName);
-
-    // Inisialisasi variable offset
-    // dengan nilai page dikurangi 1 dikali perpage
-    int offset = page * perpage;
-
-    // Inisialisasi variable start
-    // dengan nilai offset dikurangi perpage
-    int start = offset - perpage;
-
-    // Insialisasi variable index dengan nilai 0
-    int index = 0;
-
-    // Insialisasi variable found dengan nilai 0
-    int found = 0;
-
-    // Memberikan nilai head pada variable current node
-    currentNode = head;
-
-    // Menampilkan separator untuk memisahkan data
-    cout << "====================" << endl;
-
-    // Melakukan looping hingga index sama dengan offset
-    do {
-      // Jika index lebih besar atau sama dengan start
-      // dan index lebih kecil dari total data
-      // serta index lebih kecil dari offset
-      // serta data yang ditemukan sama dengan destinationName
-      // maka tampilkan data yang ada pada node
-      if (
-          index < total && found < offset
-          && currentNode->data.destination_name == destinationName
-          && currentNode->data.username == username
-        )
-      {
-        // Jika found lebih besar atau sama dengan start
-        // maka tampilkan data yang ditemukan pada node
-        if (found >= start) {
-          // Menampilkan id data yang ada pada node
-          cout << "ID : " << found + 1 << endl;
-
-          // Menampilkan data yang ditemukan pada node
-          displayNode(currentNode->data, isDetail);
-
-          // Menampilkan separator untuk memisahkan data
-          cout << "====================" << endl;
-        }
-
-        // Menambahkan satu nilai untuk variable found
-        found++;
-      }
-
-      // Menambahkan satu nilai untuk variable index
-      index++;
-
-      // Mengganti nilai current menjadi node selanjutnya
-      currentNode = currentNode->next;
-
-      // jika nilai current node bukan head lanjut looping
-    } while (index <= offset);
-
-    // Jika offset lebih kecil dari spesificTotal data
-    // maka ubah nilai isNext menjadi true
-    if (offset < spesificTotal) isNext = true;
+    if (offset < total) isNext = true;
 
     // Jika page lebih besar dari 1
     // maka ubah nilai isBack menjadi true
