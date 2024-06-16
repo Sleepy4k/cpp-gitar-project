@@ -4,6 +4,7 @@
 #define PARSE_HELPER_HPP
 
 #include <string>
+#include <sstream>
 
 /**
  * Deklarasi namespace Parse
@@ -72,6 +73,28 @@ namespace Parse {
 
     // Mengembalikan nilai double
     return converted;
+  }
+
+  /**
+   * @brief Mengkonversi nilai apa saja menjadi string
+   * 
+   * @param value nilai apa saja yang akan di konversi
+   * 
+   * @return string
+   */
+  template <typename T>
+  static std::string toString(T value) {
+    std::string result;
+
+    // Mengkonversi nilai apa saja menjadi string
+    std::ostringstream stream;
+    stream << value;
+
+    // Mengembalikan nilai stream ke dalam result
+    result = stream.str();
+
+    // Mengembalikan nilai result
+    return result;
   }
 }
 
