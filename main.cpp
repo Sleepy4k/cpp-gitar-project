@@ -10,8 +10,7 @@
 //--------------------------------------------------------------------------------
 // Development Team:
 // 1. Apri Pandu Wicaksono (NIM: 2311102081)
-// 2. Batsinah Adila Lidyanti (NIM: 2311102092)
-// 3. Gumawang Sasongko (NIM: 2311102104)
+// 2. Gumawang Sasongko (NIM: 2311102104)
 //--------------------------------------------------------------------------------
 // Version: 1.0.0
 // Date: 2024-06-01
@@ -25,12 +24,21 @@
 #include <iostream>
 
 #include "helpers/path.hpp"
+#include "helpers/system.hpp"
 #include "helpers/input_data.hpp"
 #include "controllers/user_controller.hpp"
 #include "controllers/package_controller.hpp"
 #include "controllers/comment_controller.hpp"
 #include "controllers/destination_controller.hpp"
 
+/**
+ * @brief Inisialisasi fungsi main pada program
+ * 
+ * @param argc yaitu jumlah argumen yang diberikan pada program
+ * @param argv yaitu array yang berisi argumen yang diberikan pada program
+ * 
+ * @return integer
+ */
 int main(int argc, char* argv[]) {
   /**
    * Set path untuk file storage
@@ -87,7 +95,9 @@ int main(int argc, char* argv[]) {
   // sehingga program akan berjalan terlebih dahulu
   // sebelum melakukan pengecekan kondisi
   do {
-    system("cls"); // Untuk menghapus layar pada terminal
+    // Memanggil method clear pada namespace SYS
+    // untuk membersihkan layar
+    SYS::clear();
 
     cout << "=== Gitar - Guider for Tour and Recreation ===" << endl;
     cout << "| 1. Destinasi Wisata                        |" << endl;
