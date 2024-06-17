@@ -3,7 +3,7 @@
 // Path file data destinasi wisata
 #ifndef COMMENT_DATA_PATH
 #define COMMENT_DATA_PATH "/data/comment_data.csv"
-#endif
+#endif // COMMENT_DATA_PATH
 
 #ifndef COMMENT_MODEL_HPP
 #define COMMENT_MODEL_HPP
@@ -64,8 +64,10 @@ namespace CommentModel {
         row.push_back(word);
       }
 
+      // Inisialisasi struct CommentStruct
       CommentStruct comment;
 
+      // Mengisi data struct CommentStruct dengan data yang sudah di split
       comment.destination_name = row[0];
       comment.username = row[1];
       comment.comment = row[2];
@@ -84,6 +86,8 @@ namespace CommentModel {
 
   /**
    * @brief Membaca data ulasan dari file berdasarkan username
+   * 
+   * @param username data username yang akan di cari
    * 
    * @return std::vector<CommentStruct> 
    */
@@ -113,7 +117,9 @@ namespace CommentModel {
   /**
    * @brief Menambahkan data ulasan ke dalam file
    * 
-   * @param data CommentStruct
+   * @param data yaitu data ulasan yang akan di tambahkan
+   * 
+   * @return void
    */
   void insert(const CommentStruct &data) {
     std::string dataString = data.destination_name + "," + data.username + "," + data.comment + "," + std::to_string(data.rating);
@@ -125,8 +131,8 @@ namespace CommentModel {
   /**
    * @brief Mencari data ulasan berdasarkan usernama
    * 
-   * @param username string
-   * @param destinationName string
+   * @param username yaitu data username yang akan di cari
+   * @param destinationName yaitu data nama destinasi yang akan di cari
    * 
    * @return CommentStruct 
    */
@@ -157,7 +163,7 @@ namespace CommentModel {
   /**
    * @brief Menghapus data yang sudah ada di dalam file
    * 
-   * @param data string
+   * @param data yaitu data ulasan yang akan di hapus
    * 
    * @return void
    */

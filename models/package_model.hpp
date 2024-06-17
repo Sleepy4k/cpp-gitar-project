@@ -3,7 +3,7 @@
 // Path file data destinasi wisata
 #ifndef PACKAGE_DATA_PATH
 #define PACKAGE_DATA_PATH "/data/destination_data.csv"
-#endif
+#endif // PACKAGE_DATA_PATH
 
 #ifndef PACKAGE_MODEL_HPP
 #define PACKAGE_MODEL_HPP

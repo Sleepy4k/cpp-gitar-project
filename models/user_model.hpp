@@ -3,7 +3,7 @@
 // Path file data user
 #ifndef USER_DATA_PATH
 #define USER_DATA_PATH "/data/user_data.csv"
-#endif
+#endif // USER_DATA_PATH
 
 #ifndef USER_MODEL_HPP
 #define USER_MODEL_HPP
@@ -90,7 +90,7 @@ namespace UserModel {
   /**
    * @brief Menambahkan data user ke dalam file
    * 
-   * @param data UserStruct
+   * @param data yaitu data user yang akan di tambahkan
    * 
    * @return void
    */

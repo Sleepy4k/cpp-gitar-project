@@ -3,7 +3,7 @@
 // Path file data destinasi wisata
 #ifndef DESTINATION_DATA_PATH
 #define DESTINATION_DATA_PATH "/data/destination_data.csv"
-#endif
+#endif // DESTINATION_DATA_PATH
 
 #ifndef DESTINATION_MODEL_HPP
 #define DESTINATION_MODEL_HPP
@@ -91,10 +91,16 @@ namespace DestinationModel {
   /**
    * @brief Menambahkan data destinasi ke dalam file
    * 
-   * @param data DestinationStruct
+   * @param data yang akan di tambahkan
+   * 
+   * @return void
    */
   void insert(const DestinationStruct &data) {
-    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + "," + std::to_string(data.person) + "," + std::to_string(data.price) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
+    // Merangkap data ke dalam string
+    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + ",";
+
+    // Menambahkan data ke dalam string
+    dataString += std::to_string(data.price) + "," + std::to_string(data.person) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
 
     // Menyimpan data ke dalam file dengan menggunakan DataHandler::insert
     DataHandler::insert(DESTINATION_DATA_PATH, dataString);
@@ -103,7 +109,7 @@ namespace DestinationModel {
   /**
    * @brief Mencari data destinasi berdasarkan nama
    * 
-   * @param name string
+   * @param name yaitu nama destinasi yang akan di cari
    * 
    * @return DestinationStruct 
    */
@@ -134,18 +140,23 @@ namespace DestinationModel {
   /**
    * @brief Mengubah data yang sudah ada di dalam file
    * 
-   * @param filename string
-   * @param data string
-   * @param newData string
+   * @param data yaitu data destinasi yang akan di ubah
+   * @param newData yaitu data baru yang akan di simpan
    * 
    * @return void
    */
   void update(const DestinationStruct &data, const DestinationStruct &newData) {
     // Merangkap data baru ke dalam string
-    std::string newDataString = newData.name + "," + newData.description + "," + newData.location + "," + newData.work_hours + "," + std::to_string(newData.person) + "," + std::to_string(newData.price) + "," + std::to_string(newData.pengunjung) + "," + std::to_string(newData.type);
+    std::string newDataString = newData.name + "," + newData.description + "," + newData.location + "," + newData.work_hours + ",";
+
+    // Menambahkan data baru ke dalam string
+    newDataString += std::to_string(newData.price) + "," + std::to_string(newData.person) + "," + std::to_string(newData.pengunjung) + "," + std::to_string(newData.type);
 
     // Merangkap data lama ke dalam string
-    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + "," + std::to_string(data.person) + "," + std::to_string(data.price) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
+    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + ",";
+
+    // Menambahkan data lama ke dalam string
+    dataString += std::to_string(data.price) + "," + std::to_string(data.person) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
 
     // Mengubah data yang sudah ada di dalam file dengan menggunakan DataHandler::update
     DataHandler::update(DESTINATION_DATA_PATH, dataString, newDataString);
@@ -160,7 +171,10 @@ namespace DestinationModel {
    */
   void remove(const DestinationStruct &data) {
     // Merangkap data ke dalam string
-    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + "," + std::to_string(data.person) + "," + std::to_string(data.price) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
+    std::string dataString = data.name + "," + data.description + "," + data.location + "," + data.work_hours + ",";
+
+    // Menambahkan data ke dalam string
+    dataString += std::to_string(data.price) + "," + std::to_string(data.person) + "," + std::to_string(data.pengunjung) + "," + std::to_string(data.type);
 
     // Menghapus data yang sudah ada di dalam file dengan menggunakan DataHandler::remove
     DataHandler::remove(DESTINATION_DATA_PATH, dataString);
