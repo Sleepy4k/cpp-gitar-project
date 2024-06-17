@@ -35,12 +35,17 @@ private:
   // dari class UserController
   UserController userData;
 
-  // Inisialisasi variabel hashTable untuk menyimpan data ulasan
+  // Inisialisasi variabel commentList untuk menyimpan data ulasan
   // dari class HashTable dengan tipe data CommentStruct
   HashTable<CommentStruct> commentList;
 
   /**
-   * @brief Menampilkan semua ulasan
+   * @brief Menampilkan semua ulasan menggunakan pagination
+   * 
+   * @param choice variabel untuk menyimpan pilihan user
+   * @param index yaitu untuk menyimpan halaman data
+   * @param page yaitu untuk menyimpan jumlah data per halaman
+   * @param pagination yaitu untuk menyimpan jumlah data per pagination
    * 
    * @return void
    */
@@ -68,6 +73,7 @@ private:
     // Mencetak garis untuk memisahkan antara data
     cout << endl;
 
+    // Menampilkan menu pilihan untuk pagination
     cout << "===================" << endl;
     cout << "1. Lanjut ke halaman berikutnya" << endl;
     cout << "2. Kembali ke halaman sebelumnya" << endl;
@@ -113,6 +119,13 @@ private:
       break;
     // Jika user memilih selain 1, 2, 3
     default:
+      // Menampilkan pesan error
+      cout << "Pilihan tidak ditemukan!" << endl;
+
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan pengecekan
       break;
     }
@@ -122,7 +135,12 @@ private:
   }
 
   /**
-   * @brief Menampilkan ulasan user
+   * @brief Menampilkan semua ulasan user menggunakan pagination
+   * 
+   * @param choice variabel untuk menyimpan pilihan user
+   * @param index yaitu untuk menyimpan halaman data
+   * @param page yaitu untuk menyimpan jumlah data per halaman
+   * @param pagination yaitu untuk menyimpan jumlah data per pagination
    * 
    * @return void
    */
@@ -144,6 +162,7 @@ private:
     // untuk menampilkan data ulasan user
     commentList.showByUsername(destinationName, userData.getUsername());
 
+    // Mencetak menu pilihan user
     cout << "===================" << endl;
     cout << "1. Kembali" << endl;
     cout << "===================" << endl;
@@ -178,44 +197,34 @@ private:
     // Inisialisasi variabel comment untuk menyimpan data ulasan
     CommentStruct comment, isDuplicated = CommentModel::findByUsernameAndDestinationName(userData.getUsername(), destinationName);
 
+    // Melakukan pengecekan apakah user sudah memberikan ulasan pada destinasi ini
+    // Jika sudah maka system akan menghentikan proses dan menampilkan pesan error
     if (!isDuplicated.username.empty() && !isDuplicated.destination_name.empty()) {
+      // Menampilkan pesan error dan mencetak data ulasan yang sudah ada
       cout << "Anda sudah memberikan ulasan pada destinasi ini!" << endl;
       cout << "===================" << endl;
-      cout << "Nama Destinasi : " << isDuplicated.destination_name << endl;
-      cout << "Komentar : " << isDuplicated.comment << endl;
-
-      switch (isDuplicated.rating) {
-      case 1:
-        cout << "Rating : 1 (Sangat Buruk)" << endl;
-        break;
-      case 2:
-        cout << "Rating : 2 (Buruk)" << endl;
-        break;
-      case 3:
-        cout << "Rating : 3 (Cukup)" << endl;
-        break;
-      case 4:
-        cout << "Rating : 4 (Baik)" << endl;
-        break;
-      case 5:
-        cout << "Rating : 5 (Sangat Baik)" << endl;
-        break;
-      }
-
+      commentList.displayData(isDuplicated);
       cout << "===================" << endl;
 
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
+      // Menghentikan proses
       return;
     }
 
-    // Meminta input dari user
+    // Mengisi nama destinasi dan username
     comment.destination_name = destinationName;
     comment.username = userData.getUsername();
 
+    // Meminta input ulasan dari user
     comment.comment = InputData::getInputLine(
       "Ulasan : ",
       "Ulasan tidak boleh kosong!"
     );
 
+    // Meminta input rating dari user
     comment.rating = InputData::getInputIntRange(
       "Rating : ",
       "Rating harus berupa angka! dan diantara 1 sampai 5!",
@@ -227,6 +236,13 @@ private:
 
     // Menambahkan data ulasan ke dalam file csv
     CommentModel::insert(comment);
+
+    // Menampilkan pesan berhasil
+    cout << "Ulasan berhasil ditambahkan!" << endl;
+
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
   }
 
   /**
@@ -247,7 +263,7 @@ private:
     // Inisialisasi variabel comment untuk menyimpan data ulasan
     CommentStruct comment;
 
-    // Meminta input dari user
+    // Mengisi nama destinasi dan username
     comment.destination_name = destinationName;
     comment.username = userData.getUsername();
 
@@ -267,52 +283,10 @@ private:
       return;
     }
 
-    // Menampilkan data ulasan
+    // Menampilkan data ulasan yang akan dihapus
     cout << "Ulasan Destinasi Wisata" << endl;
     cout << "===================" << endl;
-    cout << "Nama Destinasi : " << isExist.destination_name << endl;
-    cout << "Komentar : " << isExist.comment << endl;
-
-    // Melakukan pengecekan rating ulasan
-    switch (isExist.rating) {
-    // Jika rating 1
-    case 1:
-      // Menampilkan rating sangat buruk
-      cout << "Rating : 1 (Sangat Buruk)" << endl;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika rating 2
-    case 2:
-      // Menampilkan rating buruk
-      cout << "Rating : 2 (Buruk)" << endl;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika rating 3
-    case 3:
-      // Menampilkan rating cukup
-      cout << "Rating : 3 (Cukup)" << endl;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika rating 4
-    case 4:
-      // Menampilkan rating baik
-      cout << "Rating : 4 (Baik)" << endl;
-
-      // Menghentikan pengecekan
-      break;
-    // Jika rating 5
-    case 5:
-      // Menampilkan rating sangat baik
-      cout << "Rating : 5 (Sangat Baik)" << endl;
-
-      // Menghentikan pengecekan
-      break;
-    }
-
-    // Menampilkan garis untuk memisahkan antara data
+    commentList.displayData(isExist);
     cout << "===================" << endl;
 
     // Meminta konfirmasi dari user
@@ -321,14 +295,21 @@ private:
       "Pilihan harus berupa y atau n!"
     );
 
-    // Jika user memilih y maka akan menghapus data ulasan
-    if (confirm == 'y') {
-      // Menghapus data ulasan dari queue list
-      commentList.remove(isExist);
+    // Jika user memilih selain y maka akan keluar dari proses
+    if (tolower(confirm) != 'y') return;
 
-      // Menghapus data ulasan dari file csv
-      CommentModel::remove(isExist);
-    }
+    // Menghapus data ulasan dari queue list
+    commentList.remove(isExist);
+
+    // Menghapus data ulasan dari file csv
+    CommentModel::remove(isExist);
+
+    // Menampilkan pesan berhasil
+    cout << "Ulasan berhasil dihapus!" << endl;
+
+    // Memanggil method pause pada SYS
+    // untuk menjeda layar terminal
+    SYS::pause();
   }
 
   /**
@@ -436,13 +417,16 @@ private:
       break;
     // Jika user memilih selain 1, 2, 3, 4, 5
     default:
+      // Menampilkan pesan error
+      cout << "Pilihan tidak ditemukan!" << endl;
+
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan pengecekan
       break;
     }
-
-    // Memanggil method pause pada SYS
-    // untuk menjeda layar terminal
-    SYS::pause();
 
     // Memanggil method showMainMenu
     showMainMenu();
@@ -476,6 +460,7 @@ public:
       // Melakukan perulangan untuk menambahkan data ulasan ke dalam queue list
       // berdasarkan data yang sudah di baca
       for (CommentStruct comment : comments) {
+        // Menambahkan data ulasan ke dalam queue list
         commentList.insert(comment);
       }
     }
