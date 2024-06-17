@@ -3,7 +3,6 @@
 #ifndef DATA_HANDLER_HPP
 #define DATA_HANDLER_HPP
 
-#include <string>
 #include <vector>
 #include <sstream>
 

@@ -289,6 +289,18 @@ public:
   }
 
   /**
+   * @brief Menampilkan data dari hash table
+   * 
+   * @param data Nilai data yang akan ditampilkan
+   * @param isDetail Status apakah data yang ditampilkan adalah detail atau tidak
+   * 
+   * @return void
+   */
+  void displayData(T data, bool isDetail = false) {
+    displayData(1, data, isDetail);
+  }
+
+  /**
    * @brief Menambah data ke dalam hash table
    * 
    * @tparam T
