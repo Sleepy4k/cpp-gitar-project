@@ -99,6 +99,7 @@ int main(int argc, char* argv[]) {
     // untuk membersihkan layar
     SYS::clear();
 
+    // Menampilkan menu utama
     cout << "=== Gitar - Guider for Tour and Recreation ===" << endl;
     cout << "| 1. Destinasi Wisata                        |" << endl;
     cout << "| 2. Paket Wisata                            |" << endl;
@@ -106,6 +107,7 @@ int main(int argc, char* argv[]) {
     cout << "| 4. Keluar                                  |" << endl;
     cout << "==============================================" << endl;
 
+    // Meminta input dari user
     choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
@@ -154,7 +156,12 @@ int main(int argc, char* argv[]) {
       break;
     // Jika user memilih menu selain 1, 2, 3, 4
     default:
+      // Menampilkan pesan pilihan tidak valid
       cout << "Pilihan tidak valid, silahkan coba lagi" << endl;
+
+      // Memanggil method pause dari SYS
+      // untuk memberikan jeda sebelum melanjutkan
+      SYS::pause();
 
       // Menghentikan switch case
       break;
