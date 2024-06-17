@@ -8,8 +8,6 @@
 #ifndef HASH_HELPER_HPP
 #define HASH_HELPER_HPP
 
-#include <string>
-
 /**
  * Deklarasi namespace Hashing
  * 

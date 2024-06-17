@@ -3,7 +3,6 @@
 #ifndef FILE_STORAGE_HELPER_HPP
 #define FILE_STORAGE_HELPER_HPP
 
-#include <string>
 #include <fstream>
 
 /**

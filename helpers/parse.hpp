@@ -3,7 +3,6 @@
 #ifndef PARSE_HELPER_HPP
 #define PARSE_HELPER_HPP
 
-#include <string>
 #include <sstream>
 
 /**

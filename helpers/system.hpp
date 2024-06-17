@@ -3,8 +3,6 @@
 #ifndef SYSTEM_HELPER_HPP
 #define SYSTEM_HELPER_HPP
 
-#include <string>
-
 /**
  * Deklarasi namespace SYS
  * 

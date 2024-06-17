@@ -4,7 +4,6 @@
 #define TIME_HELPER_HPP
 
 #include <ctime>
-#include <string>
 
 /**
  * Deklarasi namespace Time

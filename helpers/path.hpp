@@ -3,8 +3,6 @@
 #ifndef PATH_HELPER_HPP
 #define PATH_HELPER_HPP
 
-#include <string>
-
 // Inisialisasi variabel basepath dengan nilai __FILE__
 // __FILE__ adalah variabel yang menyimpan path dari file
 // yang sedang di compile saat ini, contoh : /path/to/file.cpp
