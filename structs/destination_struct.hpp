@@ -3,8 +3,6 @@
 #ifndef DESTINATION_STRUCT_HPP
 #define DESTINATION_STRUCT_HPP
 
-#include <string>
-
 #include "../enums/destination_type_enum.hpp"
 
 /**

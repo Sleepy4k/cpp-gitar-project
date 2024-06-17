@@ -3,8 +3,6 @@
 #ifndef COMMENT_STRUCT_HPP
 #define COMMENT_STRUCT_HPP
 
-#include <string>
-
 /**
  * Deklarasi struct Comment
  *

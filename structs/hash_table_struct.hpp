@@ -3,8 +3,6 @@
 #ifndef HASH_TABLE_STRUCT_HPP
 #define HASH_TABLE_STRUCT_HPP
 
-#include <string>
-
 /**
  * Deklarasi struct HashTable
  *

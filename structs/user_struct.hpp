@@ -3,8 +3,6 @@
 #ifndef USER_STRUCT_HPP
 #define USER_STRUCT_HPP
 
-#include <string>
-
 #include "../enums/role_enum.hpp"
 
 /**

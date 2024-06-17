@@ -3,8 +3,6 @@
 #ifndef PACKAGE_STRUCT_HPP
 #define PACKAGE_STRUCT_HPP
 
-#include <string>
-
 #include "../enums/destination_type_enum.hpp"
 #include "../enums/package_transport_enum.hpp"
 

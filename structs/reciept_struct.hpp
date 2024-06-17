@@ -3,8 +3,6 @@
 #ifndef RECIEPT_STRUCT_HPP
 #define RECIEPT_STRUCT_HPP
 
-#include <string>
-
 /**
  * Deklarasi struct Reciept
  *
