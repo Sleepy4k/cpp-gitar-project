@@ -7,8 +7,6 @@
 #ifndef PACKAGE_TRANSPORT_ENUM_HPP
 #define PACKAGE_TRANSPORT_ENUM_HPP
 
-#include <string>
-
 /**
  * Enum PackageTransport
  * 

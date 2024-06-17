@@ -3,8 +3,6 @@
 #ifndef DESTINATION_TYPE_ENUM_HPP
 #define DESTINATION_TYPE_ENUM_HPP
 
-#include <string>
-
 /**
  * Deklarasi Enum atau Enumeration Type
  *
