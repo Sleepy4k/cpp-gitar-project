@@ -2,7 +2,7 @@
 
 #ifndef HASH_TABLE_MAX_SIZE
 #define HASH_TABLE_MAX_SIZE 500
-#endif
+#endif // HASH_TABLE_MAX_SIZE
 
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
