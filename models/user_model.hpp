@@ -8,8 +8,6 @@
 #ifndef USER_MODEL_HPP
 #define USER_MODEL_HPP
 
-#include <string>
-
 #include "../helpers/path.hpp"
 #include "../enums/role_enum.hpp"
 #include "../structs/user_struct.hpp"

@@ -8,8 +8,6 @@
 #ifndef DESTINATION_MODEL_HPP
 #define DESTINATION_MODEL_HPP
 
-#include <string>
-
 #include "../helpers/path.hpp"
 #include "../handlers/data_handler.hpp"
 #include "../structs/destination_struct.hpp"

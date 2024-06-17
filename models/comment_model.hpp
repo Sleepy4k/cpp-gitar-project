@@ -8,8 +8,6 @@
 #ifndef COMMENT_MODEL_HPP
 #define COMMENT_MODEL_HPP
 
-#include <string>
-
 #include "../helpers/path.hpp"
 #include "../handlers/data_handler.hpp"
 #include "../structs/comment_struct.hpp"

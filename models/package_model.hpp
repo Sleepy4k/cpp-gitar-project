@@ -9,7 +9,6 @@
 #define PACKAGE_MODEL_HPP
 
 #include <ctime>
-#include <string>
 #include <cstdlib>
 
 #include "../helpers/path.hpp"
