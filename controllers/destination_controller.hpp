@@ -91,32 +91,34 @@ private:
     data.person = InputData::getInputIntRange(
       "Masukan jumlah orang per tiket : ",
       "Jumlah orang harus berupa angka! dan diantara 1 sampai 100!",
-      1,
-      100
+      1, 100
     );
 
     // Meminta input dari user untuk mengisi harga per tiket
     data.price = InputData::getInputIntRange(
       "Masukan harga per tiket : ",
       "Harga harus berupa angka! dan diantara 1 sampai 1000000!",
-      1,
-      1000000
+      1, 1000000
     );
 
     // Menaampilkan jenis destinasi
     cout << "Jenis destinasi" << endl;
     cout << "==================" << endl;
-    cout << "1. Alam" << endl;
-    cout << "2. Sejarah" << endl;
-    cout << "3. Budaya" << endl;
+
+    // Melakukan perulangan untuk menampilkan jenis destinasi
+    for (int i = 1; i <= DESTINATION_TYPE_SIZE_ENUM_HPP; i++) {
+      // Mencetak data jenis destinasi
+      cout << i << ". " << destinationTypeToString(i) << endl;
+    }
+
+    // Mencetak garis untuk memisahkan antara jenis destinasi
     cout << "==================" << endl;
 
     // Meminta input dari user untuk mengisi jenis destinasi
     type = InputData::getInputIntRange(
       "Masukan jenis destinasi : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 3!",
-      1,
-      3
+      1, 3
     );
 
     // Melakukan pengecekan jenis destinasi
@@ -318,13 +320,13 @@ private:
   }
 
   /**
-   * @brief Menampilkan menu destinasi
+   * @brief Menampilkan menu destinasi untuk admin
    * 
-   * @param choice
-   * @param index 
-   * @param page 
-   * @param pagination 
-   * @param result 
+   * @param choice Variable untuk menyimpan pilihan user
+   * @param index yaitu untuk menyimpan halaman data
+   * @param page yaitu untuk menyimpan jumlah data per halaman
+   * @param pagination yaitu untuk menyimpan jumlah data per pagination
+   * @param result Variable untuk menyimpan hasil data pagination
    * 
    * @return bool 
    */
@@ -334,6 +336,7 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
+    // Mencetak menu list destinasi
     cout << "Menu List Destinasi Wisata" << endl;
     cout << "===================" << endl;
     cout << "1. Detail Destinasi" << endl;
@@ -344,11 +347,11 @@ private:
     cout << "6. Kembali" << endl;
     cout << "===================" << endl;
 
+    // Meminta input dari user untuk memilih menu
     *choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 7!",
-      1,
-      7
+      1, 7
     );
 
     // Jika user memilih menu 7
@@ -410,6 +413,13 @@ private:
       break;
     // Jika user memilih selain 1, 2, 3, 4, 5
     default:
+      // Menampilkan pesan pilihan tidak valid
+      cout << "Pilihan tidak valid" << endl;
+
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan pengecekan
       break;
     }
@@ -419,13 +429,13 @@ private:
   }
 
   /**
-   * @brief Menampilkan menu destinasi
+   * @brief Menampilkan menu destinasi untuk user
    * 
-   * @param choice
-   * @param index 
-   * @param page 
-   * @param pagination 
-   * @param result 
+   * @param choice Variable untuk menyimpan pilihan user
+   * @param index yaitu untuk menyimpan halaman data
+   * @param page yaitu untuk menyimpan jumlah data per halaman
+   * @param pagination yaitu untuk menyimpan jumlah data per pagination
+   * @param result Variable untuk menyimpan hasil data pagination
    * 
    * @return bool 
    */
@@ -435,6 +445,7 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
+    // Mencetak menu list destinasi
     cout << "Menu List Destinasi Wisata" << endl;
     cout << "===================" << endl;
     cout << "1. Detail Destinasi" << endl;
@@ -443,11 +454,11 @@ private:
     cout << "4. Kembali" << endl;
     cout << "===================" << endl;
 
+    // Meminta input dari user untuk memilih menu
     *choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
-      1,
-      4
+      1, 4
     );
 
     // Jika user memilih menu 4
@@ -493,6 +504,13 @@ private:
       break;
     // Jika user memilih selain 1, 2, 3
     default:
+      // Menampilkan pesan pilihan tidak valid
+      cout << "Pilihan tidak valid" << endl;
+
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan pengecekan
       break;
     }
@@ -538,8 +556,8 @@ public:
   /**
    * @brief Menampilkan menu destinasi
    * 
-   * @param user 
-   * @param comment
+   * @param user Variable untuk menyimpan data user
+   * @param comment Variable untuk menyimpan data ulasan
    * 
    * @return void
    */

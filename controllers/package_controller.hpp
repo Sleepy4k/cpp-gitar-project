@@ -298,6 +298,7 @@ private:
       // Mencetak garis untuk memisahkan antara data
       cout << endl;
 
+      // Mencetak menu riwayat pembelian
       cout << "Menu Riwayat Pembelian" << endl;
       cout << "===================" << endl;
       cout << "1. Lihat Detail Struk Pembelian" << endl;
@@ -306,6 +307,7 @@ private:
       cout << "4. Kembali" << endl;
       cout << "===================" << endl;
 
+      // Meminta user untuk memilih menu
       choice = InputData::getInputIntRange(
         "Pilihan menu : ",
         "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
@@ -363,6 +365,13 @@ private:
         break;
       // Jika user memilih selain 1, 2, 3, 4
       default:
+        // Menampilkan pesan error
+        cout << "Pilihan tidak ditemukan!" << endl;
+
+        // Memanggil method pause pada SYS
+        // untuk menjeda layar terminal
+        SYS::pause();
+
         // Menghentikan pengecekan
         break;
       }
@@ -376,7 +385,7 @@ private:
   /**
    * @brief Membeli paket wisata
    * 
-   * @param category
+   * @param category Jenis paket wisata yang akan di beli
    * 
    * @return void
    */
@@ -462,11 +471,11 @@ private:
   /**
    * @brief Menampilkan menu paket wisata untuk admin
    * 
-   * @param choice
-   * @param index 
-   * @param page 
-   * @param pagination 
-   * @param category
+   * @param choice variabel untuk menyimpan pilihan user
+   * @param index yaitu untuk menyimpan halaman data
+   * @param page yaitu untuk menyimpan jumlah data per halaman
+   * @param pagination yaitu untuk menyimpan jumlah data per pagination
+   * @param category yaitu untuk menyimpan jenis paket wisata
    * 
    * @return void
    */
@@ -476,7 +485,7 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
-    while (true) {
+    do {
       // Mencetak data dari pagination
       cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
 
@@ -553,20 +562,27 @@ private:
         break;
       // Jika user memilih selain 1, 2, 3, 4
       default:
+        // Menampilkan pesan error
+        cout << "Pilihan tidak ditemukan!" << endl;
+
+        // Memanggil method pause pada SYS
+        // untuk menjeda layar terminal
+        SYS::pause();
+
         // Menghentikan pengecekan
         break;
       }
-    }
+    } while (true);
   }
 
   /**
    * @brief Menampilkan menu paket wisata untuk user
    * 
-   * @param choice
-   * @param index 
-   * @param page 
-   * @param pagination 
-   * @param category
+   * @param choice variabel untuk menyimpan pilihan user
+   * @param index yaitu untuk menyimpan halaman data
+   * @param page yaitu untuk menyimpan jumlah data per halaman
+   * @param pagination yaitu untuk menyimpan jumlah data per pagination
+   * @param category yaitu untuk menyimpan jenis paket wisata
    * 
    * @return void
    */
@@ -576,7 +592,7 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
-    while (true) {
+    do {
       // Mencetak data dari pagination
       cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
 
@@ -649,10 +665,17 @@ private:
         break;
       // Jika user memilih selain 1, 2, 3, 4
       default:
+        // Menampilkan pesan error
+        cout << "Pilihan tidak ditemukan!" << endl;
+
+        // Memanggil method pause pada SYS
+        // untuk menjeda layar terminal
+        SYS::pause();
+
         // Menghentikan pengecekan
         break;
       }
-    }
+    } while (true);
   }
 
 public:
@@ -676,8 +699,12 @@ public:
         // Jika kosong maka system akan membaca data dari file csv
         if (!packageList[k].isEmpty()) continue;
 
+        // Menginisialisasi variabel data untuk menyimpan data
+        // dari file csv berdasarkan jenis paket wisata
         std::vector<PackageStruct> data = result[k];
 
+        // Melakukan perulangan untuk menambahkan data ke dalam linked list
+        // sebanayak data yang sudah di baca dari file csv
         for (int v = 0; v < data.size(); v++) {
           // Menambahkan data ke dalam linked list
           packageList[k].insertHead(data[v]);
@@ -689,7 +716,7 @@ public:
   /**
    * @brief Menampilkan menu paket wisata
    * 
-   * @param userController 
+   * @param userController variabel untuk menyimpan data user
    * 
    * @return void
    */
@@ -707,6 +734,8 @@ public:
     int choice, index, page, pagination;
 
     do {
+      // Menginisialisasi variabel dengan nilai default
+      // sehingga system akan menampilkan data dari pagination
       choice = 0, index = 1, page = 5, pagination = 5;
 
       // Memanggil method clear pada SYS
@@ -722,6 +751,7 @@ public:
       cout << "4. Keluar" << endl;
       cout << "===================" << endl;
 
+      // Meminta user untuk memilih menu
       choice = InputData::getInputIntRange(
         "Pilih menu : ",
         "Pilihan harus berupa angka! dan diantara 1 sampai 4!",

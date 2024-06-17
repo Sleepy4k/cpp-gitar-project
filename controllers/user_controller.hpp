@@ -301,6 +301,7 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
+    // Mencetak pesan ke layar terminal
     cout << "List of User Menu" << endl;
     cout << "===================" << endl;
     cout << "1. Sign In" << endl;
@@ -308,6 +309,7 @@ private:
     cout << "3. Kembali" << endl;
     cout << "===================" << endl;
 
+    // Meminta inputan dari user berupa pilihan menu
     *choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan tidak valid",
@@ -339,6 +341,13 @@ private:
       break;
     // Jika user memilih selain 1, 2
     default:
+      // Menampilkan pesan error
+      cout << "Pilihan tidak ditemukan!" << endl;
+
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan pengecekan
       break;
     }
@@ -360,6 +369,7 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
+    // Mencetak pesan ke layar terminal
     cout << "List of User Menu" << endl;
     cout << "===================" << endl;
     cout << "1. Profile" << endl;
@@ -367,6 +377,7 @@ private:
     cout << "3. Keluar" << endl;
     cout << "===================" << endl;
 
+    // Meminta inputan dari user berupa pilihan menu
     *choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan tidak valid",
@@ -398,6 +409,13 @@ private:
       break;
     // Jika user memilih selain 1, 2
     default:
+      // Menampilkan pesan error
+      cout << "Pilihan tidak ditemukan!" << endl;
+
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan pengecekan
       break;
     }
@@ -464,10 +482,7 @@ public:
   std::string getUsername() {
     // Memanggil method isAlreadyLogin untuk mengecek apakah user sudah login
     // Jika sudah login, maka system akan mengembalikan username user yang sedang login
-    if (isAlreadyLogin()) return currentUser.username;
-
-    // Mengembalikan nilai kosong
-    return "Tamu";
+    return isAlreadyLogin() ? currentUser.username : "Tamu";
   }
 
   /**
