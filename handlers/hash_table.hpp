@@ -296,7 +296,9 @@ public:
    * 
    * @return void
    */
-  void displayData(T data, bool isDetail = false) {
+  void displayData(C data, bool isDetail = false) {
+    // Memanggil fungsi displayData dengan parameter 1
+    // untuk menampilkan data dari hash table
     displayData(1, data, isDetail);
   }
 
