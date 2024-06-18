@@ -350,12 +350,12 @@ private:
     // Meminta input dari user untuk memilih menu
     *choice = InputData::getInputIntRange(
       "Pilih menu : ",
-      "Pilihan harus berupa angka! dan diantara 1 sampai 7!",
-      1, 7
+      "Pilihan harus berupa angka! dan diantara 1 sampai 6!",
+      1, 6
     );
 
-    // Jika user memilih menu 7
-    if (*choice == 7) return false;
+    // Jika user memilih menu 6
+    if (*choice == 6) return false;
 
     // Memanggil method clear pada SYS
     // untuk membersihkan layar
