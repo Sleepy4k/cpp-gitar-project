@@ -23,7 +23,7 @@ enum Role {
  *
  * @return string data enum yang sudah diubah
  */
-std::string roleToString(Role role) {
+std::string roleToString(const Role &role) {
   // Menggunakan switch case untuk mengecek
   // nilai dari role dan mengembalikan string
   switch (role) {
@@ -49,7 +49,7 @@ std::string roleToString(Role role) {
  *
  * @return string data integer yang sudah diubah
  */
-std::string roleToString(int role) {
+std::string roleToString(const int &role) {
   // Menggunakan switch case untuk mengecek
   // nilai dari role dan mengembalikan string
   switch (role) {

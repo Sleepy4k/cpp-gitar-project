@@ -23,11 +23,11 @@ enum PackageTransport {
 /**
  * @brief Mengambil nama fasilitas transportasi
  * 
- * @param transport
+ * @param transport data integer yang akan diubah menjadi string
  * 
  * @return string
  */
-std::string getFacilityName(int transport) {
+std::string getFacilityName(const int &transport) {
   // Menggunakan switch case untuk mengecek
   // nilai dari transport dan mengembalikan string
   switch (transport) {
@@ -53,11 +53,11 @@ std::string getFacilityName(int transport) {
 /**
  * @brief Mengambil daftar fasilitas transportasi
  * 
- * @param transport
+ * @param transport data integer yang akan diubah menjadi string
  * 
  * @return string
  */
-std::string getListOfFacility(int transport) {
+std::string getListOfFacility(const int &transport) {
   // Menggunakan switch case untuk mengecek
   // nilai dari transport dan mengembalikan string
   switch (transport) {

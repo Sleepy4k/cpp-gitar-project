@@ -29,7 +29,7 @@ enum DestinationType {
  *
  * @return string data enum yang sudah diubah
  */
-std::string destinationTypeToString(DestinationType type) {
+std::string destinationTypeToString(const DestinationType &type) {
   // Menggunakan switch case untuk mengecek
   // nilai dari type dan mengembalikan string
   switch (type) {
@@ -59,7 +59,7 @@ std::string destinationTypeToString(DestinationType type) {
  *
  * @return string data integer yang sudah diubah
  */
-std::string destinationTypeToString(int type) {
+std::string destinationTypeToString(const int &type) {
   // Menggunakan switch case untuk mengecek
   // nilai dari type dan mengembalikan string
   switch (type) {
