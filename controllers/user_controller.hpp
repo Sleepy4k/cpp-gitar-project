@@ -92,16 +92,10 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
-    // Deklarasi variabel result dan tempUser
-    // yang akan digunakan untuk menyimpan data user
-    // yang sudah terdaftar dan data user yang akan
-    // di autentikasi
-    UserStruct result, tempUser = {username, password, Guest};
-
     // Memanggil method findNodeData pada userList dengan
     // parameter 2 dan tempUser, lalu menyimpan hasilnya
     // ke dalam variabel result
-    result = userList.findNodeData(2, tempUser);
+    const UserStruct result = userList.findNodeData(2, UserStruct { username, password, Guest });
 
     // Cek apakah username dan password kosong
     // jika kosong, maka tampilkan pesan akun tidak ditemukan
@@ -143,16 +137,16 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
-    // Deklarasi variabel result dan tempUser
+    // Deklarasi variabel tempUser
     // yang akan digunakan untuk menyimpan data user
     // yang sudah terdaftar dan data user yang akan
     // di autentikasi
-    UserStruct result, tempUser = {username, password, Guest};
+    UserStruct tempUser = {username, password, Guest};
 
     // Memanggil method findNodeData pada userList dengan
     // parameter 2 dan tempUser, lalu menyimpan hasilnya
     // ke dalam variabel result
-    result = userList.findNodeData(2, tempUser);
+    const UserStruct result = userList.findNodeData(2, tempUser);
 
     // Cek apakah username dan password kosong
     // jika tidak kosong, maka tampilkan pesan akun sudah ada
@@ -215,10 +209,7 @@ private:
     basic_form();
 
     // Meminta inputan dari user berupa konfirmasi password
-    string password_confirmation;
-
-    // Meminta inputan dari user berupa konfirmasi password
-    password_confirmation = InputData::getInput(
+    const string password_confirmation = InputData::getInput(
       "Masukan ulang kata sandi : ",
       "Kata sandi tidak boleh kosong serta tidak boleh mengandung spasi"
     );
@@ -256,6 +247,9 @@ private:
 
     // Menghapus data user yang sedang login
     currentUser = UserStruct{};
+
+    // Menhapus data username dan password
+    username = password = "";
 
     // Menampilkan pesan ke layar terminal
     cout << "Anda berhasil keluar" << endl;
@@ -434,10 +428,7 @@ public:
     // Mengecek apakah file user_data.csv tidak ada
     // Jika tidak ada maka system akan membuat file user_data.csv
     // dan menambahkan data destinasi secara default
-    if (!FileStorage::Exists(Path::getPath() + "/data/user_data.csv")) {
-      // Membuat file user_data.csv
-      FileStorage::Create(Path::getPath() + "/data/user_data");
-
+    if (!FileStorage::Exists(Path::getPath() + USER_DATA_PATH)) {
       // Menambahkan data user secara default
       UserModel::insert(UserStruct{"user", Hashing::encrypt("password"), Guest});
       UserModel::insert(UserStruct{"admin", Hashing::encrypt("password"), Admin});
@@ -447,13 +438,13 @@ public:
     // Jika kosong maka system akan membaca data dari file csv
     if (userList.isEmpty()) {
       // Membaca data dari file csv
-      std::vector<UserStruct> data = UserModel::read();
+      const std::vector<UserStruct> users = UserModel::read();
 
       // Melakukan perulangan untuk menambahkan data ke dalam linked list
       // berdasarkan data yang sudah di baca dari file csv
-      for (int i = 0; i < data.size(); i++) {
+      for (UserStruct user : users) {
         // Menambahkan data ke dalam linked list
-        userList.insertHead(data[i]);
+        userList.insertHead(user);
       }
     }
   }
@@ -466,12 +457,7 @@ public:
   bool isAlreadyLogin() {
     // Cek apakah username dan password kosong
     // Jika kosong, maka system akan mengembalikan nilai false
-    if (currentUser.username.empty() || currentUser.password.empty())
-      // Mengembalikan nilai false
-      return false;
-
-    // Mengembalikan nilai true
-    return true;
+    return !currentUser.username.empty() && !currentUser.password.empty();
   }
 
   /**

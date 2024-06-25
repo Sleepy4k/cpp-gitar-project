@@ -60,7 +60,8 @@ private:
     // Deklarasi variabel isRunning, choice, index, page, pagination
     char confirm;
     bool isRunning = true;
-    int choice, index = 1, page = 5, pagination = 5;
+    const int pagination = 5;
+    int choice = 0, index = 1, page = 5;
 
     do {
       // Memanggil method clear pada SYS
@@ -103,7 +104,11 @@ private:
         // Jika kosong maka system akan menghentikan proses
         if (recieptList.isEmpty()) {
           // Mencetak pesan data tidak ditemukan
-          cout << "Data tidak ditemukan" << endl;
+          cout << "Belum ada data yang tersedia untuk dihapus" << endl;
+
+          // Memanggil method pause pada SYS
+          // untuk menjeda layar terminal
+          SYS::pause();
 
           // Menghentikan pengecekan
           break;
@@ -174,7 +179,7 @@ private:
    * 
    * @return void
    */
-  void reciept_template(RecieptStruct reciept) {
+  void reciept_template(const RecieptStruct &reciept) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -215,11 +220,8 @@ private:
       return;
     }
 
-    // Deklarasi variabel id untuk menyimpan id dari struk pembelian
-    std::string id;
-
     // Meminta user untuk memasukkan id dari struk pembelian
-    id = InputData::getInput(
+    const std::string id = InputData::getInput(
       "Masukkan ID Struk Pembelian : ",
       "Struk Pembelian tidak boleh kosong! dan tidak boleh ada spasi!"
     );
@@ -230,13 +232,13 @@ private:
 
     // Memanggil method get dari hashTable untuk mendapatkan data
     // dari struk pembelian berdasarkan id yang di masukkan user
-    RecieptStruct reciept = recieptList.get(std::stoi(id));
+    const RecieptStruct reciept = recieptList.get(std::stoi(id));
 
     // Mengecek apakah data yang di cari tidak ada
     // Jika tidak ada maka system akan mencetak pesan data tidak ditemukan
     if (reciept.name.empty()) {
       // Mencetak pesan data tidak ditemukan
-      cout << "Data tidak ditemukan" << endl;
+      cout << "Belum ada data yang tersedia" << endl;
 
       // Menghentikan proses
       return;
@@ -247,7 +249,7 @@ private:
     // Jika bukan maka system akan mencetak pesan tidak diizinkan
     if (reciept.name != userData.getUsername() && !userData.isUserAdmin()) {
       // Mencetak pesan tidak diizinkan
-      cout << "Tidak diizinkan" << endl;
+      cout << "Anda tidak memiliki akses untuk struk ini!" << endl;
 
       // Menghentikan proses
       return;
@@ -275,13 +277,18 @@ private:
       // Mencetak pesan silahkan login terlebih dahulu
       cout << "Silahkan login terlebih dahulu" << endl;
 
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan proses
       return;
     }
 
     // Deklarasi variabel isRunning, choice, index, page, pagination
     bool isRunning = true;
-    int choice, index = 1, page = 5, pagination = 5;
+    const int pagination = 5;
+    int choice, index = 1, page = 5;
 
     do {
       // Memanggil method clear pada SYS
@@ -389,7 +396,7 @@ private:
    * 
    * @return void
    */
-  void buy_package(int category) {
+  void buy_package(const int &category) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -402,28 +409,26 @@ private:
       // Mencetak pesan silahkan login terlebih dahulu
       cout << "Silahkan login terlebih dahulu" << endl;
 
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar terminal
+      SYS::pause();
+
       // Menghentikan proses
       return;
     }
-
-    // Deklarasi variabel package untuk menyimpan data paket wisata
-    PackageStruct package;
 
     // Mencetak garis untuk memisahkan
     cout << "===================" << endl;
 
     // Memanggil method showNodeData dari linked list
     // untuk menampilkan data paket wisata
-    package = packageList[category].showNodeData<PackageStruct>(true);
+    const PackageStruct package = packageList[category].showNodeData<PackageStruct>(true);
 
     // Mencetak garis untuk memisahkan antara data
     cout << "===================" << endl;
 
-    // Deklarasi variabel confirm untuk menyimpan konfirmasi
-    char confirm;
-
     // Meminta user untuk mengkonfirmasi pembelian
-    confirm = InputData::getInputChar(
+    const char confirm = InputData::getInputChar(
       "Apakah anda yakin ingin membeli paket ini ? (Y/n) : ",
       "Konfirmasi tidak valid! silahkan masukkan y atau N"
     );
@@ -435,17 +440,14 @@ private:
     cout << "Pembelian Berhasil" << endl;
     cout << "===================" << endl;
 
-    // Deklarasi variabel reciept untuk menyimpan data struk pembelian
-    RecieptStruct reciept;
-
-    // Deklarasi variable phone untuk menyimpan nomor telepon
-    std::string phone;
-
     // Meminta user untuk memasukkan nomor telepon
-    phone = InputData::getInput(
+    const std::string phone = InputData::getInput(
       "Masukkan Nomor Telepon : ",
       "Nomor Telepon tidak boleh kosong! dan tidak boleh ada spasi!"
     );
+
+    // Deklarasi variabel reciept untuk menyimpan data struk pembelian
+    RecieptStruct reciept;
 
     // Memasukkan data ke dalam variabel reciept
     reciept.name = userData.getUsername();
@@ -479,19 +481,23 @@ private:
    * 
    * @return void
    */
-  void adminMenu(int *choice, int *index, int *page, int *pagination, int category) {
+  void adminMenu(int *choice, int *index, int *page, const int &pagination, const int &category) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
     using std::endl;
 
     do {
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
+
       // Mencetak data dari pagination
-      cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
+      cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - pagination << " - " << *page << " data" << endl;
 
       // Menginisialisasi variabel result untuk menyimpan data
       // dari linked list berdasarkan pilihan user
-      PaginationStruct result = packageList[category].showAllNodes(*index, *pagination, true);
+      const PaginationStruct result = packageList[category].showAllNodes(*index, pagination, true);
 
       // Mencetak garis untuk memisahkan antara data
       cout << endl;
@@ -513,6 +519,10 @@ private:
 
       // Jika user memilih menu 4
       if (*choice == 5) return;
+
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Melakukan pengecekan pilihan user
       switch (*choice) {
@@ -544,7 +554,7 @@ private:
 
         // Jika tidak kosong maka system akan menambahkan index dan page
         *index += 1;
-        *page += *pagination;
+        *page += pagination;
 
         // Menghentikan pengecekan
         break;
@@ -556,7 +566,7 @@ private:
 
         // Jika tidak kosong maka system akan mengurangi index dan page
         *index -= 1;
-        *page -= *pagination;
+        *page -= pagination;
 
         // Menghentikan pengecekan
         break;
@@ -586,19 +596,23 @@ private:
    * 
    * @return void
    */
-  void userMenu(int *choice, int *index, int *page, int *pagination, int category) {
+  void userMenu(int *choice, int *index, int *page, const int &pagination, const int &category) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
     using std::endl;
 
     do {
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
+
       // Mencetak data dari pagination
-      cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - *pagination << " - " << *page << " data" << endl;
+      cout << "Menampilkan list Paket " << destinationTypeToString(category + 1) << " dari " << *page - pagination << " - " << *page << " data" << endl;
 
       // Menginisialisasi variabel result untuk menyimpan data
       // dari linked list berdasarkan pilihan user
-      PaginationStruct result = packageList[category].showAllNodes(*index, *pagination, true);
+      const PaginationStruct result = packageList[category].showAllNodes(*index, pagination, true);
 
       // Mencetak garis untuk memisahkan antara data
       cout << endl;
@@ -620,6 +634,10 @@ private:
 
       // Jika user memilih menu 5
       if (*choice == 5) break;
+
+      // Memanggil method clear pada SYS
+      // untuk membersihkan layar terminal
+      SYS::clear();
 
       // Melakukan pengecekan pilihan user
       switch (*choice) {
@@ -647,7 +665,7 @@ private:
 
         // Jika tidak kosong maka system akan menambahkan index dan page
         *index += 1;
-        *page += *pagination;
+        *page += pagination;
 
         // Menghentikan pengecekan
         break;
@@ -659,7 +677,7 @@ private:
 
         // Jika tidak kosong maka system akan mengurangi index dan page
         *index -= 1;
-        *page -= *pagination;
+        *page -= pagination;
 
         // Menghentikan pengecekan
         break;
@@ -688,9 +706,9 @@ public:
     // Mengecek apakah file destination_data.csv ada
     // Jika ada maka system akan membaca file tersebut
     // dan membuat data package wisata secara otomatis
-    if (FileStorage::Exists(Path::getPath() + "/data/destination_data.csv")) {
+    if (FileStorage::Exists(Path::getPath() + PACKAGE_DATA_PATH)) {
       // Membaca data dari file csv
-      std::vector<std::vector<PackageStruct>> result = PackageModel::read();
+      const std::vector<std::vector<PackageStruct>> result = PackageModel::read();
 
       // Melakukan perulangan untuk menambahkan data ke dalam linked list
       // berdasarkan data yang sudah di baca dari file csv
@@ -701,13 +719,13 @@ public:
 
         // Menginisialisasi variabel data untuk menyimpan data
         // dari file csv berdasarkan jenis paket wisata
-        std::vector<PackageStruct> data = result[k];
+        const std::vector<PackageStruct> packages = result[k];
 
         // Melakukan perulangan untuk menambahkan data ke dalam linked list
         // sebanayak data yang sudah di baca dari file csv
-        for (int v = 0; v < data.size(); v++) {
+        for (PackageStruct package : packages) {
           // Menambahkan data ke dalam linked list
-          packageList[k].insertHead(data[v]);
+          packageList[k].insertHead(package);
         }
       }
     }
@@ -720,7 +738,7 @@ public:
    * 
    * @return void
    */
-  void menu(UserController user) {
+  void menu(const UserController &user) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -731,12 +749,13 @@ public:
 
     // Deklarasi variabel isRunning, choice, index, page, pagination
     bool isRunning = true;
-    int choice, index, page, pagination;
+    int choice, index, page;
+    const int pagination = 5;
 
     do {
       // Menginisialisasi variabel dengan nilai default
       // sehingga system akan menampilkan data dari pagination
-      choice = 0, index = 1, page = 5, pagination = 5;
+      choice = 0, index = 1, page = 5;
 
       // Memanggil method clear pada SYS
       // untuk membersihkan layar terminal
@@ -769,8 +788,8 @@ public:
       // Melakukan pengecekan apakah user adalah admin atau tidak
       // Jika user adalah admin maka system akan menampilkan menu admin
       // Jika user bukan admin maka system akan menampilkan menu user
-      if (userData.isUserAdmin()) adminMenu(&choice, &index, &page, &pagination, choice - 1);
-      else userMenu(&choice, &index, &page, &pagination, choice - 1);
+      if (userData.isUserAdmin()) adminMenu(&choice, &index, &page, pagination, choice - 1);
+      else userMenu(&choice, &index, &page, pagination, choice - 1);
     } while (isRunning); // Melakukan perulangan selama isRunning bernilai true
   }
 };

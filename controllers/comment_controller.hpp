@@ -49,7 +49,7 @@ private:
    * 
    * @return void
    */
-  void showAllComment(int choice = 0, int index = 1, int page = 5, int pagination = 5) {
+  void showAllComment(int choice = 0, int index = 1, int page = 5, const int &pagination = 5) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -68,7 +68,7 @@ private:
 
     // Memanggil method showAll pada destination
     // untuk menampilkan semua data ulasan pada queue
-    PaginationStruct result = commentList.showAll(index, pagination, false, destinationName);
+    const PaginationStruct result = commentList.showAll(index, pagination, false, destinationName);
 
     // Mencetak garis untuk memisahkan antara data
     cout << endl;
@@ -144,7 +144,7 @@ private:
    * 
    * @return void
    */
-  void showMyComment(int choice = 0, int index = 1, int page = 5, int pagination = 5) {
+  void showMyComment(int choice = 0, int index = 1, int page = 5, const int &pagination = 5) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -194,8 +194,8 @@ private:
     // untuk membersihkan layar terminal
     SYS::clear();
 
-    // Inisialisasi variabel comment untuk menyimpan data ulasan
-    CommentStruct comment, isDuplicated = CommentModel::findByUsernameAndDestinationName(userData.getUsername(), destinationName);
+    // Mencari data ulasan berdasarkan username dan nama destinasi
+    const CommentStruct isDuplicated = CommentModel::findByUsernameAndDestinationName(userData.getUsername(), destinationName);
 
     // Melakukan pengecekan apakah user sudah memberikan ulasan pada destinasi ini
     // Jika sudah maka system akan menghentikan proses dan menampilkan pesan error
@@ -213,6 +213,9 @@ private:
       // Menghentikan proses
       return;
     }
+
+    // Inisialisasi variabel comment untuk menyimpan data ulasan
+    CommentStruct comment;
 
     // Mengisi nama destinasi dan username
     comment.destination_name = destinationName;
@@ -260,15 +263,8 @@ private:
     // untuk membersihkan layar terminal
     SYS::clear();
 
-    // Inisialisasi variabel comment untuk menyimpan data ulasan
-    CommentStruct comment;
-
-    // Mengisi nama destinasi dan username
-    comment.destination_name = destinationName;
-    comment.username = userData.getUsername();
-
     // Mencari data ulasan berdasarkan username dan nama destinasi
-    CommentStruct isExist = CommentModel::findByUsernameAndDestinationName(comment.username, comment.destination_name);
+    const CommentStruct isExist = CommentModel::findByUsernameAndDestinationName(userData.getUsername(), destinationName);
 
     // Jika data ulasan tidak ditemukan
     if (isExist.username.empty() || isExist.destination_name.empty()) {
@@ -290,7 +286,7 @@ private:
     cout << "===================" << endl;
 
     // Meminta konfirmasi dari user
-    char confirm = InputData::getInputChar(
+    const char confirm = InputData::getInputChar(
       "Apakah anda yakin ingin menghapus ulasan ini? (y/n) : ",
       "Pilihan harus berupa y atau n!"
     );
@@ -323,9 +319,6 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
-    // Inisialisasi variabel choice untuk menyimpan pilihan user
-    int choice;
-
     // Memanggil method clear pada SYS
     // untuk membersihkan layar terminal
     SYS::clear();
@@ -341,7 +334,7 @@ private:
     cout << "===================" << endl;
 
     // Meminta input dari user
-    choice = InputData::getInputIntRange(
+    const int choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 4!",
       1, 5
@@ -443,9 +436,6 @@ public:
     // Jika tidak ada maka system akan membuat file destination_data.csv
     // dan menambahkan data destinasi secara default
     if (!FileStorage::Exists(Path::getPath() + COMMENT_DATA_PATH)) {
-      // Membuat file destination_data.csv
-      FileStorage::Create(Path::getPath() + COMMENT_DATA_PATH);
-
       // Menambahkan data destinasi secara default
       CommentModel::insert(CommentStruct{"Taman Nasional Bromo Tengger Semeru", "user", "View gunung nya bagus, cocok untuk orang yang suka dengan view gunung", 5});
       CommentModel::insert(CommentStruct{"Candi Borobudur", "user", "Komentar 2", 3});
@@ -455,7 +445,7 @@ public:
     // Jika kosong maka system akan menambahkan data ulasan
     if (commentList.empty()) {
       // Membaca data ulasan dari file csv
-      std::vector<CommentStruct> comments = CommentModel::read();
+      const std::vector<CommentStruct> comments = CommentModel::read();
 
       // Melakukan perulangan untuk menambahkan data ulasan ke dalam queue list
       // berdasarkan data yang sudah di baca
@@ -474,7 +464,7 @@ public:
    * 
    * @return void
    */
-  void menu(UserController user, std::string destination) {
+  void menu(const UserController &user, const std::string &destination) {
     // Mengisi data user dari class UserController
     userData = user;
 

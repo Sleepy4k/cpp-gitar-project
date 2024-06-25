@@ -57,9 +57,6 @@ private:
     // Menggunakan std::endl
     using std::endl;
 
-    // Inisialisasi variabel type dan data untuk menyimpan data
-    int type;
-
     // Inisialisasi variabel data untuk menyimpan data destinasi
     DestinationStruct data;
 
@@ -115,7 +112,7 @@ private:
     cout << "==================" << endl;
 
     // Meminta input dari user untuk mengisi jenis destinasi
-    type = InputData::getInputIntRange(
+    const int type = InputData::getInputIntRange(
       "Masukan jenis destinasi : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 3!",
       1, 3
@@ -176,18 +173,22 @@ private:
 
     // Memanggil method form_destination untuk membuat form
     // dan mengisi dari data destinasi yang akan di inputkan
-    DestinationStruct data = form_destination();
+    const DestinationStruct data = form_destination();
 
     // Memanggil method findByName pada DestinationModel
     // untuk mencari data destinasi berdasarkan nama
-    DestinationStruct isDuplicated = DestinationModel::findByName(data.name);
+    const DestinationStruct isDuplicated = DestinationModel::findByName(data.name);
 
     // Cek apakah data yang di inputkan sudah ada atau belum
     // Jika sudah ada maka system akan mencetak pesan data sudah ada
     // dan menghentikan proses
     if (!isDuplicated.name.empty() || !isDuplicated.description.empty()) {
       // Mencetak pesan data sudah ada
-      cout << "Data sudah ada" << endl;
+      cout << "Data dengan nama " << data.name << " sudah ada, silahkan coba lagi!" << endl;
+
+      // Memanggil method pause pada SYS
+      // untuk menjeda layar
+      SYS::pause();
 
       // Menghentikan proses
       return;
@@ -239,7 +240,7 @@ private:
 
     // Memanggil method showNodeData pada destination
     // untuk menampilkan data destinasi
-    DestinationStruct data = destinationList.showNodeData(true);
+    const DestinationStruct data = destinationList.showNodeData(true);
 
     // Mencetak garis untuk memisahkan antara data
     cout << "===================" << endl;
@@ -247,11 +248,8 @@ private:
     cout << "2. Kembali" << endl;
     cout << "===================" << endl;
 
-    // Deklarasi variabel choice
-    int choice;
-
     // Meminta input dari user untuk memilih menu
-    choice = InputData::getInputIntRange(
+    const int choice = InputData::getInputIntRange(
       "Pilih menu : ",
       "Pilihan harus berupa angka! dan diantara 1 sampai 2!",
       1, 2
@@ -292,13 +290,10 @@ private:
     }
 
     // Mencetak data teratas dari stack
-    DestinationStruct data = destinationList.peek();
-
-    // Deklarasi variabel confirmation
-    char confirmation;
+    const DestinationStruct data = destinationList.peek();
 
     // Meminta konfirmasi dari user apakah yakin
-    confirmation = InputData::getInputChar(
+    const char confirmation = InputData::getInputChar(
       "Apakah kamu yakin mau menghapus? (y/N) : ",
       "Pilihan harus berupa karakter! dan diantara y atau N!"
     );
@@ -330,7 +325,7 @@ private:
    * 
    * @return bool 
    */
-  bool adminMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
+  bool adminMenu(int *choice, int *index, int *page, const int &pagination, const PaginationStruct &result) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -395,7 +390,7 @@ private:
 
       // Jika tidak kosong maka system akan menambahkan index dan page
       *index += 1;
-      *page += *pagination;
+      *page += pagination;
 
       // Menghentikan pengecekan
       break;
@@ -407,7 +402,7 @@ private:
 
       // Jika tidak kosong maka system akan mengurangi index dan page
       *index -= 1;
-      *page -= *pagination;
+      *page -= pagination;
 
       // Menghentikan pengecekan
       break;
@@ -439,7 +434,7 @@ private:
    * 
    * @return bool 
    */
-  bool userMenu(int *choice, int *index, int *page, int *pagination, PaginationStruct result) {
+  bool userMenu(int *choice, int *index, int *page, const int &pagination, const PaginationStruct &result) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -486,7 +481,7 @@ private:
 
       // Jika tidak kosong maka system akan menambahkan index dan page
       *index += 1;
-      *page += *pagination;
+      *page += pagination;
 
       // Menghentikan pengecekan
       break;
@@ -498,7 +493,7 @@ private:
 
       // Jika tidak kosong maka system akan mengurangi index dan page
       *index -= 1;
-      *page -= *pagination;
+      *page -= pagination;
 
       // Menghentikan pengecekan
       break;
@@ -530,9 +525,6 @@ public:
     // Jika tidak ada maka system akan membuat file destination_data.csv
     // dan menambahkan data destinasi secara default
     if (!FileStorage::Exists(Path::getPath() + DESTINATION_DATA_PATH)) {
-      // Membuat file destination_data.csv
-      FileStorage::Create(Path::getPath() + DESTINATION_DATA_PATH);
-
       // Menambahkan data destinasi secara default
       DestinationModel::insert(DestinationStruct{"Taman Nasional Bromo Tengger Semeru", "Taman Nasional Bromo Tengger Semeru adalah sebuah kawasan konservasi alam di Jawa Timur", "Probolinggo Jawa Timur", "24 Jam", 1, 50000, Nature});
       DestinationModel::insert(DestinationStruct{"Candi Borobudur", "Candi Borobudur adalah sebuah candi Buddha yang terletak di Magelang Jawa Tengah", "Magelang Jawa Tengah", "06.00 - 17.00", 1, 50000, History});
@@ -542,13 +534,13 @@ public:
     // Jika kosong maka system akan membaca data dari file csv
     if (destinationList.empty()) {
       // Membaca data dari file csv
-      std::vector<DestinationStruct> data = DestinationModel::read();
+      const std::vector<DestinationStruct> destinations = DestinationModel::read();
 
       // Melakukan perulangan untuk menambahkan data ke dalam stack
       // berdasarkan data yang sudah di baca dari file csv
-      for (int i = 0; i < data.size(); i++) {
+      for (DestinationStruct destination : destinations) {
         // Menambahkan data ke dalam stack
-        destinationList.push(data[i]);
+        destinationList.push(destination);
       }
     }
   }
@@ -561,7 +553,7 @@ public:
    * 
    * @return void
    */
-  void menu(UserController user, CommentController comment) {
+  void menu(const UserController &user, const CommentController &comment) {
     // Menggunakan std::cout
     using std::cout;
     // Menggunakan std::endl
@@ -575,7 +567,8 @@ public:
 
     // Deklarasi variabel isRunning, choice, index, page, pagination
     bool isRunning = true;
-    int choice, index = 1, page = 5, pagination = 5;
+    const int pagination = 5;
+    int choice, index = 1, page = 5;
 
     do {
       // Memanggil method clear pada SYS
@@ -587,7 +580,7 @@ public:
 
       // Memanggil method showAllNodes pada destination
       // untuk menampilkan semua data destinasi pada linked list
-      PaginationStruct result = destinationList.showAllNodes(index, pagination, false);
+      const PaginationStruct result = destinationList.showAllNodes(index, pagination, false);
 
       // Mencetak garis untuk memisahkan antara data
       cout << endl;
@@ -595,8 +588,8 @@ public:
       // Melakukan pengecekan apakah user adalah admin atau tidak
       // Jika user adalah admin maka system akan menampilkan menu admin
       // Jika user bukan admin maka system akan menampilkan menu user
-      if (userData.isUserAdmin()) isRunning = adminMenu(&choice, &index, &page, &pagination, result);
-      else isRunning = userMenu(&choice, &index, &page, &pagination, result);
+      if (userData.isUserAdmin()) isRunning = adminMenu(&choice, &index, &page, pagination, result);
+      else isRunning = userMenu(&choice, &index, &page, pagination, result);
     } while (isRunning); // Melakukan perulangan selama isRunning bernilai true
   }
 };
