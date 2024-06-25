@@ -146,6 +146,10 @@ int main(int argc, char* argv[]) {
       break;
     // Jika user memilih menu 4
     case 4:
+      // Memanggil method clear pada namespace SYS
+      // untuk membersihkan layar
+      SYS::clear();
+
       // Menampilkan pesan terima kasih
       cout << "Terima kasih telah menggunakan aplikasi ini" << endl;
 
