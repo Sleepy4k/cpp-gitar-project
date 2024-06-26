@@ -196,6 +196,12 @@ public:
     // Jika node kosong maka kembalikan nilai data
     if (isNodeEmpty()) return data;
 
+    // Memanggil method totalNodeData untuk menghitung
+    // jumlah data yang ada pada node
+    // Jika index lebih kecil dari 0 atau index lebih besar dari total data
+    // maka kembalikan nilai data
+    if (index < 0 || index > totalNodeData()) return data;
+
     // Inisialisasi variable index dengan nilai 0
     int i = 0;
 
