@@ -232,7 +232,7 @@ private:
 
     // Memanggil method get dari hashTable untuk mendapatkan data
     // dari struk pembelian berdasarkan id yang di masukkan user
-    const RecieptStruct reciept = recieptList.get(std::stoi(id));
+    const RecieptStruct reciept = recieptList.get(std::stoi(id) - 1);
 
     // Mengecek apakah data yang di cari tidak ada
     // Jika tidak ada maka system akan mencetak pesan data tidak ditemukan
