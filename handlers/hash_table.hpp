@@ -216,10 +216,10 @@ private:
     if (data.username.empty() || data.comment.empty()) return;
 
     // Menampilkan data dari hash table
-    cout << "ID Pembelian   : " << key << endl;
+    cout << "ID Komentar    : " << key << endl;
     cout << "Nama Destinasi : " << data.destination_name << endl;
-    cout << "Nama Pengguna : " << data.username << endl;
-    cout << "Komentar : " << data.comment << endl;
+    cout << "Nama Pengguna  : " << data.username << endl;
+    cout << "Komentar       : " << data.comment << endl;
 
     // Melakukan pengecekan apakah data yang ditampilkan adalah detail
     // jika tidak maka akan menghentikan proses
@@ -437,8 +437,6 @@ public:
         // Melakukan pengecekan apakah nilai found lebih besar dari start
         // jika iya maka tampilkan data yang ada pada node
         if (found >= start) {
-          cout << "ID Komentar : " << found + 1 << endl;
-
           // Menampilkan data dari hash table
           displayData(key, hashTable[key].value, isDetail);
 

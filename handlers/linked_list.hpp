@@ -277,7 +277,7 @@ private:
     if (data.name.empty() || data.description.empty()) return;
 
     // Menampilkan data yang ada pada node
-    cout << "Nama : " << data.name << " (" << destinationTypeToString(data.type) << ")" << endl;
+    cout << "Nama  : " << data.name << " (" << destinationTypeToString(data.type) << ")" << endl;
     cout << data.description << endl;
     cout << "Harga : Rp. " << Parse::intToCurrencyFormat(data.price) << " / " << data.people << " orang" << endl;
 
